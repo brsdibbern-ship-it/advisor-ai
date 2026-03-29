@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advisor AI — Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#07101E;--s1:#0F1629;--s2:#111D30;--b1:#1A2840;--b2:#253650;--amber:#F59E0B;--teal:#14B8A6;--green:#10B981;--red:#EF4444;--t1:#F1F5F9;--t2:#94A3B8;--t3:#475569}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI',sans-serif;min-height:100vh}
+.topbar{background:var(--s1);border-bottom:1px solid var(--b1);padding:14px 28px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:800;color:var(--t1)}.logo em{color:var(--amber);font-style:normal}
+.admin-badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
+.logout-btn{padding:6px 14px;border-radius:8px;background:transparent;border:1px solid var(--b2);color:var(--t3);font-size:12px;font-weight:600;cursor:pointer}
+.logout-btn:hover{background:var(--s2)}
+.container{max-width:1200px;margin:0 auto;padding:28px}
+.login-wrap{max-width:400px;margin:80px auto;padding:0 20px}
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:24px;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.metric{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:16px;text-align:center}
+.metric-n{font-size:28px;font-weight:800;color:var(--t1)}
+.metric-n.amber{color:var(--amber)}
+.metric-n.green{color:var(--green)}
+.metric-n.teal{color:var(--teal)}
+.metric-l{font-size:11px;color:var(--t3);margin-top:4px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--b1)}
+td{padding:11px 12px;border-bottom:1px solid rgba(26,40,64,.5);color:var(--t2)}
+tr:hover td{background:rgba(255,255,255,.02)}
+tr.clickable{cursor:pointer}
+.chip{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;display:inline-block}
+.ch-a{background:rgba(245,158,11,.12);color:var(--amber)}
+.ch-g{background:rgba(16,185,129,.12);color:var(--green)}
+.ch-r{background:rgba(239,68,68,.12);color:var(--red)}
+.ch-b{background:var(--s2);color:var(--t3)}
+.btn{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:opacity .15s}
+.btn-a{background:var(--amber);color:#07101E}
+.btn-a:hover{opacity:.9}
+.btn-o{background:transparent;border:1px solid var(--b2);color:var(--t2)}
+.btn-o:hover{background:var(--s2)}
+.btn-g{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:var(--green)}
+.search-inp{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--t1);outline:none;width:240px}
+.search-inp:focus{border-color:var(--b2)}
+.tabs{display:flex;gap:6px;margin-bottom:20px}
+.tab{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--b1);color:var(--t3);background:transparent}
+.tab.on{background:var(--amber);color:#07101E;border-color:var(--amber)}
+input,button{font-family:inherit}
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:6px;display:block}
+.form-inp{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:11px 14px;font-size:14px;color:var(--t1);outline:none}
+.form-inp:focus{border-color:var(--amber)}
+.err-msg{color:var(--red);font-size:12px;margin-top:8px}
+.empty{text-align:center;padding:40px;color:var(--t3);font-size:13px}
+.back-lnk{font-size:12px;color:var(--t3);cursor:pointer;margin-bottom:16px;display:inline-flex;align-items:center;gap:4px}
+.back-lnk:hover{color:var(--t2)}
+.score-bar{height:4px;border-radius:2px;background:var(--b1);margin-top:4px;overflow:hidden}
+.score-fill{height:100%;border-radius:2px;background:var(--green)}
+.score-fill.mid{background:var(--amber)}
+.score-fill.low{background:var(--red)}
+.spinner{width:24px;height:24px;border-radius:50%;border:2px solid var(--b2);border-top-color:var(--amber);animation:spin .7s linear infinite;margin:40px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+#app{display:none}
+#login-view{display:block}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-view">
+  <div class="login-wrap">
+    <div style="text-align:center;margin-bottom:28px">
+      <div class="logo" style="font-size:24px;margin-bottom:6px">advisor <em>ai</em></div>
+      <div style="font-size:13px;color:var(--t3)">Painel administrativo</div>
+    </div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">E-mail admin</label>
+        <input class="form-inp" type="email" id="login-email" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input class="form-inp" type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div id="login-err" class="err-msg" style="display:none"></div>
+      <button class="btn btn-a" style="width:100%;padding:12px;margin-top:6px" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="logo">advisor <em>ai</em></div>
+      <span class="admin-badge">Admin</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="admin-email-lbl" style="font-size:12px;color:var(--t3)"></span>
+      <button class="logout-btn" onclick="doLogout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="container" id="main-view">
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab on" onclick="showTab('overview',this)">Visão geral</button>
+      <button class="tab" onclick="showTab('users',this)">Usuários</button>
+      <button class="tab" onclick="showTab('sessions',this)">Sessões</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div id="tab-overview">
+      <div id="overview-content"><div class="spinner"></div></div>
+    </div>
+
+    <!-- USERS -->
+    <div id="tab-users" style="display:none">
+      <div class="card">
+        <div class="card-title">
+          Todos os usuários
+          <div style="display:flex;gap:8px;align-items:center">
+            <input class="search-inp" id="user-search" placeholder="Buscar por nome..." oninput="filterUsers()">
+            <button class="btn btn-g" onclick="exportUsers()">⬇ Exportar CSV</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Nome</th><th>E-mail</th><th>Nível</th>
+              <th>Sessões</th><th>Score médio</th><th>XP</th><th>Streak</th><th>Cadastro</th>
+            </tr></thead>
+            <tbody id="users-tbody"><tr><td colspan="8"><div class="spinner"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSIONS -->
+    <div id="tab-sessions" style="display:none">
+      <div class="card">
+        <div class="card-title" id="sessions-title">
+          Todas as sessões
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-g" onclick="exportSessions()">⬇ Exportar CSV</button>
+            <button class="btn btn-o" id="btn-all-sessions" style="display:none" onclick="loadAllSessions()">Ver todas</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Data</th><th>Usuário</th><th>Persona</th><th>Objetivo</th>
+              <th>Cenário</th><th>Score</th><th>Tom</th><th>Humor</th><th>Trocas</th>
+            </tr></thead>
+            <tbody id="sessions-tbody"><tr><td colspan="9"><div class="spinner"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG — preencha com seus dados do Supabase ──
+const SUPABASE_URL = 'PREENCHA_AQUI';
+const SUPABASE_ANON_KEY = 'PREENCHA_AQUI';
+const ADMIN_EMAIL = 'PREENCHA_AQUI'; // só esse e-mail acessa o admin
+
+let sb, currentUser;
+let allUsers = [], allSessions = [], currentFilterUserId = null;
+
+async function init() {
+  if (SUPABASE_URL === 'PREENCHA_AQUI') {
+    document.getElementById('login-view').innerHTML = `
+      <div style="max-width:500px;margin:80px auto;padding:20px;text-align:center">
+        <div style="font-size:24px;font-weight:800;color:#F59E0B;margin-bottom:12px">⚙ Config necessária</div>
+        <p style="color:#94A3B8;font-size:14px;line-height:1.6">Abra o arquivo <code>admin.html</code> e preencha as constantes <strong>SUPABASE_URL</strong>, <strong>SUPABASE_ANON_KEY</strong> e <strong>ADMIN_EMAIL</strong> no topo do script. Veja o SETUP.md para instruções.</p>
+      </div>`;
+    return;
+  }
+
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { data: { session } } = await sb.auth.getSession();
+  if (session && session.user.email === ADMIN_EMAIL) {
+    showApp(session.user);
+  }
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-err');
+  errEl.style.display = 'none';
+
+  if (email !== ADMIN_EMAIL) {
+    errEl.textContent = 'Acesso restrito ao administrador.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; return; }
+  showApp(data.user);
+}
+
+function showApp(user) {
+  currentUser = user;
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('admin-email-lbl').textContent = user.email;
+  loadOverview();
+  loadUsers();
+  loadAllSessions();
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  location.reload();
+}
+
+// ── TABS ──
+function showTab(name, btn) {
+  ['overview','users','sessions'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === name ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ── OVERVIEW ──
+async function loadOverview() {
+  try {
+    const r = await fetch('/api/admin?action=overview');
+    const d = await r.json();
+    document.getElementById('overview-content').innerHTML = `
+      <div class="metrics">
+        <div class="metric"><div class="metric-n amber">${d.totalUsers}</div><div class="metric-l">Usuários cadastrados</div></div>
+        <div class="metric"><div class="metric-n">${d.totalSessions}</div><div class="metric-l">Sessões realizadas</div></div>
+        <div class="metric"><div class="metric-n green">${d.avgScore || '—'}</div><div class="metric-l">Score médio geral</div></div>
+        <div class="metric"><div class="metric-n teal">${d.openRate}%</div><div class="metric-l">Taxa de cliente abrindo</div></div>
+        <div class="metric"><div class="metric-n">${d.audioSessions}</div><div class="metric-l">Sessões com voz</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="card">
+          <div class="card-title" style="font-size:13px">Persona mais praticada</div>
+          <div style="font-size:22px;font-weight:700;color:var(--amber)">${d.topPersona}</div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="font-size:13px">Objetivo mais treinado</div>
+          <div style="font-size:16px;font-weight:700;color:var(--teal)">${d.topObjetivo}</div>
+        </div>
+      </div>`;
+  } catch(e) {
+    document.getElementById('overview-content').innerHTML = `<div class="empty">Erro ao carregar métricas: ${e.message}</div>`;
+  }
+}
+
+// ── USERS ──
+async function loadUsers() {
+  try {
+    const r = await fetch('/api/admin?action=users');
+    allUsers = await r.json();
+    renderUsers(allUsers);
+  } catch(e) {
+    document.getElementById('users-tbody').innerHTML = `<tr><td colspan="8" style="color:var(--red);padding:20px">Erro: ${e.message}</td></tr>`;
+  }
+}
+
+function renderUsers(users) {
+  if (!users.length) { document.getElementById('users-tbody').innerHTML = '<tr><td colspan="8"><div class="empty">Nenhum usuário ainda.</div></td></tr>'; return; }
+  document.getElementById('users-tbody').innerHTML = users.map(u => `
+    <tr class="clickable" onclick="filterByUser('${u.id}','${u.name}')">
+      <td style="font-weight:600;color:var(--t1)">${u.name}</td>
+      <td>${u.id}</td>
+      <td><span class="chip ch-a">${u.nivel}</span></td>
+      <td>${u.total_sessions}</td>
+      <td>
+        ${u.avg_score != null ? `
+          <span style="font-weight:600">${u.avg_score}</span>
+          <div class="score-bar"><div class="score-fill ${u.avg_score>=70?'':u.avg_score>=50?'mid':'low'}" style="width:${u.avg_score}%"></div></div>` : '—'}
+      </td>
+      <td>${u.xp?.toLocaleString('pt-BR') || 0}</td>
+      <td>${u.streak || 0} 🔥</td>
+      <td style="font-size:11px">${new Date(u.created_at).toLocaleDateString('pt-BR')}</td>
+    </tr>`).join('');
+}
+
+function filterUsers() {
+  const q = document.getElementById('user-search').value.toLowerCase();
+  renderUsers(allUsers.filter(u => u.name?.toLowerCase().includes(q)));
+}
+
+function exportUsers() {
+  const headers = ['nome','nivel','sessoes','score_medio','xp','streak','cadastro'];
+  const rows = allUsers.map(u => [
+    u.name, u.nivel, u.total_sessions, u.avg_score ?? '', u.xp ?? 0, u.streak ?? 0,
+    new Date(u.created_at).toLocaleDateString('pt-BR')
+  ]);
+  downloadCSV([headers,...rows], 'advisor-ai-usuarios.csv');
+}
+
+// ── SESSIONS ──
+async function loadAllSessions() {
+  currentFilterUserId = null;
+  document.getElementById('sessions-title').querySelector('span,div:first-child') && null;
+  document.getElementById('btn-all-sessions').style.display = 'none';
+  try {
+    const r = await fetch('/api/admin?action=sessions');
+    allSessions = await r.json();
+    renderSessions(allSessions, 'Todas as sessões');
+  } catch(e) {
+    document.getElementById('sessions-tbody').innerHTML = `<tr><td colspan="9" style="color:var(--red);padding:20px">Erro: ${e.message}</td></tr>`;
+  }
+}
+
+function filterByUser(userId, userName) {
+  showTab('sessions', document.querySelectorAll('.tab')[2]);
+  currentFilterUserId = userId;
+  document.getElementById('btn-all-sessions').style.display = 'inline-flex';
+  const filtered = allSessions.filter(s => s.user_id === userId);
+  renderSessions(filtered, `Sessões de ${userName}`);
+}
+
+function renderSessions(sessions, title) {
+  const titleEl = document.getElementById('sessions-title');
+  titleEl.childNodes[0].textContent = title;
+  if (!sessions.length) { document.getElementById('sessions-tbody').innerHTML = '<tr><td colspan="9"><div class="empty">Nenhuma sessão encontrada.</div></td></tr>'; return; }
+
+  const humorColor = { aberto:'ch-g', neutro:'ch-a', cetico:'ch-r' };
+  document.getElementById('sessions-tbody').innerHTML = sessions.slice(0,200).map(s => `
+    <tr>
+      <td style="font-size:11px;white-space:nowrap">${new Date(s.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
+      <td style="font-weight:500;color:var(--t1)">${s.profiles?.name || '—'}</td>
+      <td>${s.persona || '—'}</td>
+      <td style="font-size:11px;max-width:140px">${s.objetivo || '—'}</td>
+      <td style="font-size:11px;max-width:120px">${s.cenario || '—'}</td>
+      <td>
+        ${s.score_geral != null ? `<span style="font-weight:700;color:${s.score_geral>=70?'var(--green)':s.score_geral>=50?'var(--amber)':'var(--red)'}">${s.score_geral}</span>` : '—'}
+      </td>
+      <td>${s.score_tom != null ? `<span style="color:var(--teal);font-weight:600">🎤 ${s.score_tom}</span>` : '—'}</td>
+      <td>${s.humor_final ? `<span class="chip ${humorColor[s.humor_final]||'ch-b'}">${s.humor_final}</span>` : '—'}</td>
+      <td>${s.num_trocas ?? '—'}</td>
+    </tr>`).join('');
+}
+
+async function exportSessions() {
+  const url = currentFilterUserId
+    ? `/api/admin?action=sessions&format=csv&userId=${currentFilterUserId}`
+    : '/api/admin?action=sessions&format=csv';
+  const r = await fetch(url);
+  const blob = await r.blob();
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'advisor-ai-sessoes.csv';
+  a.click();
+}
+
+// ── CSV util ──
+function downloadCSV(rows, filename) {
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
+init();
+</script>
+</body>
+</html>
