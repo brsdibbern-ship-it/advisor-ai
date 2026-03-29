@@ -1,0 +1,135 @@
+import { createClient } from '@supabase/supabase-js';
+
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, x-admin-key',
+};
+
+export default async function handler(req, res) {
+  Object.entries(CORS).forEach(([k, v]) => res.setHeader(k, v));
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
+  const adminKey = req.headers['x-admin-key'];
+  if (adminKey !== process.env.ADMIN_SECRET_KEY && process.env.ADMIN_SECRET_KEY) {
+    return res.status(401).json({ error: 'Não autorizado' });
+  }
+
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return res.status(500).json({ error: 'Variáveis SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY não configuradas.' });
+  }
+
+  const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+  const { action, userId, format } = req.query;
+
+  try {
+    if (action === 'users') {
+      const { data: profiles, error } = await sb
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+
+      const { data: sessionCounts } = await sb
+        .from('sessions')
+        .select('user_id, score_geral');
+
+      const metricsMap = {};
+      (sessionCounts || []).forEach(s => {
+        if (!metricsMap[s.user_id]) metricsMap[s.user_id] = { count: 0, total: 0 };
+        metricsMap[s.user_id].count++;
+        metricsMap[s.user_id].total += s.score_geral || 0;
+      });
+
+      const enriched = profiles.map(p => ({
+        ...p,
+        total_sessions: metricsMap[p.id]?.count || 0,
+        avg_score: metricsMap[p.id]?.count
+          ? Math.round(metricsMap[p.id].total / metricsMap[p.id].count)
+          : null,
+      }));
+
+      return res.status(200).json(enriched);
+    }
+
+    if (action === 'sessions') {
+      let query = sb
+        .from('sessions')
+        .select('*, profiles(name, nivel)')
+        .order('created_at', { ascending: false })
+        .limit(500);
+      if (userId) query = query.eq('user_id', userId);
+
+      const { data, error } = await query;
+      if (error) throw error;
+
+      if (format === 'csv') {
+        const headers = [
+          'data', 'usuario', 'nivel', 'modo', 'persona', 'objetivo',
+          'cenario', 'dificuldade', 'score_geral', 'score_objetivo',
+          'score_mercado', 'score_escuta', 'score_tom', 'humor_final',
+          'audio', 'num_trocas', 'dica'
+        ];
+        const rows = data.map(s => [
+          new Date(s.created_at).toLocaleString('pt-BR'),
+          s.profiles?.name || '',
+          s.profiles?.nivel || s.nivel_usuario || '',
+          s.mode || '',
+          s.persona || '',
+          s.objetivo || '',
+          s.cenario || '',
+          s.dificuldade || '',
+          s.score_geral ?? '',
+          s.score_objetivo ?? '',
+          s.score_mercado ?? '',
+          s.score_escuta ?? '',
+          s.score_tom ?? '',
+          s.humor_final || '',
+          s.had_audio ? 'sim' : 'não',
+          s.num_trocas ?? '',
+          `"${(s.dica_principal || '').replace(/"/g, '""')}"`,
+        ]);
+        const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', `attachment; filename="advisor-ai-sessoes.csv"`);
+        return res.status(200).send('\uFEFF' + csv);
+      }
+
+      return res.status(200).json(data);
+    }
+
+    if (action === 'overview') {
+      const [usersRes, sessionsRes] = await Promise.all([
+        sb.from('profiles').select('id', { count: 'exact', head: true }),
+        sb.from('sessions').select('score_geral, humor_final, persona, objetivo, had_audio'),
+      ]);
+      const sessions = sessionsRes.data || [];
+      const totalUsers = usersRes.count || 0;
+      const totalSessions = sessions.length;
+      const avgScore = sessions.length
+        ? Math.round(sessions.reduce((a, s) => a + (s.score_geral || 0), 0) / sessions.length)
+        : 0;
+      const openRate = sessions.length
+        ? Math.round((sessions.filter(s => s.humor_final === 'aberto').length / sessions.length) * 100)
+        : 0;
+      const audioSessions = sessions.filter(s => s.had_audio).length;
+      const topPersona = mostCommon(sessions.map(s => s.persona));
+      const topObjetivo = mostCommon(sessions.map(s => s.objetivo));
+
+      return res.status(200).json({
+        totalUsers, totalSessions, avgScore, openRate, audioSessions, topPersona, topObjetivo
+      });
+    }
+
+    return res.status(400).json({ error: 'Ação inválida. Use: users, sessions, overview' });
+
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+}
+
+function mostCommon(arr) {
+  const freq = {};
+  arr.filter(Boolean).forEach(v => { freq[v] = (freq[v] || 0) + 1; });
+  return Object.entries(freq).sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
+}
