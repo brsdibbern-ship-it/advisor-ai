@@ -129,7 +129,7 @@ input,button{font-family:inherit}
         <div class="table-wrap">
           <table>
             <thead><tr>
-              <th>Nome</th><th>E-mail</th><th>Nível</th>
+              <th>Nome</th><th>Nível</th>
               <th>Sessões</th><th>Score médio</th><th>XP</th><th>Streak</th><th>Cadastro</th>
             </tr></thead>
             <tbody id="users-tbody"><tr><td colspan="8"><div class="spinner"></div></td></tr></tbody>
@@ -142,7 +142,7 @@ input,button{font-family:inherit}
     <div id="tab-sessions" style="display:none">
       <div class="card">
         <div class="card-title" id="sessions-title">
-          Todas as sessões
+          <span id="sessions-title-text">Todas as sessões</span>
           <div style="display:flex;gap:8px">
             <button class="btn btn-g" onclick="exportSessions()">⬇ Exportar CSV</button>
             <button class="btn btn-o" id="btn-all-sessions" style="display:none" onclick="loadAllSessions()">Ver todas</button>
@@ -164,9 +164,9 @@ input,button{font-family:inherit}
 
 <script>
 // ── CONFIG — preencha com seus dados do Supabase ──
-const SUPABASE_URL = 'PREENCHA_AQUI';
-const SUPABASE_ANON_KEY = 'PREENCHA_AQUI';
-const ADMIN_EMAIL = 'PREENCHA_AQUI'; // só esse e-mail acessa o admin
+const SUPABASE_URL = 'https://falogskpwaslzlskljib.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhbG9nc2twd2FzbHpsc2tsamliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODk2ODIsImV4cCI6MjA5MDM2NTY4Mn0.LArX4_Ad9IV5dL_cZ5yYohJWyB6WMH_xTlc9v29aAmM';
+const ADMIN_EMAIL = 'brsdibbern@gmail.com'; // só esse e-mail acessa o admin
 
 let sb, currentUser;
 let allUsers = [], allSessions = [], currentFilterUserId = null;
@@ -269,11 +269,10 @@ async function loadUsers() {
 }
 
 function renderUsers(users) {
-  if (!users.length) { document.getElementById('users-tbody').innerHTML = '<tr><td colspan="8"><div class="empty">Nenhum usuário ainda.</div></td></tr>'; return; }
+  if (!users.length) { document.getElementById('users-tbody').innerHTML = '<tr><td colspan="7"><div class="empty">Nenhum usuário ainda.</div></td></tr>'; return; }
   document.getElementById('users-tbody').innerHTML = users.map(u => `
     <tr class="clickable" onclick="filterByUser('${u.id}','${u.name}')">
       <td style="font-weight:600;color:var(--t1)">${u.name}</td>
-      <td>${u.id}</td>
       <td><span class="chip ch-a">${u.nivel}</span></td>
       <td>${u.total_sessions}</td>
       <td>
@@ -304,7 +303,7 @@ function exportUsers() {
 // ── SESSIONS ──
 async function loadAllSessions() {
   currentFilterUserId = null;
-  document.getElementById('sessions-title').querySelector('span,div:first-child') && null;
+  document.getElementById('sessions-title-text').textContent = 'Todas as sessões';
   document.getElementById('btn-all-sessions').style.display = 'none';
   try {
     const r = await fetch('/api/admin?action=sessions');
@@ -320,18 +319,17 @@ function filterByUser(userId, userName) {
   currentFilterUserId = userId;
   document.getElementById('btn-all-sessions').style.display = 'inline-flex';
   const filtered = allSessions.filter(s => s.user_id === userId);
-  renderSessions(filtered, `Sessões de ${userName}`);
+  renderSessions(filtered, 'Sessões de ' + userName);
 }
 
 function renderSessions(sessions, title) {
-  const titleEl = document.getElementById('sessions-title');
-  titleEl.childNodes[0].textContent = title;
+  document.getElementById('sessions-title-text').textContent = title;
   if (!sessions.length) { document.getElementById('sessions-tbody').innerHTML = '<tr><td colspan="9"><div class="empty">Nenhuma sessão encontrada.</div></td></tr>'; return; }
 
   const humorColor = { aberto:'ch-g', neutro:'ch-a', cetico:'ch-r' };
   document.getElementById('sessions-tbody').innerHTML = sessions.slice(0,200).map(s => `
     <tr>
-      <td style="font-size:11px;white-space:nowrap">${new Date(s.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
+      <td style="font-size:11px;white-space:nowraw">${new Date(s.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
       <td style="font-weight:500;color:var(--t1)">${s.profiles?.name || '—'}</td>
       <td>${s.persona || '—'}</td>
       <td style="font-size:11px;max-width:140px">${s.objetivo || '—'}</td>
