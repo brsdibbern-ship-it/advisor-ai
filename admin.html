@@ -163,24 +163,15 @@ input,button{font-family:inherit}
 </div>
 
 <script>
-// ── CONFIG — preencha com seus dados do Supabase ──
+// ── CONFIG ──
 const SUPABASE_URL = 'https://falogskpwaslzlskljib.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhbG9nc2twd2FzbHpsc2tsamliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODk2ODIsImV4cCI6MjA5MDM2NTY4Mn0.LArX4_Ad9IV5dL_cZ5yYohJWyB6WMH_xTlc9v29aAmM';
-const ADMIN_EMAIL = 'brsdibbern@gmail.com'; // só esse e-mail acessa o admin
+const ADMIN_EMAIL = 'brsdibbern@gmail.com';
 
 let sb, currentUser;
 let allUsers = [], allSessions = [], currentFilterUserId = null;
 
 async function init() {
-  if (SUPABASE_URL === 'PREENCHA_AQUI') {
-    document.getElementById('login-view').innerHTML = `
-      <div style="max-width:500px;margin:80px auto;padding:20px;text-align:center">
-        <div style="font-size:24px;font-weight:800;color:#F59E0B;margin-bottom:12px">⚙ Config necessária</div>
-        <p style="color:#94A3B8;font-size:14px;line-height:1.6">Abra o arquivo <code>admin.html</code> e preencha as constantes <strong>SUPABASE_URL</strong>, <strong>SUPABASE_ANON_KEY</strong> e <strong>ADMIN_EMAIL</strong> no topo do script. Veja o SETUP.md para instruções.</p>
-      </div>`;
-    return;
-  }
-
   sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const { data: { session } } = await sb.auth.getSession();
   if (session && session.user.email === ADMIN_EMAIL) {
@@ -193,13 +184,11 @@ async function doLogin() {
   const pass = document.getElementById('login-pass').value;
   const errEl = document.getElementById('login-err');
   errEl.style.display = 'none';
-
   if (email !== ADMIN_EMAIL) {
     errEl.textContent = 'Acesso restrito ao administrador.';
     errEl.style.display = 'block';
     return;
   }
-
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; return; }
   showApp(data.user);
@@ -220,7 +209,6 @@ async function doLogout() {
   location.reload();
 }
 
-// ── TABS ──
 function showTab(name, btn) {
   ['overview','users','sessions'].forEach(t => {
     document.getElementById('tab-'+t).style.display = t === name ? 'block' : 'none';
@@ -229,10 +217,9 @@ function showTab(name, btn) {
   btn.classList.add('on');
 }
 
-// ── OVERVIEW ──
 async function loadOverview() {
   try {
-    const r = await fetch('/api/admin?action=overview');
+    const r = await fetch('/api/admin?action=overview', { headers: { 'x-admin-key': 'advisor-admin-2024' } });
     const d = await r.json();
     document.getElementById('overview-content').innerHTML = `
       <div class="metrics">
@@ -243,24 +230,17 @@ async function loadOverview() {
         <div class="metric"><div class="metric-n">${d.audioSessions}</div><div class="metric-l">Sessões com voz</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div class="card">
-          <div class="card-title" style="font-size:13px">Persona mais praticada</div>
-          <div style="font-size:22px;font-weight:700;color:var(--amber)">${d.topPersona}</div>
-        </div>
-        <div class="card">
-          <div class="card-title" style="font-size:13px">Objetivo mais treinado</div>
-          <div style="font-size:16px;font-weight:700;color:var(--teal)">${d.topObjetivo}</div>
-        </div>
+        <div class="card"><div class="card-title" style="font-size:13px">Persona mais praticada</div><div style="font-size:22px;font-weight:700;color:var(--amber)">${d.topPersona}</div></div>
+        <div class="card"><div class="card-title" style="font-size:13px">Objetivo mais treinado</div><div style="font-size:16px;font-weight:700;color:var(--teal)">${d.topObjetivo}</div></div>
       </div>`;
   } catch(e) {
-    document.getElementById('overview-content').innerHTML = `<div class="empty">Erro ao carregar métricas: ${e.message}</div>`;
+    document.getElementById('overview-content').innerHTML = `<div class="empty">Erro: ${e.message}</div>`;
   }
 }
 
-// ── USERS ──
 async function loadUsers() {
   try {
-    const r = await fetch('/api/admin?action=users');
+    const r = await fetch('/api/admin?action=users', { headers: { 'x-admin-key': 'advisor-admin-2024' } });
     allUsers = await r.json();
     renderUsers(allUsers);
   } catch(e) {
@@ -275,11 +255,7 @@ function renderUsers(users) {
       <td style="font-weight:600;color:var(--t1)">${u.name}</td>
       <td><span class="chip ch-a">${u.nivel}</span></td>
       <td>${u.total_sessions}</td>
-      <td>
-        ${u.avg_score != null ? `
-          <span style="font-weight:600">${u.avg_score}</span>
-          <div class="score-bar"><div class="score-fill ${u.avg_score>=70?'':u.avg_score>=50?'mid':'low'}" style="width:${u.avg_score}%"></div></div>` : '—'}
-      </td>
+      <td>${u.avg_score != null ? `<span style="font-weight:600">${u.avg_score}</span><div class="score-bar"><div class="score-fill ${u.avg_score>=70?'':u.avg_score>=50?'mid':'low'}" style="width:${u.avg_score}%"></div></div>` : '—'}</td>
       <td>${u.xp?.toLocaleString('pt-BR') || 0}</td>
       <td>${u.streak || 0} 🔥</td>
       <td style="font-size:11px">${new Date(u.created_at).toLocaleDateString('pt-BR')}</td>
@@ -293,20 +269,16 @@ function filterUsers() {
 
 function exportUsers() {
   const headers = ['nome','nivel','sessoes','score_medio','xp','streak','cadastro'];
-  const rows = allUsers.map(u => [
-    u.name, u.nivel, u.total_sessions, u.avg_score ?? '', u.xp ?? 0, u.streak ?? 0,
-    new Date(u.created_at).toLocaleDateString('pt-BR')
-  ]);
+  const rows = allUsers.map(u => [u.name, u.nivel, u.total_sessions, u.avg_score ?? '', u.xp ?? 0, u.streak ?? 0, new Date(u.created_at).toLocaleDateString('pt-BR')]);
   downloadCSV([headers,...rows], 'advisor-ai-usuarios.csv');
 }
 
-// ── SESSIONS ──
 async function loadAllSessions() {
   currentFilterUserId = null;
   document.getElementById('sessions-title-text').textContent = 'Todas as sessões';
   document.getElementById('btn-all-sessions').style.display = 'none';
   try {
-    const r = await fetch('/api/admin?action=sessions');
+    const r = await fetch('/api/admin?action=sessions', { headers: { 'x-admin-key': 'advisor-admin-2024' } });
     allSessions = await r.json();
     renderSessions(allSessions, 'Todas as sessões');
   } catch(e) {
@@ -318,25 +290,21 @@ function filterByUser(userId, userName) {
   showTab('sessions', document.querySelectorAll('.tab')[2]);
   currentFilterUserId = userId;
   document.getElementById('btn-all-sessions').style.display = 'inline-flex';
-  const filtered = allSessions.filter(s => s.user_id === userId);
-  renderSessions(filtered, 'Sessões de ' + userName);
+  renderSessions(allSessions.filter(s => s.user_id === userId), 'Sessões de ' + userName);
 }
 
 function renderSessions(sessions, title) {
   document.getElementById('sessions-title-text').textContent = title;
   if (!sessions.length) { document.getElementById('sessions-tbody').innerHTML = '<tr><td colspan="9"><div class="empty">Nenhuma sessão encontrada.</div></td></tr>'; return; }
-
   const humorColor = { aberto:'ch-g', neutro:'ch-a', cetico:'ch-r' };
   document.getElementById('sessions-tbody').innerHTML = sessions.slice(0,200).map(s => `
     <tr>
-      <td style="font-size:11px;white-space:nowraw">${new Date(s.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
+      <td style="font-size:11px;white-space:nowrap">${new Date(s.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
       <td style="font-weight:500;color:var(--t1)">${s.profiles?.name || '—'}</td>
       <td>${s.persona || '—'}</td>
       <td style="font-size:11px;max-width:140px">${s.objetivo || '—'}</td>
       <td style="font-size:11px;max-width:120px">${s.cenario || '—'}</td>
-      <td>
-        ${s.score_geral != null ? `<span style="font-weight:700;color:${s.score_geral>=70?'var(--green)':s.score_geral>=50?'var(--amber)':'var(--red)'}">${s.score_geral}</span>` : '—'}
-      </td>
+      <td>${s.score_geral != null ? `<span style="font-weight:700;color:${s.score_geral>=70?'var(--green)':s.score_geral>=50?'var(--amber)':'var(--red)'}">${s.score_geral}</span>` : '—'}</td>
       <td>${s.score_tom != null ? `<span style="color:var(--teal);font-weight:600">🎤 ${s.score_tom}</span>` : '—'}</td>
       <td>${s.humor_final ? `<span class="chip ${humorColor[s.humor_final]||'ch-b'}">${s.humor_final}</span>` : '—'}</td>
       <td>${s.num_trocas ?? '—'}</td>
@@ -344,10 +312,8 @@ function renderSessions(sessions, title) {
 }
 
 async function exportSessions() {
-  const url = currentFilterUserId
-    ? `/api/admin?action=sessions&format=csv&userId=${currentFilterUserId}`
-    : '/api/admin?action=sessions&format=csv';
-  const r = await fetch(url);
+  const url = currentFilterUserId ? `/api/admin?action=sessions&format=csv&userId=${currentFilterUserId}` : '/api/admin?action=sessions&format=csv';
+  const r = await fetch(url, { headers: { 'x-admin-key': 'advisor-admin-2024' } });
   const blob = await r.blob();
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -355,7 +321,6 @@ async function exportSessions() {
   a.click();
 }
 
-// ── CSV util ──
 function downloadCSV(rows, filename) {
   const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
