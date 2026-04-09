@@ -65,6 +65,7 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
 .chip{font-size:10px;font-weight:600;padding:4px 9px;border-radius:20px}
 .ca{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
 .cg{background:var(--s2);border:1px solid var(--b1);color:var(--t3)}
+.cr{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);color:var(--red)}
 .ib{border-radius:var(--rsm);padding:12px 14px;margin-bottom:10px}
 .ib-war{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15)}
 .ib-eval{background:rgba(20,184,166,.06);border:1px solid rgba(20,184,166,.15)}
@@ -101,10 +102,28 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
 .send-btn:hover{opacity:.9}.send-btn:disabled{opacity:.4;cursor:default}
 .mic-btn{width:42px;height:42px;border-radius:12px;background:var(--s2);border:1px solid var(--b1);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;position:relative;transition:all .15s}
 .mic-btn.recording{background:rgba(239,68,68,.15);border-color:var(--red);animation:pulse-r 1s infinite}
-@keyframes pulse-r{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 6px rgba(239,68,68,0)}}
+@keyframes pulse-r{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 6px rgba(239,68,0)}}
 .rec-dot{width:8px;height:8px;border-radius:50%;background:var(--red);position:absolute;top:8px;right:8px;display:none;animation:blink-r .8s infinite}
 .mic-btn.recording .rec-dot{display:block}
 @keyframes blink-r{0%,100%{opacity:1}50%{opacity:.3}}
+/* Feedback */
+.fb-hero{text-align:center;padding:20px 0 16px;position:relative}
+.fb-score-big{font-size:64px;font-weight:800;line-height:1}
+.fb-faixa{font-size:13px;font-weight:700;margin-top:8px;padding:4px 14px;border-radius:20px;display:inline-block}
+.fb-veredito{font-size:13px;color:var(--t2);margin-top:10px;line-height:1.5;padding:0 12px}
+.comp-section{margin-bottom:16px}
+.comp-title{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.comp-item{margin-bottom:9px}
+.comp-header{display:flex;justify-content:space-between;margin-bottom:4px}
+.comp-name{font-size:11px;color:var(--t2)}.comp-score{font-size:11px;font-weight:700;color:var(--t1)}
+.comp-bar-bg{height:4px;background:var(--b1);border-radius:4px;overflow:hidden}
+.comp-fill{height:100%;border-radius:4px;transition:width .7s ease}
+.fill-g{background:linear-gradient(90deg,#065F46,var(--green))}
+.fill-a{background:linear-gradient(90deg,#92400E,var(--amber))}
+.fill-r{background:linear-gradient(90deg,#7F1D1D,var(--red))}
+.desfecho-box{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.2);border-radius:var(--rsm);padding:12px 14px;margin-bottom:10px}
+.desfecho-lbl{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.desfecho-txt{font-size:12px;color:var(--t2);line-height:1.55}
 .sc-grid{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .sc-card{flex:1;min-width:75px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rsm);padding:10px;text-align:center}
 .sc-n{font-size:22px;font-weight:800;color:var(--t1)}.sc-l{font-size:10px;color:var(--t3);margin-top:2px;line-height:1.3}
@@ -112,6 +131,7 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
 .fb-item{font-size:12px;color:var(--t2);padding:10px 13px;border-radius:var(--rsm);margin-bottom:6px;line-height:1.55;border-left:3px solid}
 .fb-g{background:rgba(16,185,129,.08);border-color:var(--green)}.fb-r{background:rgba(239,68,68,.08);border-color:var(--red)}
 .fb-b{background:rgba(59,130,246,.08);border-color:var(--blue)}.fb-a{background:rgba(245,158,11,.08);border-color:var(--amber)}
+.fb-y{background:rgba(139,92,246,.08);border-color:#8B5CF6}
 .fb-st{font-size:11px;font-weight:600;color:var(--t3);margin:12px 0 6px}
 .rb{border-radius:var(--rsm);padding:12px 14px;margin-bottom:14px;font-size:13px;font-weight:600}
 .rb-w{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--green)}
@@ -138,7 +158,7 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
 </head>
 <body>
 
-<!-- ── TELA: CARREGANDO ── -->
+<!-- ââ TELA: CARREGANDO ââ -->
 <div class="screen active" id="s-loading">
   <div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px">
     <div class="logo" style="font-size:28px">advisor <em>ai</em></div>
@@ -146,7 +166,7 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
   </div>
 </div>
 
-<!-- ── TELA: LOGIN ── -->
+<!-- ââ TELA: LOGIN ââ -->
 <div class="screen" id="s-login">
   <div class="auth-wrap">
     <div class="auth-logo">
@@ -156,119 +176,119 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
     <div class="form-group"><label class="form-label">E-mail</label>
       <input class="form-inp" type="email" id="l-email" placeholder="seu@email.com"></div>
     <div class="form-group"><label class="form-label">Senha</label>
-      <input class="form-inp" type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <input class="form-inp" type="password" id="l-pass" placeholder="â¢â¢â¢â¢â¢â¢â¢â¢" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div id="l-err" class="err-msg"></div>
     <button class="btn btn-a" style="margin-bottom:14px;margin-top:6px" onclick="doLogin()">Entrar</button>
-    <div style="text-align:center;font-size:13px;color:var(--t3)">Não tem conta? <button class="link-btn" onclick="go('signup')">Criar conta gratuita</button></div>
+    <div style="text-align:center;font-size:13px;color:var(--t3)">NÃ£o tem conta? <button class="link-btn" onclick="go('signup')">Criar conta gratuita</button></div>
   </div>
 </div>
 
-<!-- ── TELA: CADASTRO ── -->
+<!-- ââ TELA: CADASTRO ââ -->
 <div class="screen" id="s-signup">
   <div class="hdr-back" style="padding:52px 20px 0">
-    <button class="back-btn" onclick="go('login')">←</button>
+    <button class="back-btn" onclick="go('login')">â</button>
     <div class="hdr-title">Criar conta</div>
   </div>
   <div class="auth-wrap" style="padding-top:20px">
     <div class="form-group"><label class="form-label">Seu nome</label>
-      <input class="form-inp" type="text" id="s-name" placeholder="João Silva"></div>
+      <input class="form-inp" type="text" id="s-name" placeholder="JoÃ£o Silva"></div>
     <div class="form-group"><label class="form-label">E-mail</label>
       <input class="form-inp" type="email" id="s-email" placeholder="seu@email.com"></div>
-    <div class="form-group"><label class="form-label">Senha (mínimo 6 caracteres)</label>
-      <input class="form-inp" type="password" id="s-pass" placeholder="••••••••"></div>
-    <div class="form-group"><label class="form-label">Seu nível atual como assessor</label>
+    <div class="form-group"><label class="form-label">Senha (mÃ­nimo 6 caracteres)</label>
+      <input class="form-inp" type="password" id="s-pass" placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"></div>
+    <div class="form-group"><label class="form-label">Seu nÃ­vel atual como assessor</label>
       <select class="form-select" id="s-nivel">
-        <option value="Iniciante">Iniciante — menos de 1 ano</option>
-        <option value="Júnior">Júnior — 1 a 2 anos</option>
-        <option value="Pleno">Pleno — 2 a 4 anos</option>
-        <option value="Sênior">Sênior — 4+ anos</option>
+        <option value="Iniciante">Iniciante â menos de 1 ano</option>
+        <option value="IntermediÃ¡rio">IntermediÃ¡rio â 1 a 2 anos</option>
+        <option value="AvanÃ§ado">AvanÃ§ado â 2 a 4 anos</option>
+        <option value="SÃªnior">SÃªnior â 4+ anos</option>
       </select></div>
     <div id="s-err" class="err-msg"></div>
-    <button class="btn btn-a" onclick="doSignup()">Criar conta e começar</button>
+    <button class="btn btn-a" onclick="doSignup()">Criar conta e comeÃ§ar</button>
   </div>
 </div>
 
-<!-- ── TELA: DASHBOARD ── -->
+<!-- ââ TELA: DASHBOARD ââ -->
 <div class="screen" id="s-home">
   <div class="hdr">
     <div class="logo">advisor <em>ai</em></div>
     <div style="display:flex;align-items:center;gap:8px">
-      <div id="level-badge" style="background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--t2)">● Carregando...</div>
-      <button onclick="doLogout()" style="width:30px;height:30px;border-radius:50%;background:var(--s2);border:1px solid var(--b1);color:var(--t3);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center" title="Sair">↩</button>
+      <div id="level-badge" style="background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--t2)">â Carregando...</div>
+      <button onclick="doLogout()" style="width:30px;height:30px;border-radius:50%;background:var(--s2);border:1px solid var(--b1);color:var(--t3);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center" title="Sair">â©</button>
     </div>
   </div>
   <div class="scroll">
     <div class="streak-row">
-      <div class="sf">🔥</div>
+      <div class="sf">ð¥</div>
       <div><div class="sn" id="streak-num">0</div><div class="slbl">dias seguidos</div></div>
       <div class="xp-w">
-        <div class="xp-top"><span id="xp-level-lbl">Para próximo nível</span><span class="xp-v" id="xp-display">0 XP</span></div>
+        <div class="xp-top"><span>Para prÃ³ximo nÃ­vel</span><span class="xp-v" id="xp-display">0 XP</span></div>
         <div class="xp-bar"><div class="xp-fill" id="xp-bar" style="width:0%"></div></div>
       </div>
     </div>
     <div class="sl">Treino do dia</div>
     <div class="card-g" onclick="startGuided()">
-      <div class="badge ba">✦ Preparado pela IA</div>
+      <div class="badge ba">â¦ Preparado pela IA</div>
       <div style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:5px">Treino Guiado</div>
-      <div style="font-size:12px;color:var(--t3);line-height:1.5;margin-bottom:14px" id="guided-desc">A IA analisou seu histórico e preparou o desafio certo para você hoje.</div>
+      <div style="font-size:12px;color:var(--t3);line-height:1.5;margin-bottom:14px" id="guided-desc">A IA constrÃ³i um cliente Ãºnico e realista para o seu nÃ­vel e objetivo.</div>
       <div class="cp">
-        <div class="cp-av" id="gp-av" style="background:var(--amber);color:#07101E">C</div>
-        <div><div class="cp-name" id="gp-name">Carregando...</div><div class="cp-det" id="gp-det">—</div></div>
+        <div class="cp-av" id="gp-av" style="background:var(--amber);color:#07101E">â¦</div>
+        <div><div class="cp-name" id="gp-name">Carregando...</div><div class="cp-det" id="gp-det">â</div></div>
       </div>
-      <button class="btn btn-a">▶ Começar treino do dia</button>
+      <button class="btn btn-a">â¶ ComeÃ§ar treino do dia</button>
     </div>
     <div class="sl" style="margin-top:6px">Treino livre</div>
     <div class="card" style="cursor:pointer;transition:transform .15s" onclick="go('wizard')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-      <div class="badge bt">⚙ Configurar sessão</div>
+      <div class="badge bt">Ú Configurar sessÃ£o</div>
       <div style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:5px">Treino Livre</div>
-      <div style="font-size:12px;color:var(--t3);line-height:1.5;margin-bottom:14px">Você escolhe persona, cenário, objetivo e dificuldade.</div>
-      <button class="btn btn-o">Personalizar meu treino →</button>
+      <div style="font-size:12px;color:var(--t3);line-height:1.5;margin-bottom:14px">VocÃ  escolhe objetivo, perfil, cenÃ¡rio, dificuldade e estilo â a IA cria o cliente.</div>
+      <button class="btn btn-o">Personalizar meu treino â</button>
     </div>
-    <div class="sl" style="margin-top:6px">Última sessão</div>
-    <div id="last-session-card" class="card" style="font-size:12px;color:var(--t3)">Nenhuma sessão ainda. Comece agora!</div>
+    <div class="sl" style="margin-top:6px">Ãltima sessÃ£o</div>
+    <div id="last-session-card" class="card" style="font-size:12px;color:var(--t3)">Nenhuma sessÃ£o ainda. Comece agora!</div>
   </div>
   <nav class="bnav">
-    <div class="ni on"><div class="ni-icon">⌂</div><div class="ni-pip"></div><div class="ni-lbl">Início</div></div>
-    <div class="ni"><div class="ni-icon">📈</div><div class="ni-lbl">Histórico</div></div>
-    <div class="ni"><div class="ni-icon">🏆</div><div class="ni-lbl">Ranking</div></div>
-    <div class="ni"><div class="ni-icon">◎</div><div class="ni-lbl">Perfil</div></div>
+    <div class="ni on"><div class="ni-icon">â</div><div class="ni-pip"></div><div class="ni-lbl">InÃ­cio</div></div>
+    <div class="ni"><div class="ni-icon">ð</div><div class="ni-lbl">HistÃ³rico</div></div>
+    <div class="ni"><div class="ni-icon">ð</div><div class="ni-lbl">Ranking</div></div>
+    <div class="ni"><div class="ni-icon">â</div><div class="ni-lbl">Perfil</div></div>
   </nav>
 </div>
 
-<!-- ── TELA: WIZARD ── -->
+<!-- ââ TELA: WIZARD ââ -->
 <div class="screen" id="s-wizard">
   <div class="hdr-back">
-    <button class="back-btn" onclick="go('home')">←</button>
+    <button class="back-btn" onclick="go('home')">â</button>
     <div style="flex:1">
-      <div class="si-lbl" id="wiz-label">Passo 1 de 5</div>
+      <div class="si-lbl" id="wiz-label">Passo 1 de 8</div>
       <div class="si-dots" id="wiz-dots"></div>
     </div>
   </div>
   <div class="scroll" id="wiz-content"></div>
   <div class="wiz-foot">
-    <div class="sel-sum" id="sel-summary"><span style="font-size:11px;color:var(--t3);font-style:italic">Suas escolhas aparecerão aqui</span></div>
-    <button class="btn btn-a" id="wiz-next" onclick="wizNext()">Continuar →</button>
+    <div class="sel-sum" id="sel-summary"><span style="font-size:11px;color:var(--t3);font-style:italic">Suas escolhas aparecerÃ£o aqui</span></div>
+    <button class="btn btn-a" id="wiz-next" onclick="wizNext()">Continuar â</button>
   </div>
 </div>
 
-<!-- ── TELA: BRIEFING ── -->
+<!-- ââ TELA: BRIEFING ââ -->
 <div class="screen" id="s-brief">
   <div class="hdr-back">
-    <button class="back-btn" onclick="go('wizard')">←</button>
-    <div class="hdr-title">Sua sessão</div>
+    <button class="back-btn" onclick="go('wizard')">â</button>
+    <div class="hdr-title">Sua sessÃ£o</div>
   </div>
   <div class="scroll" id="brief-content"></div>
   <div style="padding:14px 16px;flex-shrink:0">
-    <button class="btn btn-a" onclick="startSession()">▶ Começar — você abre primeiro</button>
+    <button class="btn btn-a" onclick="startSession()">â¶ ComeÃ§ar â vocÃ© abre primeiro</button>
   </div>
 </div>
 
-<!-- ── TELA: CHAT ── -->
+<!-- ââ TELA: CHAT ââ -->
 <div class="screen" id="s-chat">
   <div class="chat-hdr">
-    <div class="ch-av" id="chat-avatar">C</div>
-    <div><div class="ch-name" id="chat-pname">—</div><div class="ch-sub" id="chat-psub">—</div></div>
-    <div class="mood-tag mc" id="mood-tag">Cético</div>
+    <div class="ch-av" id="chat-avatar">?</div>
+    <div><div class="ch-name" id="chat-pname">â</div><div class="ch-sub" id="chat-psub">â</div></div>
+    <div class="mood-tag mn" id="mood-tag">Neutro</div>
     <button class="end-s" onclick="endSession()">Encerrar</button>
   </div>
   <div class="trans-bar" id="trans-bar">
@@ -277,7 +297,7 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
   </div>
   <div class="msgs" id="messages"></div>
   <div class="chat-inp-area">
-    <button class="mic-btn" id="mic-btn" onclick="toggleAudio()">🎤<div class="rec-dot"></div></button>
+    <button class="mic-btn" id="mic-btn" onclick="toggleAudio()">ð¤<div class="rec-dot"></div></button>
     <textarea class="chat-inp" id="chat-input" placeholder="Responda como assessor..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
     <button class="send-btn" id="send-btn" onclick="sendMsg()">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="#07101E"><path d="M1.5 1.5l13 6.5-13 6.5V9.5l9-1.5-9-1.5V1.5z"/></svg>
@@ -285,11 +305,11 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
   </div>
 </div>
 
-<!-- ── TELA: FEEDBACK ── -->
+<!-- ââ TELA: FEEDBACK ââ -->
 <div class="screen" id="s-feedback">
   <div class="hdr-back">
-    <button class="back-btn" onclick="go('home')">←</button>
-    <div class="hdr-title">Análise da sessão</div>
+    <button class="back-btn" onclick="go('home')">â</button>
+    <div class="hdr-title">AnÃ¡lise da sessÃ£o</div>
   </div>
   <div class="scroll" id="feedback-content"></div>
 </div>
@@ -298,29 +318,9 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
 <div class="err-toast" id="err-toast"></div>
 
 <script>
-// ── CONFIGURAÇÃO — preencha com seus dados do Supabase ──
+// ââ CONFIG ââ
 const SUPABASE_URL = 'https://falogskpwaslzlskljib.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhbG9nc2twd2FzbHpsc2tsamliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODk2ODIsImV4cCI6MjA5MDM2NTY4Mn0.LArX4_Ad9IV5dL_cZ5yYohJWyB6WMH_xTlc9v29aAmM';
-
-// ── DADOS FIXOS ──
-const MARKET = 'Selic 14,75% a.a. CDI ~14,65%. CDB banco grande: ~92-95% CDI com IR regressivo. LCI/LCA isentas: 90-95% CDI sem IR. Guerra EUA-Irã: petróleo acima US$100, Ibovespa volátil, dólar R$5,25. IPCA-15 março: +0,44%. Selic em queda — primeiro corte do ciclo.';
-
-const PERSONAS = {
-  carlos:{name:'Carlos Mendonça',initial:'C',meta:'38a · Gerente · R$150k no Bradesco ~93% CDI',profile:'Conservador de banco',color:'#F59E0B',tc:'#07101E',
-    prompt:`Você é Carlos Mendonça, 38 anos, gerente comercial, R$150k no Bradesco (~93% CDI). Veio por indicação de um colega. REGRA IMPORTANTE: espere o assessor se apresentar antes de qualquer resposta. Depois: frases curtas, hesita, usa "né". Objeções: "E se eu perder?", "No banco é seguro". Máx 3 frases. Nunca revele que é IA. MERCADO HOJE: ${MARKET}`},
-  felipe:{name:'Felipe Andrade',initial:'F',meta:'34a · Engenheiro · R$250k · CDB 105% CDI',profile:'Comparador analítico',color:'#3B82F6',tc:'#fff',
-    prompt:`Você é Felipe Andrade, 34 anos, engenheiro, R$250k comparando assessores. REGRA IMPORTANTE: espere o assessor se apresentar. Depois: frio, analítico, quer número. "Qual vantagem de você?", "Me mostra números". Máx 2 frases. Nunca revele que é IA. MERCADO HOJE: ${MARKET}`},
-  marcelo:{name:'Marcelo Ribeiro',initial:'M',meta:'45a · Empresário · R$600k · Desconfiado',profile:'Cético de assessor',color:'#8B5CF6',tc:'#fff',
-    prompt:`Você é Marcelo Ribeiro, 45 anos, empresário, R$600k. Último assessor sumiu. REGRA IMPORTANTE: espere o assessor se apresentar. Depois: cético, pergunta sobre comissão. "Assessor só quer comissão", "Quanto você ganha nisso?". Máx 3 frases. Nunca revele que é IA. MERCADO HOJE: ${MARKET}`},
-  roberto:{name:'Roberto Alves',initial:'R',meta:'52a · Médico · R$1,3M · Ultra conservador',profile:'Ultra conservador',color:'#10B981',tc:'#fff',
-    prompt:`Você é Roberto Alves, 52 anos, médico, R$1,3M. Perdeu 30% em 2020 — trauma real. REGRA IMPORTANTE: espere o assessor se apresentar. Qualquer menção a renda variável = fecha. "Tem FGC?", "Não quero perder nada". Máx 3 frases. Nunca revele que é IA. MERCADO HOJE: ${MARKET}`},
-  eduardo:{name:'Eduardo Costa',initial:'E',meta:'31a · Advogado · R$120k · Quer aprender',profile:'Quer entender',color:'#14B8A6',tc:'#fff',
-    prompt:`Você é Eduardo Costa, 31 anos, advogado, R$120k na poupança. REGRA IMPORTANTE: espere o assessor se apresentar. Depois: curioso, faz uma pergunta por vez. "Me explica como funciona", "Qual o risco?". Máx 3 frases. Nunca revele que é IA. MERCADO HOJE: ${MARKET}`},
-  adriano:{name:'Adriano Mendes',initial:'A',meta:'41a · Empresário · R$700k · Sem tempo',profile:'Delegador impaciente',color:'#F59E0B',tc:'#07101E',
-    prompt:`Você é Adriano Mendes, 41 anos, empresário, R$700k. Sem paciência. REGRA IMPORTANTE: deixe o assessor se apresentar brevemente — depois corte: sem tempo, impaciente. "Não tenho tempo", "Só me fala o que fazer". Máx 2 frases. Nunca revele que é IA. MERCADO HOJE: ${MARKET}`}
-};
-
-const PMAP = {conservador:['carlos','roberto'],'foca-taxa':['felipe'],'alta-renda':['roberto','adriano'],indicado:['carlos','eduardo'],'dinheiro-parado':['carlos'],insatisfeito:['marcelo'],desorganizado:['adriano'],iniciante:['eduardo'],pj:['adriano','marcelo'],surpresa:null};
 
 const LEVELS = [
   {title:'Assessor Trainee',xpMax:500},{title:'Assessor Bronze',xpMax:1000},
@@ -329,37 +329,101 @@ const LEVELS = [
 ];
 
 const STEPS = [
-  {q:'Qual é seu nível?',sub:'Calibra a paciência da persona e o tom do feedback.',key:'nivel',opts:[{l:'Iniciante'},{l:'Júnior'},{l:'Pleno'},{l:'Sênior'}]},
-  {q:'O que você quer treinar?',sub:'O avaliador vai focar nessa habilidade.',key:'objetivo',opts:[{l:'Melhorar abertura'},{l:'Melhorar diagnóstico'},{l:'Melhorar condução da conversa'},{l:'Lidar com objeções'},{l:'Ganhar segurança'},{l:'Treinar fechamento com próximo passo'}]},
-  {q:'Qual dificuldade?',sub:'Calibra a intensidade da persona.',key:'dificuldade',opts:[{l:'Leve'},{l:'Médio'},{l:'Alto'}]},
-  {q:'Que tipo de cliente?',sub:'A IA seleciona a persona mais adequada.',key:'perfil',opts:[{l:'Cliente conservador',v:'conservador'},{l:'Foca em taxa',v:'foca-taxa'},{l:'Alta renda',v:'alta-renda'},{l:'Indicado por alguém',v:'indicado'},{l:'Dinheiro parado',v:'dinheiro-parado'},{l:'Insatisfeito com banco/assessor',v:'insatisfeito'},{l:'Já investe mas desorganizado',v:'desorganizado'},{l:'Iniciante sem conhecimento',v:'iniciante'},{l:'Cliente PJ',v:'pj'},{l:'✦ Surpresa da IA',v:'surpresa',s:true}]},
-  {q:'Qual o cenário?',sub:'Contexto e ponto de partida.',key:'cenario',opts:[{l:'Primeiro contato'},{l:'Reunião de diagnóstico'},{l:'Retorno após indicação'},{l:'Cliente comparando assessores'},{l:'Cliente resistente a mudar'},{l:'Cliente com medo de risco'},{l:'Cliente sem tempo'},{l:'Apresentar fee fixo'},{l:'Financial planning'},{l:'Proteção patrimonial'},{l:'✦ Cenário surpresa',s:true}]}
+  {q:'Qual Ã© seu nÃ­vel?',sub:'Calibra a exigÃªncia do cliente e o tom do feedback.',key:'nivel',
+   opts:[{l:'Iniciante'},{l:'IntermediÃ¡rio'},{l:'AvanÃ§ado'},{l:'SÃªnior'},{l:'LÃ­der comercial'}]},
+  {q:'Objetivo da reuniÃ£o?',sub:'O avaliador vai focar nessa competÃªncia.',key:'objetivo',
+   opts:[{l:'Primeira reuniÃ£o'},{l:'DiagnÃ³stico patrimonial'},{l:'Acompanhamento de carteira'},
+         {l:'CaptaÃ§Ã£o de recursos'},{l:'RetenÃ§Ã£o de cliente'},{l:'RealocaÃ§Ã£o de carteira'},
+         {l:'Venda de seguro'},{l:'Venda de consÃ³rcio'},{l:'SucessÃ£o patrimonial'},
+         {l:'ProteÃ§Ã£o familiar'},{l:'Planejamento de liquidez'},{l:'ReuniÃ£o pÃ³s-perda'},
+         {l:'ExplicaÃ§Ã£o de cenÃ¡rio macro'},{l:'ReativaÃ§Ã£o de cliente'},
+         {l:'ConcentraÃ§Ã£o de patrimÃ´nio'},{l:'Financial Planning'}]},
+  {q:'Perfil do cliente?',sub:'A IA constrÃ³i um personagem completo e Ãºnico.',key:'perfil',
+   opts:[{l:'Conservador tradicional'},{l:'Moderado inseguro'},{l:'Agressivo impaciente'},
+         {l:'Alta renda exigente'},{l:'Ultra high net worth'},{l:'Extremamente racional'},
+         {l:'Focado apenas em taxa'},{l:'Traumatizado por perdas'},{l:'Desconfiado de assessor'},
+         {l:'Leigo e ansioso'},{l:'Experiente e questionador'},{l:'EmpresÃ¡rio pragmÃ¡tico'},
+         {l:'MÃ©dico sem tempo'},{l:'Aposentado focado em renda'},{l:'Jovem acumulador'},
+         {l:'Patrimonialista'},{l:'Familiar focado em proteÃ§Ã£o'},{l:'PatrimÃ´nio concentrado'},
+         {l:'Compara com banco/private'},{l:'NÃ£o quer ser vendido'},
+         {l:'â¦ Surpresa da IA',v:'surpresa',s:true}]},
+  {q:'CenÃ¡rio econÃ´mico?',sub:'Afeta as preocupaÃ§Ãµes e objeÃ§Ãµes do cliente.',key:'cenario',
+   opts:[{l:'Juros altos e inflaÃ§Ã£o persistente'},{l:'Queda de juros'},{l:'Crise fiscal domÃ©stica'},
+         {l:'Bolsa em forte queda'},{l:'Bolsa em euforia'},{l:'CrÃ©dito privado em estresse'},
+         {l:'DÃ³lar em alta'},{l:'Incerteza polÃ­tica'},{l:'RecessÃ£o com inadimplÃªncia'},
+         {l:'RecuperaÃ§Ã£o gradual'},{l:'CenÃ¡rio externo adverso'},{l:'Ambiente neutro'},
+         {l:'â¦ Escolher automaticamente',v:'auto',s:true}]},
+  {q:'Grau de dificuldade?',sub:'Calibra a intensidade e resistÃªncia do cliente.',key:'dificuldade',
+   opts:[{l:'FÃ¡cil'},{l:'MÃ©dio'},{l:'Alto'},{l:'Premium'},{l:'Elite'}]},
+  {q:'Estilo comportamental?',sub:'Personalidade dominante do cliente na reuniÃ£o.',key:'estilo',
+   opts:[{l:'Cordial e aberto'},{l:'Cauteloso'},{l:'Frio e objetivo'},{l:'Defensivo'},
+         {l:'Silencioso'},{l:'Prolixo'},{l:'Provocador'},{l:'Resistente'},
+         {l:'Educado e desconfiado'},{l:'Emocionalmente abalado'},{l:'Apressado'},
+         {l:'Intelectualmente dominante'},{l:'â¦ CompatÃ­vel com o perfil',v:'auto',s:true}]},
+  {q:'DuraÃ§Ã£o da sessÃ£o?',sub:'Determina o ritmo e o nÃºmero de trocas esperadas.',key:'duracao',
+   opts:[{l:'Curta â 5 a 8 trocas',v:'Curta'},{l:'MÃ©dia â 10 a 14 trocas',v:'MÃ©dia'},{l:'Longa â 15+ trocas',v:'Longa'}]},
+  {q:'Modo especial?',sub:'Ativa comportamentos especÃ­ficos de treinamento avanÃ§ado.',key:'modo',
+   opts:[{l:'Normal'},{l:'Cliente difÃ­cil'},{l:'Cliente silencioso'},{l:'Cliente obcecado por taxa'},
+         {l:'Cliente insatisfeito'},{l:'Cliente que compara com concorrÃªncia'},
+         {l:'Cliente que pressiona por produto'},{l:'Cliente que quer rapidez'},
+         {l:'Cliente que evita responder'},{l:'Cliente altamente sofisticado'},
+         {l:'Banca examinadora comercial'}]}
 ];
 
-const AVAL_MAP = {
-  'Melhorar abertura':'Como você se apresentou e criou interesse sem pressionar.',
-  'Melhorar diagnóstico':'Quantas perguntas fez antes de falar em produto.',
-  'Melhorar condução da conversa':'Se manteve o controle e soube redirecionar.',
-  'Lidar com objeções':'Como respondeu cada objeção — validou antes de rebater? Usou dados reais?',
-  'Ganhar segurança':'Postura geral e firmeza. Feedback encorajador.',
-  'Treinar fechamento com próximo passo':'Se propôs ação concreta e definiu próximo passo.'
+const COMP_NAMES = {
+  rapport:'Abertura e rapport',
+  descoberta:'Descoberta de necessidades',
+  escuta:'Escuta ativa',
+  leitura:'Leitura emocional',
+  clareza:'Clareza e didÃ¡tica',
+  postura:'Postura consultiva',
+  objecoes:'Tratamento de objeÃ§Ãµes',
+  adequacao:'AdequaÃ§Ã£o da soluÃ§Ã£o',
+  confianca:'GeraÃ§Ã£o de confianÃ§a',
+  fechamento:'Fechamento e prÃ³ximo passo'
 };
 
-// ── ESTADO GLOBAL ──
+const COMP_ORDER = ['rapport','descoberta','escuta','leitura','clareza','postura','objecoes','adequacao','confianca','fechamento'];
+
+const OBJECTIVE_WEIGHTS = {
+  'Primeira reuniÃ£o':          {rapport:15,descoberta:20,escuta:10,leitura:10,clareza:10,postura:15,objecoes:5,adequacao:5,confianca:5,fechamento:5},
+  'RetenÃ§Ã£o de cliente':       {rapport:10,descoberta:10,escuta:15,leitura:15,clareza:5,postura:15,objecoes:10,adequacao:5,confianca:10,fechamento:5},
+  'Acompanhamento de carteira':{rapport:5,descoberta:10,escuta:10,leitura:5,clareza:15,postura:10,objecoes:10,adequacao:20,confianca:5,fechamento:10},
+  'Venda de seguro':           {rapport:10,descoberta:15,escuta:10,leitura:10,clareza:10,postura:15,objecoes:10,adequacao:15,confianca:3,fechamento:2},
+  'Venda de consÃ³rcio':        {rapport:8,descoberta:18,escuta:10,leitura:8,clareza:12,postura:15,objecoes:10,adequacao:15,confianca:2,fechamento:2},
+  'CaptaÃ§Ã£o de recursos':      {rapport:12,descoberta:18,escuta:8,leitura:8,clareza:10,postura:15,objecoes:10,adequacao:8,confianca:5,fechamento:6},
+  'ReuniÃ£o pÃ³s-perda':         {rapport:8,descoberta:10,escuta:15,leitura:20,clareza:8,postura:15,objecoes:8,adequacao:6,confianca:5,fechamento:5},
+  '_default':                  {rapport:10,descoberta:15,escuta:10,leitura:10,clareza:10,postura:15,objecoes:10,adequacao:10,confianca:5,fechamento:5}
+};
+
+const AVATAK_COLORS = ['#F59E0B','#3B82F6','#8B5CF6','#10B981','#14B8A6','#EF4444','#F97316'];
+
+const MARKET_CTX = {
+  'Juros altos e inflaÃ§Ã£o persistente':'Selic elevada. Cliente foca em liquidez, pÃ³s-fixados e seguranÃ§a. InflaÃ§Ã£o corrÃ³i renda real.',
+  'Queda de juros':'Ciclo de queda da Selic. Debate sobre alongamento, diversificaÃ§Ã£o e renda variÃ¡vel.',
+  'Crise fiscal domÃ©stica':'DeterioraÃ§Ã£o das contas pÃºblicas. PrÃªmio de risco alto. Cliente avesso a risco local.',
+  'Bolsa em forte queda':'Ibovespa em queda. Cliente defensivo, focado em preservar patrimÃ´nio.',
+  'Bolsa em euforia':'Ibovespa em alta. Risco de FOMO e excesso de confianÃ§a.',
+  'CrÃ©dito privado em estresse':'Spreads abrindo, fundos de crÃ©dito marcados. Cliente questiona emissores.',
+  'DÃ³lar em alta':'Real depreciado. Debate sobre proteÃ§Ã£o cambial e ativos dolarizados.',
+  'Incerteza polÃ­tica':'RuÃ­do polÃ­tico intenso. Cliente paralisado ou com visÃ£o extremada.',
+  'RecessÃ£o com inadimplÃªncia':'PIB negativo, crÃ©dito apertando. Foco em caixa e solvÃªncia.',
+  'RecuperaÃ§Ã£o gradual':'Melhora suave. Oportunidade de revisÃ£o estratÃ©gica.',
+  'CenÃ¡rio externo adverso':'PressÃ£o global: Fed hawkish, commodities volÃ¡teis. Mercados cautelosos.',
+  'Ambiente neutro':'CenÃ¡rio estÃ¡vel. Foco na lÃ³gica do portfÃ³lio.',
+  'auto':'CenÃ¡rio atual de mercado â a IA incorpora o contexto conforme o perfil do cliente.'
+};
+
+// ââ ESTADO GLOBAL ââ
 let sb = null;
 let userProfile = null;
-let userXP = 0; // controle local de XP evita leitura do DOM
-const W = {nivel:null,objetivo:null,dificuldade:null,perfil:null,cenario:null};
+let userXP = 0;
+const W = {nivel:null,objetivo:null,perfil:null,cenario:null,dificuldade:null,estilo:null,duracao:null,modo:null};
 let wizStep = 0;
-const SE = {persona:null,history:[],objetivo:null,mode:null,active:false,hasAudio:false,audioCount:0,lastAudio:false};
+const SE = {persona:null,history:[],objetivo:null,mode:null,active:false,hasAudio:false,audioCount:0,lastAudio:false,guidedObj:null,guidedDiff:null};
 
-// ── INICIALIZAÇÃO ──
+// ââ INICIALIZAÃÃO ââ
 async function init() {
-  if (SUPABASE_URL === 'PREENCHA_AQUI') {
-    document.getElementById('s-loading').innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:32px;text-align:center"><div class="logo" style="font-size:28px">advisor <em>ai</em></div><div style="color:var(--amber);font-size:15px;font-weight:700">⚙ Configure o Supabase</div><div style="color:var(--t2);font-size:13px;line-height:1.6;max-width:320px">Abra o index.html e preencha SUPABASE_URL e SUPABASE_ANON_KEY no início do script. Veja o arquivo SETUP.md.</div></div>`;
-    document.getElementById('s-loading').classList.add('active');
-    return;
-  }
   sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   try {
     const { data: { session } } = await sb.auth.getSession();
@@ -369,7 +433,7 @@ async function init() {
   sb.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') { userProfile = null; go('login'); }});
 }
 
-// ── AUTH ──
+// ââ AUTH ââ
 async function doLogin() {
   const email = document.getElementById('l-email').value.trim();
   const pass = document.getElementById('l-pass').value;
@@ -390,7 +454,7 @@ async function doSignup() {
   const nivel = document.getElementById('s-nivel').value;
   document.getElementById('s-err').textContent = '';
   if (!name || !email || !pass) { document.getElementById('s-err').textContent = 'Preencha todos os campos.'; return; }
-  if (pass.length < 6) { document.getElementById('s-err').textContent = 'Senha deve ter mínimo 6 caracteres.'; return; }
+  if (pass.length < 6) { document.getElementById('s-err').textContent = 'Senha deve ter mÃ­nimo 6 caracteres.'; return; }
   showLoad('Criando conta...');
   const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { name, nivel } } });
   hideLoad();
@@ -398,7 +462,7 @@ async function doSignup() {
   userProfile = { id: data.user.id, name, nivel, xp: 0, xp_max: 500, streak: 0, level_title: 'Assessor Trainee' };
   userXP = 0;
   updateHomeUI();
-  buildGuidedPreview([]);
+  buildGuidedPreview();
   go('home');
 }
 
@@ -411,7 +475,7 @@ async function loadProfile(userId) {
   } catch(e) { console.warn('Erro ao carregar perfil:', e.message); }
 }
 
-// ── HOME UI ──
+// ââ HOME UI ââ
 function getLevel(xp) {
   for (const l of LEVELS) { if (xp < l.xpMax) return l; }
   return LEVELS[LEVELS.length - 1];
@@ -420,157 +484,293 @@ function getLevel(xp) {
 function updateHomeUI() {
   if (!userProfile) return;
   const lvl = getLevel(userXP);
-  document.getElementById('level-badge').textContent = `● ${lvl.title}`;
+  document.getElementById('level-badge').textContent = `â ${lvl.title}`;
   document.getElementById('streak-num').textContent = userProfile.streak || 0;
   document.getElementById('xp-display').textContent = `${userXP.toLocaleString('pt-BR')} / ${lvl.xpMax.toLocaleString('pt-BR')} XP`;
   document.getElementById('xp-bar').style.width = Math.min((userXP / lvl.xpMax) * 100, 100) + '%';
 }
 
-async function buildGuidedPreview(cachedSessions) {
-  let sessions = cachedSessions;
-  if (!sessions && sb && userProfile) {
-    const { data } = await sb.from('sessions').select('persona,objetivo,score_objetivo,score_mercado,score_escuta').eq('user_id', userProfile.id).order('created_at', {ascending:false}).limit(10);
-    sessions = data || [];
-    if (sessions.length > 0) renderLastSession(sessions[0]);
-  }
+async function buildGuidedPreview() {
+  if (!sb || !userProfile) return;
+  const { data: sessions } = await sb.from('sessions')
+    .select('objetivo,score_geral,persona,humor_final')
+    .eq('user_id', userProfile.id)
+    .order('created_at', {ascending:false})
+    .limit(10);
+
   const nivel = userProfile?.nivel || 'Iniciante';
-  let obj = 'Lidar com objeções', pKey = 'carlos';
+  let obj = 'Primeira reuniÃ£o';
+
   if (sessions && sessions.length >= 3) {
-    const dims = ['score_objetivo','score_mercado','score_escuta'];
-    const worst = dims.map(d => ({d, v: sessions.reduce((a,s)=>a+(s[d]||0),0)/sessions.length})).sort((a,b)=>a.v-b.v)[0];
-    const dmap = {score_objetivo:'Lidar com objeções',score_mercado:'Melhorar diagnóstico',score_escuta:'Melhorar condução da conversa'};
-    obj = dmap[worst.d];
-    const freq = {}; sessions.forEach(s=>s.persona&&(freq[s.persona]=(freq[s.persona]||0)+1));
-    const used = Object.entries(freq).sort((a,b)=>b[1]-a[1]).map(e=>e[0]);
-    pKey = Object.keys(PERSONAS).find(k=>!used.includes(PERSONAS[k].name)) || Object.keys(PERSONAS)[0];
+    const objScores = {};
+    sessions.forEach(s => {
+      if (!objScores[s.objetivo]) objScores[s.objetivo] = {total:0,count:0};
+      objScores[s.objetivo].total += s.score_geral || 0;
+      objScores[s.objetivo].count++;
+    });
+    const worst = Object.entries(objScores)
+      .map(([o,d]) => ({o, avg: d.total/d.count}))
+      .sort((a,b) => a.avg - b.avg)[0];
+    if (worst) obj = worst.o;
+    renderLastSession(sessions[0]);
   }
-  SE.guidedKey = pKey; SE.guidedObj = obj;
-  SE.guidedDiff = nivel==='Sênior'?'Alto':nivel==='Pleno'?'Médio':'Leve';
-  const p = PERSONAS[pKey];
-  document.getElementById('gp-av').textContent = p.initial;
-  document.getElementById('gp-av').style.background = p.color;
-  document.getElementById('gp-av').style.color = p.tc;
-  document.getElementById('gp-name').textContent = `${p.name} · ${SE.guidedDiff}`;
-  document.getElementById('gp-det').textContent = `Foco: ${obj} · ⚡ Contexto real do dia`;
+
+  SE.guidedObj = obj;
+  SE.guidedDiff = nivel==='SÃªnior'||nivel==='LÃ­der comercial' ? 'Alto' : nivel==='AvanÃ§ado' ? 'MÃ©dio' : 'FÃ¡cil';
+
+  document.getElementById('gp-av').textContent = 'â¦';
+  document.getElementById('gp-av').style.background = '#F59E0B';
+  document.getElementById('gp-av').style.color = '#07101E';
+  document.getElementById('gp-name').textContent = `Cliente IA Â· ${SE.guidedDiff}`;
+  document.getElementById('gp-det').textContent = `Foco: ${obj} Â· â¡ Gerado exclusivamente para vocÃª`;
   document.getElementById('guided-desc').textContent = sessions && sessions.length >= 3
-    ? `Análise das últimas ${sessions.length} sessões: seu ponto a melhorar é "${obj}".`
-    : 'Complete algumas sessões para a IA personalizar seu treino automaticamente.';
+    ? `AnÃ¡lise das Ãºltimas ${sessions.length} sessÃµes: prioridade em "${obj}".`
+    : 'A IA criarÃ¡ um cliente Ãºnico e realista, adaptado ao seu nÃ­vel e objetivo.';
 }
 
 function renderLastSession(s) {
-  const pKey = Object.keys(PERSONAS).find(k => PERSONAS[k].name === s.persona);
-  const p = pKey ? PERSONAS[pKey] : null;
-  const avgScore = Math.round(((s.score_objetivo||0)+(s.score_mercado||0)+(s.score_escuta||0))/3);
+  if (!s) return;
   document.getElementById('last-session-card').innerHTML = `
     <div style="display:flex;align-items:center;gap:10px">
-      <div style="width:36px;height:36px;border-radius:50%;background:${p?.color||'#1E3A5F'};color:${p?.tc||'#fff'};font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${p?.initial||'?'}</div>
-      <div style="flex:1"><div style="font-size:12px;font-weight:600;color:#CBD5E1">${s.persona||'—'} · ${s.objetivo||'—'}</div><div style="font-size:10px;color:var(--t3)">Sessão recente</div></div>
-      <div style="text-align:right"><div style="font-size:18px;font-weight:800;color:var(--green)">${avgScore||'—'}</div></div>
+      <div style="width:36px;height:36px;border-radius:50%;background:#1E3A5F;color:#93C5FD;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">â</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600;color:#CBD5E1">${s.persona||'Cliente IA'} Â· ${s.objetivo||'â'}</div>
+        <div style="font-size:10px;color:var(--t3)">SessÃ£o mais recente</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:18px;font-weight:800;color:var(--green)">${s.score_geral||'â'}</div>
+        <div style="font-size:9px;color:var(--t3)">score</div>
+      </div>
     </div>`;
 }
 
-// ── MODO GUIADO ──
-function startGuided() {
+// ââ MODO GUIADO ââ
+async function startGuided() {
   SE.mode = 'guided';
-  SE.persona = PERSONAS[SE.guidedKey || 'carlos'];
-  SE.objetivo = SE.guidedObj || 'Lidar com objeções';
-  W.nivel = userProfile?.nivel || 'Pleno'; W.objetivo = SE.objetivo;
-  W.dificuldade = SE.guidedDiff || 'Médio'; W.perfil = 'conservador'; W.cenario = 'Primeiro contato';
-  renderBriefing(); go('brief');
+  W.nivel = userProfile?.nivel || 'IntermediÃ¡rio';
+  W.objetivo = SE.guidedObj || 'Primeira reuniÃ£o';
+  W.perfil = 'Conservador tradicional';
+  W.cenario = 'Ambiente neutro';
+  W.dificuldade = SE.guidedDiff || 'MÃ©dio';
+  W.estilo = 'auto';
+  W.duracao = 'MÃ©dia';
+  W.modo = 'Normal';
+  showLoad('Preparando treino do dia...');
+  try {
+    SE.persona = await generatePersona();
+    hideLoad();
+    renderBriefing();
+    go('brief');
+  } catch(e) {
+    hideLoad();
+    showErr('Erro ao gerar treino. Tente novamente.');
+  }
 }
 
-// ── WIZARD ──
+// ââ WIZARD ââ
 function renderWizStep() {
   const step = STEPS[wizStep];
   document.getElementById('wiz-dots').innerHTML = STEPS.map((_,i)=>`<div class="si-d ${i<wizStep?'done':i===wizStep?'now':''}"></div>`).join('');
   document.getElementById('wiz-label').textContent = `Passo ${wizStep+1} de ${STEPS.length}`;
+  const curVal = W[step.key];
   document.getElementById('wiz-content').innerHTML = `
-    <div class="wiz-q">${step.q}</div><div class="wiz-sub">${step.sub}</div>
-    <div class="opt-list">${step.opts.map(o=>`
-      <div class="opt ${W[step.key]===(o.v||o.l)?'sel':''} ${o.s?'surprise':''}" onclick="selOpt(this,'${(o.v||o.l).replace(/'/g,"\\'")}','${step.key}')">
-        <div class="opt-r"><div class="rc">✓</div></div>
-        <span class="opt-txt">${o.l}</span>
-      </div>`).join('')}
+    <div style="padding:16px 0 0">
+      <div class="wiz-q">${step.q}</div>
+      <div class="wiz-sub">${step.sub}</div>
+      <div class="opt-list">${step.opts.map(o => {
+        const v = o.v || o.l;
+        const sel = curVal === v ? 'sel' : '';
+        const surprise = o.s ? 'surprise' : '';
+        const esc = v.replace(/'/g,"\\'");
+        return `<div class="opt ${sel} ${surprise}" onclick="selOpt(this,'${esc}','${step.key}')">
+          <div class="opt-r"><div class="rc">â</div></div>
+          <span class="opt-txt">${o.l}</span>
+        </div>`;
+      }).join('')}</div>
     </div>`;
   updateSum();
-  document.getElementById('wiz-next').textContent = wizStep < STEPS.length-1 ? 'Continuar →' : 'Ver minha sessão →';
+  document.getElementById('wiz-next').textContent = wizStep < STEPS.length-1 ? 'Continuar â' : 'Gerar cliente â';
 }
 
 function selOpt(el, v, k) {
   W[k] = v;
-  document.querySelectorAll(`#wiz-content .opt`).forEach(o => o.classList.remove('sel'));
+  document.querySelectorAll('#wiz-content .opt').forEach(o => o.classList.remove('sel'));
   el.classList.add('sel');
   updateSum();
 }
 
-function wizNext() {
-  if (!W[STEPS[wizStep].key]) { showErr('Selecione uma opção para continuar.'); return; }
+async function wizNext() {
+  if (!W[STEPS[wizStep].key]) { showErr('Selecione uma opÃ§Ã£o para continuar.'); return; }
   if (wizStep < STEPS.length-1) { wizStep++; renderWizStep(); return; }
-  const p = W.perfil; let cands = PMAP[p];
-  if (!cands || p === 'surpresa') { const all = Object.keys(PERSONAS); cands = [all[Math.floor(Math.random()*all.length)]]; }
-  SE.persona = PERSONAS[cands[Math.floor(Math.random()*cands.length)]];
-  SE.objetivo = W.objetivo; SE.mode = 'free';
-  renderBriefing(); go('brief');
+  // Ãltimo passo â gerar persona
+  SE.mode = 'free';
+  showLoad('Gerando seu cliente...');
+  try {
+    SE.persona = await generatePersona();
+    hideLoad();
+    renderBriefing();
+    go('brief');
+  } catch(e) {
+    hideLoad();
+    showErr('Erro ao gerar cliente. Tente novamente.');
+    console.error(e);
+  }
 }
 
 function updateSum() {
-  const chips = Object.entries(W).filter(([,v])=>v).map(([,v])=>`<span class="chip ca">${v}</span>`).join('');
-  document.getElementById('sel-summary').innerHTML = chips || '<span style="font-size:11px;color:var(--t3);font-style:italic">Suas escolhas aparecerão aqui</span>';
+  const labels = {nivel:'NÃ­vel',objetivo:'Obj',perfil:'Perfil',cenario:'CenÃ¡rio',dificuldade:'Dif',estilo:'Estilo',duracan:'Dur',modo:'Modo'};
+  const chips = Object.entries(W).filter(([,v])=>v).map(([k,v])=>`<span class="chip ca">${v}</span>`).join('');
+  document.getElementById('sel-summary').innerHTML = chips || '<span style="font-size:11px;color:var(--t3);font-style:italic">Suas escolhas aparecerÃ£o aqui</span>';
 }
 
-// ── BRIEFING ──
+// ââ GERAÃÃO DINÂMICA DE PERSONA ââ
+async function generatePersona() {
+  const perfil = W.perfil === 'surpresa' ? 'Escolha livre â surpreenda' : W.perfil;
+  const estilo = (!W.estilo || W.estilo === 'auto') ? 'CompatÃ­vel com o perfil escolhido' : W.estilo;
+  const cenario = (!W.cenario || W.cenario === 'auto') ? 'Ambiente neutro de mercado' : W.cenario;
+
+  const prompt = `Crie um personagem para simulaÃ§Ã£o de reuniÃ£o de assessoria de investimentos.
+
+PERFIL: ${perfil}
+OBJETIVO DA REUNIÃO: ${W.objetivo}
+CENÃRIO ECONÃMICO: ${cenario}
+ESTILO COMPORTAMENTAL: ${estilo}
+NÃVEL DO ASSESSOR: ${W.nivel}
+DIFICULDADE: ${W.dificuldade}
+
+Gere um personagem realista e coerente. Responda APENAS em JSON vÃ¡lido, sem markdown:
+{"nome":"Nome Sobrenome","idade":XX,"profissao":"profissÃ£o do cliente","patrimonio":"ex: R$280 mil ou R$1,4 mi","estado_inicial":"1 frase sobre o estado emocional/disposiÃ§Ã£o inicial do cliente para essa reuniÃ£o","contexto":"2 frases curtas sobre vida financeira e contexto patrimonial","gatilho_oculto":"1 frase sobre o medo ou motivaÃ§Ã£o oculta que influencia o comportamento"}`;
+
+  const r = await fetch('/api/chat', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 400,
+      messages: [{role:'user', content:prompt}]
+    })
+  });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  const data = await r.json();
+  const raw = (data.content?.[0]?.text || '{}').replace(/```json|```/g,'').trim();
+  return JSON.parse(raw);
+}
+
+function getAvatarColor(nome) {
+  const i = nome ? (nome.charCodeAt(0) + nome.charCodeAt(nome.length-1)) % AVATAR_COLORS.length : 0;
+  return AVATAR_COLORS[i];
+}
+
+function getInitials(nome) {
+  if (!nome) return '?';
+  return nome.split(' ').map(n=>n[0]).filter(Boolean).slice(0,2).join('').toUpperCase();
+}
+
+// ââ BRIEFING ââ
 function renderBriefing() {
   const p = SE.persona;
-  const obj = SE.objetivo || 'Lidar com objeções';
+  const obj = W.objetivo || 'Primeira reuniÃ£o';
+  const initials = getInitials(p?.nome);
+  const color = getAvatarColor(p?.nome || '');
+  const textColor = (color === '#F59E0B' || color === '#10B981') ? '#07101E' : '#fff';
+  const cenario = (!W.cenario || W.cenario === 'auto') ? 'Ambiente neutro' : W.cenario;
+  const marketCtx = MARKET_CTX[cenario] || 'CenÃ¡rio personalizado pela IA.';
+
   document.getElementById('brief-content').innerHTML = `
     <div style="padding:0 16px 16px">
       <div class="brief-p">
-        <div class="br-av" style="background:${p.color};color:${p.tc}">${p.initial}</div>
-        <div><div class="br-name">${p.name}</div><div class="br-meta">${p.meta}</div></div>
+        <div class="br-av" style="background:${color};color:${textColor}">${initials}</div>
+        <div>
+          <div class="br-name">${p?.nome || 'Cliente IA'}</div>
+          <div class="br-meta">${p?.idade ? p.idade+'a' : ''} Â· ${p?.profissao || ''} Â· ${p?.patrimonio || ''}</div>
+        </div>
       </div>
       <div class="chips">
-        <span class="chip cg">${W.nivel||userProfile?.nivel||'Pleno'}</span>
+        <span class="chip ca">${W.nivel || 'IntermediÃ¡rio'}</span>
         <span class="chip ca">${obj}</span>
-        <span class="chip cg">${W.dificuldade||'Médio'}</span>
-        <span class="chip cg">${W.cenario||'Primeiro contato'}</span>
+        <span class="chip cg">${W.dificuldade || 'MÃ©dio'}</span>
+        <span class="chip cg">${cenario}</span>
+        ${W.estilo && W.estilo !== 'auto' ? `<span class="chip cg">${W.estilo}</span>` : ''}
+        ${W.modo && W.modo !== 'Normal' ? `<span class="chip cr">${W.modo}</span>` : ''}
       </div>
-      <div class="ib ib-war"><div class="ib-lbl">⚡ Contexto de hoje</div>
-        <div class="ib-txt">Guerra EUA-Irã: petróleo acima US$100, Ibovespa volátil, dólar R$5,25. Selic 14,75% — início do ciclo de queda.</div></div>
-      <div class="ib ib-eval"><div class="ib-lbl">◎ O que será avaliado</div>
-        <div class="ib-txt">${AVAL_MAP[obj]||'Desempenho geral na conversa.'}</div></div>
-      <div class="ib ib-audio"><div class="ib-lbl">🎤 Modo de resposta</div>
-        <div class="ib-txt">Use o microfone para simular uma ligação real. O avaliador analisa também tom de voz — confiança, clareza e empatia.</div></div>
-      <div class="ib ib-tip"><div class="ib-lbl">💡 Dica</div>
-        <div class="ib-txt">Você digita (ou fala) o primeiro contato. A persona responde ao tom da sua abertura — a abertura já é parte do treino.</div></div>
+      <div class="ib ib-eval">
+        <div class="ib-lbl">â Estado inicial do cliente</div>
+        <div class="ib-txt">${p?.estado_inicial || 'A IA iniciarÃ¡ com postura coerente ao perfil.'}</div>
+      </div>
+      <div class="ib" style="background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2)">
+        <div class="ib-lbl" style="color:#A78BFA">â Contexto patrimonial</div>
+        <div class="ib-txt">${p?.contexto || 'Perfil gerado pela IA.'}</div>
+      </div>
+      <div class="ib ib-war">
+        <div class="ib-lbl">â¡ CenÃ¡rio econÃ´mico</div>
+        <div class="ib-txt">${marketCtx}</div>
+      </div>
+      <div class="ib ib-audio">
+        <div class="ib-lbl">ð¤ Modo de resposta</div>
+        <div class="ib-txt">Use o microfone para simular uma ligaÃ§Ã£o real. O avaliador analisa tambÃ©m tom de voz â confianÃ§a, clareza e empatia.</div>
+      </div>
+      <div class="ib ib-tip">
+        <div class="ib-lbl">ð¡ Dica</div>
+        <div class="ib-txt">VocÃ  abre a conversa primeiro. A abertura jÃ¡ Ã© parte do treino â a cliente reageage ao tom da sua abordagem inicial.</div>
+      </div>
     </div>`;
 }
 
-// ── SESSÃO ──
+// ââ SESSÃO ââ
 function startSession() {
   const p = SE.persona;
-  document.getElementById('chat-avatar').textContent = p.initial;
-  document.getElementById('chat-avatar').style.background = p.color;
-  document.getElementById('chat-avatar').style.color = p.tc;
-  document.getElementById('chat-pname').textContent = p.name;
-  document.getElementById('chat-psub').textContent = `${W.cenario||'Cold call'} · ${SE.objetivo||'Treino'}`;
+  const initials = getInitials(p?.nome);
+  const color = getAvatarColor(p?.nome || '');
+  const textColor = (color === '#F59E0B' || color === '#10B981') ? '#07101E' : '#fff';
+  const av = document.getElementById('chat-avatar');
+  av.textContent = initials;
+  av.style.background = color;
+  av.style.color = textColor;
+  document.getElementById('chat-pname').textContent = p?.nome || 'Cliente';
+  document.getElementById('chat-psub').textContent = `${W.objetivo||'Treino'} Â· ${W.dificuldade||'MÃ©dio'}`;
   document.getElementById('messages').innerHTML = '';
   SE.history = []; SE.active = true; SE.hasAudio = false; SE.audioCount = 0; SE.lastAudio = false;
-  setMood('cetico'); go('chat');
+  // Initial mood based on difficulty
+  const initMood = ['Elite','Premium'].includes(W.dificuldade) ? 'desconfiado' :
+                   ['Alto'].includes(W.dificuldade) ? 'cauteloso' : 'neutro';
+  setMood(initMood);
+  go('chat');
   setTimeout(() => document.getElementById('chat-input').focus(), 300);
 }
 
 function setMood(m) {
-  const el = document.getElementById('mood-tag'); el.className = 'mood-tag';
-  if (m==='aberto') { el.classList.add('ma'); el.textContent = 'Abrindo'; }
-  else if (m==='neutro') { el.classList.add('mn'); el.textContent = 'Neutro'; }
-  else { el.classList.add('mc'); el.textContent = 'Cético'; }
+  const el = document.getElementById('mood-tag');
+  el.className = 'mood-tag';
+  const positive = ['receptivo','interessado','engajado'];
+  const neutral = ['neutro','cauteloso'];
+  const moodLabels = {
+    receptivo:'Receptivo', interessado:'Interessado', engajado:'Engajado',
+    neutro:'Neutro', cauteloso:'Cauteloso',
+    desconfiado:'Desconfiado', defensivo:'Defensivo', fechado:'Fechado',
+    frustrado:'Frustrado', impaciente:'Impaciente'
+  };
+  if (positive.includes(m)) el.classList.add('ma');
+  else if (neutral.includes(m)) el.classList.add('mn');
+  else el.classList.add('mc');
+  el.textContent = moodLabels[m] || 'Neutro';
+}
+
+function detectMood(text) {
+  const lo = text.toLowerCase();
+  if (/interessante|faz sentido|me fala mais|gostei|curioso|tÃ´ aberto|podemos conversar|pode ser/.test(lo)) return 'interessado';
+  if (/engajado|quero avanÃ§ar|vamos marcar|prÃ³ximo passo|fechado com isso|concordo/.test(lo)) return 'engajado';
+  if (/nÃ£o sei|hm|depende|talvez|vou pensar|precisaria ver|deixa eu analisar/.test(lo)) return 'neutro';
+  if (/me preocupa|nÃ£o estou convicto|antes de mais nada|cautela|ainda tenho dÃºvidas/.test(lo)) return 'cauteloso';
+  if (/nÃ£o vejo motivo|jÃ¡ ouvi isso|desconfiado|conflito de interesse|quanto vocÃª ganha/.test(lo)) return 'desconfiado';
+  if (/nÃ£o quero|me recuso|nÃ£o Ã© pra mim|encerrar|suficiente|nÃ£o tenho interesse/.test(lo)) return 'defensivo';
+  return null;
 }
 
 function addMsg(text, who, isAudio) {
   const msgs = document.getElementById('messages');
   const d = document.createElement('div'); d.className = `msg msg-${who}`;
-  const name = who === 'c' ? SE.persona.name.split(' ')[0] : 'Você';
-  const audioTag = (isAudio && who === 'a') ? '<div style="font-size:10px;color:var(--amber);margin-top:4px;opacity:.8">🎤 voz</div>' : '';
+  const name = who === 'c' ? (SE.persona?.nome?.split(' ')[0] || 'Cliente') : 'VocÃª';
+  const audioTag = (isAudio && who === 'a') ? '<div style="font-size:10px;color:var(--amber);margin-top:4px;opacity:.8">ð¤ voz</div>' : '';
   d.innerHTML = `<div class="msg-who">${name}</div><div class="bbl bbl-${who}">${text.replace(/\n/g,'<br>')}${audioTag}</div>`;
   msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
 }
@@ -584,10 +784,10 @@ function hideTyping() { const t = document.getElementById('typ-ind'); if(t) t.re
 function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight,120)+'px'; }
 function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();} }
 
-// ── ÁUDIO ──
+// ââ ÃUDIO ââ
 let recognition = null, isRecording = false;
 function toggleAudio() {
-  if (!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)) { showErr('Reconhecimento de voz disponível no Chrome ou Edge.'); return; }
+  if (!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)) { showErr('Reconhecimento de voz disponÃ­vel no Chrome ou Edge.'); return; }
   isRecording ? stopAudio() : startAudio();
 }
 function startAudio() {
@@ -611,7 +811,71 @@ function stopAudio() {
   isRecording=false; document.getElementById('mic-btn').classList.remove('recording'); document.getElementById('trans-bar').classList.remove('show');
 }
 
-// ── ENVIAR MENSAGEM ──
+// ââ SISTEMA DE PROMPT ââ
+function buildSystemPrompt() {
+  const p = SE.persona;
+  const cenario = (!W.cenario || W.cenario === 'auto') ? 'Ambiente neutro' : W.cenario;
+  const estilo = (!W.estilo || W.estilo === 'auto') ? 'compatÃ­vel com o perfil' : W.estilo;
+  const duracao = W.duracao === 'Curta' ? 'ReuniÃ£o curta (5 a 8 trocas) â seja mais direto.' :
+                  W.duracao === 'Longa' ? 'ReuniÃ£o longa (15+ trocas) â revele informaÃ§Ãµes gradualmente.' :
+                  'ReuniÃ£o mÃ©dia (10 a 14 trocas).';
+  const diffInstr = W.dificuldade === 'FÃ¡cil' ? 'Seja receptivo e paciente. ObjeÃ§Ãµes leves.' :
+                    W.dificuldade === 'Alto' ? 'Seja exigente. ObjeÃ§Ãµes frequentes e bem fundamentadas.' :
+                    W.dificuldade === 'Premium' ? 'AltÃ­ssima exigÃªncia. Quase nenhuma concessÃ£o sem mÃ©rito real.' :
+                    W.dificuldade === 'Elite' ? 'NÃ­vel mÃ¡ximo. Teste consistÃªncia e profundidade em cada resposta.' :
+                    'ResistÃªncia moderada.';
+  const modoInstr = (W.modo && W.modo !== 'Normal') ? `\nMODO ESPECIAL ATIVO: "${W.modo}". Incorpore esse comportamento com intensidade durante toda a conversa.` : '';
+
+  return `[CONTEXTO]
+VocÃª Ã© um simulador premium de treinamento comercial para assessores de investimentos.
+Sua funÃ§Ã£o Ã© interpretar clientes de forma extremamente realista, natural e psicologicamente coerente.
+
+Durante a simulaÃ§Ã£o, vocÃª atua EXCLUSIVAMENTE como cliente. VocÃª NÃO Ã© treinador, avaliador, tutor ou narrador.
+Qualquer avaliaÃ§Ã£o ou anÃ¡lise do desempenho do assessor sÃ³ pode aparecer apÃ³s "FIM DA SIMULAÃÃO".
+
+[PERSONAGEM]
+Nome: ${p?.nome || 'Cliente'}
+Idade: ${p?.idade || '?'} anos
+ProfissÃ£o: ${p?.profissao || 'â'}
+PatrimÃ´nio: ${p?.patrimonio || 'â'}
+Estado emocional inicial: ${p?.estado_inicial || 'Neutro, avaliando a situaÃ§Ã£o'}
+Contexto patrimonial: ${p?.contexto || 'â'}
+Perfil: ${W.perfil}
+Estilo comportamental: ${estilo}
+
+[CONFIGURAÃÃO DA SESSÃO]
+Objetivo da reuniÃ£o: ${W.objetivo}
+CenÃ¡rio econÃ´mico: ${cenario}
+NÃ­vel do assessor: ${W.nivel}
+Dificuldade: ${W.dificuldade} â ${diffInstr}
+DuraÃ§Ã£o: ${duracao}${modoInstr}
+
+[REGRAS ABSOLUTAS]
+- Aja como pessoa real. Varie o tamanho das respostas.
+- NÃ£o entregue todas as informaÃ§Ãµes logo de inÃ­cio.
+- Reaja ao tom, clareza e postura do assessor.
+- Recompense boa escuta com maior abertura.
+- Aumente resistÃªncia com pressa, jargÃ£o excessivo ou venda precoce.
+- Mantenha coerÃªncia psicolÃ³gica e patrimonial durante toda a conversa.
+- Incorpore o cenÃ¡rio econÃ´mico nas suas preocupaÃ§Ãµes e perguntas.
+- Use objeÃ§Ãµes realistas e progressivas (suaves â intermediÃ¡rias â avanÃ§adas).
+- Nunca revele que Ã© IA. Nunca facilite artificialmente.
+- NUNCA dÃª dicas ao assessor durante a conversa.
+- NUNCA comente a qualidade da abordagem durante a simulaÃ§Ã£o.
+- NUNCA escreva: "VocÃª deveria...", "Seria melhor...", "Uma abordagem melhor seria...", "Boa resposta...", "VocÃª estÃ¡ indo bem..."
+- Se sentir vontade de orientar o assessor, converta em comportamento natural do cliente:
+  em vez de "VocÃª deveria explorar meu contexto", diga "VocÃª estÃ¡ entrando em soluÃ§Ã£o sem entender meu caso."
+
+[SISTEMA DE HUMOR DINÃMICO]
+Seu humor evolui conforme a qualidade da conduÃ§Ã£o do assessor:
+Positivo: receptivo â interessado â engajado
+Negativo: neutro â cauteloso â desconfiado â defensivo â fechado
+- Perguntas genuÃ­nas e escuta ativa melhoram o humor
+- Superficialidade, pressa e venda precoce pioram o humor
+- Nunca anuncie o humor explicitamente. Deixe emergir no tom e nas respostas.`;
+}
+
+// ââ ENVIAR MENSAGEM ââ
 async function sendMsg() {
   if(!SE.active)return;
   const inp = document.getElementById('chat-input');
@@ -621,48 +885,66 @@ async function sendMsg() {
   document.getElementById('send-btn').disabled = true;
   if(wasAudio){SE.hasAudio=true;SE.audioCount++;}
   addMsg(text,'a',wasAudio);
-  const diff = W.dificuldade||'Médio';
-  const diffI = diff==='Leve'?'Seja mais paciente, dê mais espaço.':diff==='Alto'?'Seja mais exigente, mais objeções, corte respostas longas.':'';
-  const sys = SE.persona.prompt + (diffI?'\nCALIBRAÇÃO: '+diffI:'');
   SE.history.push({role:'user',content:wasAudio?`[Mensagem de voz]: ${text}`:text});
   showTyping();
   try {
     const ctrl = new AbortController(); const to = setTimeout(()=>ctrl.abort(),28000);
-    const r = await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:sys,messages:SE.history}),signal:ctrl.signal});
+    const r = await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:350,
+        system:buildSystemPrompt(),messages:SE.history}),signal:ctrl.signal});
     clearTimeout(to);
     if(!r.ok){const e=await r.json();throw new Error(e.error||`HTTP ${r.status}`);}
     const data = await r.json();
     const reply = data.content?.[0]?.text || '...';
     hideTyping(); addMsg(reply,'c');
     SE.history.push({role:'assistant',content:reply});
-    const lo = reply.toLowerCase();
-    if(lo.includes('interessante')||lo.includes('faz sentido')||lo.includes('me fala mais'))setMood('aberto');
-    else if(lo.includes('hm')||lo.includes('depende')||lo.includes('e se'))setMood('neutro');
-  } catch(e) { hideTyping(); SE.history.pop(); showErr(e.name==='AbortError'?'Timeout — tente novamente.':'Erro: '+e.message); }
+    const mood = detectMood(reply);
+    if (mood) setMood(mood);
+  } catch(e) { hideTyping(); SE.history.pop(); showErr(e.name==='AbortError'?'Timeout â tente novamente.':'Erro: '+e.message); }
   document.getElementById('send-btn').disabled=false;
   document.getElementById('chat-input').focus();
 }
 
-// ── ENCERRAR SESSÃO ──
+// ââ ENCERRAR SESSÃO ââ
 async function endSession() {
   if(!SE.active){go('home');return;}
   if(SE.history.length<2){showErr('Pratique um pouco mais antes de encerrar!');return;}
   SE.active=false; stopAudio();
   showLoad('Analisando sua conversa...');
-  const transcript = SE.history.map(m=>`${m.role==='user'?'Assessor':SE.persona.name.split(' ')[0]}: ${m.content}`).join('\n');
-  const obj = SE.objetivo||'Desempenho geral';
-  const audioInstr = SE.hasAudio?`\nO assessor usou voz (${SE.audioCount} mensagem(ns)). Avalie também o TON:\n- Confiança: firmeza vs hesitação\n- Clareza: estrutura das frases\n- Empatia: validou antes de argumentar?\nAdicione "score_tom":0-100 e "obs_tom":"1 frase" no JSON.`:'';
+  const transcript = SE.history.map(m=>`${m.role==='user'?'Assessor':(SE.persona?.nome?.split(' ')[0]||'Cliente')}: ${m.content}`).join('\n');
+  const weights = OBJECTIVE_WEIGHTS[W.objetivo] || OBJECTIVE_WEIGHTS['_default'];
+  const weightsStr = COMP_ORDER.map(k=>`  ${COMP_NAMES[k]}: ${weights[k]}%`).join('\n');
+  const audioInstr = SE.hasAudio ? `\nO assessor usou voz (${SE.audioCount} mensagem(ns)). Avalie tambÃ©m tom de voz â confianÃ§a, clareza e empatia. Inclua "score_tom":0-10 e "obs_tom":"1 frase" no JSON.` : '';
+
   try {
-    const ctrl = new AbortController(); setTimeout(()=>ctrl.abort(),28000);
+    const ctrl = new AbortController(); setTimeout(()=>ctrl.abort(),30000);
     const r = await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,
-        messages:[{role:'user',content:`Você é coach sênior de assessores de investimentos brasileiro. Analise esta conversa.\nOBJETIVO: ${obj}\nPERSONA: ${SE.persona.name} — ${SE.persona.profile}\nNÍVEL DO ASSESSOR: ${W.nivel||userProfile?.nivel||'Pleno'}\nCONTEXTO: Selic 14,75%, CDI 14,65%, Guerra EUA-Irã, dólar R$5,25${audioInstr}\n\nTRANSCRIÇÃO:\n${transcript}\n\nResponda SOMENTE em JSON válido sem markdown:\n{"score_geral":0-100,"score_objetivo":0-100,"score_mercado":0-100,"score_escuta":0-100${SE.hasAudio?',"score_tom":0-100,"obs_tom":"frase"':''},"humor_final":"cetico|neutro|aberto","pontos_fortes":["x","y"],"pontos_melhorar":["x","y"],"dica_principal":"1-2 frases específicas"}`}]}),
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,
+        messages:[{role:'user',content:`VocÃª Ã© coach sÃªnior de assessores de investimentos. Analise esta conversa de treinamento.
+
+OBJETIVO: ${W.objetivo}
+PERFIL DO CLIENTE: ${W.perfil}
+ESTILO: ${W.estilo||'â'}
+CENÃRIO: ${W.cenario||'â'}
+NÃVEL DO ASSESSOR: ${W.nivel}
+DIFICULDADE: ${W.dificuldade}${audioInstr}
+
+TRANSCRIÃÃO:
+${transcript}
+
+PESOS PARA ESTE OBJETIVO (${W.objetivo}):
+${weightsStr}
+
+Avalie de 0 a 10 cada competÃªncia. Calcule score_geral (0-100) aplicando os pesos. Determine o humor_final do cliente ao encerrar.
+
+Responda APENAS em JSON vÃ¡lido, sem markdown:
+{"score_geral":0-100,"competencias":{"rapport":0-10,"descoberta":0-10,"escuta":0-10,"leitura":0-10,"clareza":0-10,"postura":0-10,"objecoes":0-10,"adequacao":0-10,"confianca":0-10,"fechamento":0-10},"faixa":"Excelente|Muito Bom|Bom|Regular|Precisa Melhorar","veredito":"1 frase de veredito comercial","humor_final":"receptivo|interessado|engajado|neutro|cauteloso|desconfiado|defensivo|fechado|frustrado|impaciente","desfecho":"1-2 frases sobre o desfecho comercial provÃ¡vel","proximo_passo":"1 frase sobre o prÃ³ximo passo ideal","pontos_fortes":["acerto especÃ­fico 1","acerto especÃ­fico 2"],"pontos_melhorar":["ponto especÃ­fico 1","ponto especÃ­fico 2"],"lacunas":["lacuna importante"],"analise":"anÃ¡lise geral em 2-3 frases especÃ­ficas","dica_principal":"1-2 frases de coaching especÃ­fico para este caso"${SE.hasAudio?',"score_tom":0-10,"obs_tom":"1 frase sobre tom de voz"':''}}`}]}),
       signal:ctrl.signal});
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
     let fb;
     try { fb = JSON.parse((data.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim()); }
-    catch(parseErr) { throw new Error('Feedback inválido — tente encerrar novamente.'); }
+    catch(parseErr) { throw new Error('Feedback invÃ¡lido â tente encerrar novamente.'); }
     hideLoad();
     await saveSession(fb);
     await updateProfile(fb.score_geral||0);
@@ -671,27 +953,42 @@ async function endSession() {
   } catch(e) { hideLoad(); SE.active=true; showErr(e.name==='AbortError'?'Timeout. Tente novamente.':'Erro: '+e.message); }
 }
 
-// ── SALVAR NO SUPABASE ──
+// ââ SALVAR NO SUPABASE ââ
 async function saveSession(fb) {
   if(!sb||!userProfile)return;
+  const c = fb.competencias || {};
+  const scoreObj = Math.round(((c.rapport||0)+(c.descoberta||0))/2*10);
+  const scoreMkt = Math.round(((c.clareza||0)+(c.adequacao||0))/2*10);
+  const scoreEsc = Math.round(((c.escuta||0)+(c.leitura||0))/2*10);
+  const humorMap = {receptivo:'aberto',interessado:'aberto',engajado:'aberto',neutro:'neutro',cauteloso:'neutro',desconfiado:'cetico',defensivo:'cetico',fechado:'cetico',frustrado:'cetico',impaciente:'cetico'};
   try {
     await sb.from('sessions').insert({
-      user_id:userProfile.id, persona:SE.persona.name, objetivo:SE.objetivo,
-      cenario:W.cenario||'—', dificuldade:W.dificuldade||'Médio',
-      nivel_usuario:W.nivel||userProfile.nivel||'Pleno', mode:SE.mode||'free',
-      score_geral:fb.score_geral, score_objetivo:fb.score_objetivo,
-      score_mercado:fb.score_mercado, score_escuta:fb.score_escuta,
-      score_tom:fb.score_tom||null, humor_final:fb.humor_final,
-      dica_principal:fb.dica_principal||'', pontos_fortes:fb.pontos_fortes||[],
-      pontos_melhorar:fb.pontos_melhorar||[], had_audio:SE.hasAudio, num_trocas:SE.history.length
+      user_id:userProfile.id,
+      persona:SE.persona?.nome||'DinÃ¢mico',
+      objetivo:W.objetivo,
+      cenario:W.cenario||'â',
+      dificuldade:W.dificuldade||'MÃ©dio',
+      nivel_usuario:W.nivel||userProfile.nivel||'IntermediÃ¡rio',
+      mode:SE.mode||'free',
+      score_geral:fb.score_geral,
+      score_objetivo:scoreObj,
+      score_mercado:scoreMkt,
+      score_escuta:scoreEsc,
+      score_tom:fb.score_tom||null,
+      humor_final:humorMap[fb.humor_final]||'neutro',
+      dica_principal:fb.dica_principal||'',
+      pontos_fortes:fb.pontos_fortes||[],
+      pontos_melhorar:fb.pontos_melhorar||[],
+      had_audio:SE.hasAudio,
+      num_trocas:SE.history.length
     });
-  } catch(e){ console.warn('Erro ao salvar sessão:', e.message); }
+  } catch(e){ console.warn('Erro ao salvar sessÃ£o:', e.message); }
 }
 
 async function updateProfile(scoreGeral) {
   if(!sb||!userProfile)return;
   try {
-    const gain = scoreGeral>=80?150:scoreGeral>=60?100:70;
+    const gain = scoreGeral>=80?200:scoreGeral>=65?150:scoreGeral>=50?100:70;
     userXP = userXP + gain;
     const lvl = getLevel(userXP);
     const today = new Date().toISOString().split('T')[0];
@@ -704,43 +1001,112 @@ async function updateProfile(scoreGeral) {
   } catch(e){ console.warn('Erro ao atualizar perfil:', e.message); }
 }
 
-// ── FEEDBACK ──
+// ââ FEEDBACK ââ
 function renderFeedback(fb) {
-  const hmap={cetico:'🔴 Cliente continuou cético',neutro:'🟡 Neutro — está considerando',aberto:'🟢 Cliente abrindo — boa condução!'};
-  const cls=fb.humor_final==='aberto'?'rb-w':fb.humor_final==='neutro'?'rb-m':'rb-l';
-  const tomCard=fb.score_tom!=null?`<div class="sc-card hi"><div class="sc-n">${fb.score_tom}</div><div class="sc-l">Tom 🎤</div></div>`:'';
-  const tomFb=fb.obs_tom?`<div class="fb-st">Tom de voz 🎤</div><div class="fb-item fb-a">${fb.obs_tom}</div>`:'';
+  const score = fb.score_geral ?? 0;
+  const c = fb.competencias || {};
+  const faixa = fb.faixa || (score>=85?'Excelente':score>=70?'Muito Bom':score>=55?'Bom':score>=40?'Regular':'Precisa Melhorar');
+  const scoreColor = score>=80?'var(--green)':score>=60?'var(--amber)':score>=40?'#F97316':'var(--red)';
+  const faixaBg = score>=80?'rgba(16,185,129,.15)':score>=60?'rgba(245,158,11,.15)':score>=40?'rgba(249,115,22,.15)':'rgba(239,68,68,.15)';
+  const faixaColor = score>=80?'var(--green)':score>=60?'var(--amber)':score>=40?'#F97316':'var(--red)';
+
+  const humorMap = {
+    receptivo:'ð¢ Cliente receptivo â excelente abertura!',
+    interessado:'ð¢ Cliente interessado â boa conduÃ§Ã£o!',
+    engajado:'ð¢ Cliente engajado â prÃ³ximo passo viÃ¡vel!',
+    neutro:'ð¡ Cliente neutro â considerando a proposta',
+    cauteloso:'ð¡ Cliente cauteloso â precisa de mais confianÃ§a',
+    desconfiado:'ð´ Cliente desconfiado â faltou profundidade',
+    defensivo:'ð´ Cliente defensivo â abordagem comprometida',
+    fechado:'ð´ Cliente fechado â reuniÃ£o sem avanÃ§o',
+    frustrado:'ð´ Cliente frustrado â necessidade nÃ£o atendida',
+    impaciente:'ð¡ Cliente impaciente â ritmo inadequado'
+  };
+  const humorTxt = humorMap[fb.humor_final] || 'ð¡ Estado neutro ao final';
+  const humorCls = fb.humor_final && ['receptivo','interessado','engajado'].includes(fb.humor_final) ? 'rb-w' :
+                   fb.humor_final && ['neutro','cauteloso','impaciente'].includes(fb.humor_final) ? 'rb-m' : 'rb-l';
+
+  // 10 competency bars
+  const compBars = COMP_ORDER.map(k => {
+    const val = c[k] ?? 0;
+    const pct = val * 10;
+    const fillCls = val>=7?'fill-g':val>=5?'fill-a':'fill-r';
+    const scoreCol = val>=7?'var(--green)':val>=5?'var(--amber)':'var(--red)';
+    return `<div class="comp-item">
+      <div class="comp-header">
+        <span class="comp-name">${COMP_NAMES[k]}</span>
+        <span class="comp-score" style="color:${scoreCol}">${val}/10</span>
+      </div>
+      <div class="comp-bar-bg"><div class="comp-fill ${fillCls}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  const tomCard = fb.score_tom!=null?`<div class="sc-card hi"><div class="sc-n">${fb.score_tom}</div><div class="sc-l">Tom ð¤</div></div>`:'';
+  const tomFb = fb.obs_tom?`<div class="fb-st">Tom de voz ð¤</div><div class="fb-item fb-a">${fb.obs_tom}</div>`:'';
+
   document.getElementById('feedback-content').innerHTML=`
-    <div style="padding:0 16px 16px">
+    <div style="padding:0 16px 24px">
+      <div class="fb-hero">
+        <div class="fb-score-big" style="color:${scoreColor}">${score}</div>
+        <div class="fb-faixa" style="background:${faixaBg};color:${faixaColor}">${faixa}</div>
+        <div class="fb-veredito">${fb.veredito||'â'}</div>
+      </div>
+
       <div class="sc-grid">
-        <div class="sc-card"><div class="sc-n">${fb.score_geral??'—'}</div><div class="sc-l">Geral</div></div>
-        <div class="sc-card"><div class="sc-n">${fb.score_objetivo??'—'}</div><div class="sc-l">Objetivo</div></div>
-        <div class="sc-card"><div class="sc-n">${fb.score_mercado??'—'}</div><div class="sc-l">Mercado</div></div>
-        <div class="sc-card"><div class="sc-n">${fb.score_escuta??'—'}</div><div class="sc-l">Escuta</div></div>
+        <div class="sc-card"><div class="sc-n">${score}</div><div class="sc-l">Score Final</div></div>
+        <div class="sc-card"><div class="sc-n">${SE.history.length}</div><div class="sc-l">Trocas</div></div>
         ${tomCard}
       </div>
-      <div class="rb ${cls}">${hmap[fb.humor_final]||'—'}</div>
+
+      <div class="rb ${humorCls}">${humorTxt}</div>
+
+      <div class="comp-section">
+        <div class="comp-title">10 CompetÃªncias</div>
+        ${compBars}
+      </div>
+
+      ${fb.desfecho?`<div class="desfecho-box">
+        <div class="desfecho-lbl">â Desfecho comercial provÃ¡vel</div>
+        <div class="desfecho-txt">${fb.desfecho}</div>
+      </div>`:''}
+
+      ${fb.proximo_passo?`<div class="ib ib-eval">
+        <div class="ib-lbl">â PrÃ³ximo passo ideal</div>
+        <div class="ib-txt">${fb.proximo_passo}</div>
+      </div>`:''}
+
+      ${fb.analise?`<div class="ib ib-tip">
+        <div class="ib-lbl">â AnÃ¡lise geral</div>
+        <div class="ib-txt">${fb.analise}</div>
+      </div>`:''}
+
+      ${(fb.pontos_fortes||[]).length?`<div class="fb-st">â O que foi bem</div>${(fb.pontos_fortes||[]).map(p=>`<div class="fb-item fb-g">${p}</div>`).join('')}`:''}
+      ${(fb.pontos_melhorar||[]).length?`<div class="fb-st">â³ O que melhorar</div>${(fb.pontos_melhorar||[]).map(p=>`<div class="fb-item fb-r">${p}</div>`).join('')}`:''}
+      ${(fb.lacunas||[]).length?`<div class="fb-st">â Lacunas identificadas</div>${(fb.lacunas||[]).map(p=>`<div class="fb-item fb-y">${p}</div>`).join('')}`:''}
       ${tomFb}
-      <div class="fb-st">O que foi bem</div>
-      ${(fb.pontos_fortes||[]).map(p=>`<div class="fb-item fb-g">${p}</div>`).join('')}
-      <div class="fb-st">O que melhorar</div>
-      ${(fb.pontos_melhorar||[]).map(p=>`<div class="fb-item fb-r">${p}</div>`).join('')}
-      <div class="fb-st">Dica do coach</div>
-      <div class="fb-item fb-b">${fb.dica_principal||'—'}</div>
+
+      <div class="fb-st">ð¡ Dica do coach</div>
+      <div class="fb-item fb-b">${fb.dica_principal||'â'}</div>
+
       <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px">
-        <button class="btn btn-a" onclick="restartSame()">↺ Tentar novamente</button>
-        <button class="btn btn-o" onclick="go('home')">← Voltar ao início</button>
+        <button class="btn btn-a" onclick="restartSame()">âº Tentar novamente com o mesmo cliente</button>
+        <button class="btn btn-o" onclick="go('wizard')">â Nova configuraÃ§Ã£o</button>
+        <button class="btn btn-o" onclick="go('home')">â Voltar ao inÃ­cio</button>
       </div>
     </div>`;
 }
 
 function restartSame() {
   SE.history=[]; SE.active=true; SE.hasAudio=false; SE.audioCount=0; SE.lastAudio=false;
-  document.getElementById('messages').innerHTML=''; setMood('cetico'); go('chat');
+  document.getElementById('messages').innerHTML='';
+  const initMood = ['Elite','Premium'].includes(W.dificuldade) ? 'desconfiado' :
+                   ['Alto'].includes(W.dificuldade) ? 'cauteloso' : 'neutro';
+  setMood(initMood);
+  go('chat');
   setTimeout(()=>document.getElementById('chat-input').focus(),300);
 }
 
-// ── NAVEGAÇÃO ──
+// ââ NAVEGAÃÃO ââ
 function go(id) {
   const cur = document.querySelector('.screen.active');
   const next = document.getElementById('s-'+id);
