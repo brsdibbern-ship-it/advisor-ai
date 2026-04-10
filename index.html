@@ -82,6 +82,19 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
 .mn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);color:var(--amber)}
 .ma{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.2);color:var(--green)}
 .end-s{padding:5px 10px;border-radius:8px;background:transparent;border:1px solid var(--b2);color:var(--t3);font-size:11px;font-weight:600;cursor:pointer;margin-left:6px;flex-shrink:0}
+.tts-btn{padding:5px 8px;border-radius:8px;background:transparent;border:1px solid var(--b2);color:var(--t3);font-size:14px;cursor:pointer;flex-shrink:0;transition:all .2s;line-height:1}
+.tts-btn.on{border-color:rgba(245,158,11,.4);color:var(--amber);background:rgba(245,158,11,.08)}
+.tts-btn.speaking{border-color:rgba(245,158,11,.6);color:var(--amber);background:rgba(245,158,11,.15);animation:tts-pulse .8s ease-in-out infinite alternate}
+@keyframes tts-pulse{from{opacity:.7}to{opacity:1}}
+.tts-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
+.tts-box{background:var(--s1);border:1px solid var(--b2);border-radius:16px;padding:24px;width:100%;max-width:340px}
+.tts-box h3{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:4px}
+.tts-box p{font-size:12px;color:var(--t3);margin-bottom:16px;line-height:1.5}
+.tts-box label{font-size:11px;color:var(--t2);display:block;margin-bottom:5px}
+.tts-box input{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--t1);outline:none;margin-bottom:14px;font-family:inherit}
+.tts-box input:focus{border-color:var(--amber)}
+.tts-row{display:flex;gap:8px}.tts-row button{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none}
+.tts-save{background:var(--amber);color:#07101E}.tts-cancel{background:var(--s2);border:1px solid var(--b1)!important;color:var(--t2)}
 .msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
 .msgs::-webkit-scrollbar{display:none}
 .msg{max-width:82%}.msg-c{align-self:flex-start}.msg-a{align-self:flex-end}
@@ -163,808 +176,79 @@ body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI','
   <div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px">
     <div class="logo" style="font-size:28px">advisor <em>ai</em></div>
     <div class="spinner"></div>
-  </div>
+</div>
 </div>
 
-<!-- ── TELA: LOGIN ── -->
-<div class="screen" id="s-login">
-  <div class="auth-wrap">
-    <div class="auth-logo">
-      <div class="logo" style="font-size:28px;margin-bottom:8px">advisor <em>ai</em></div>
-      <div style="font-size:13px;color:var(--t3)">Treine. Evolua. Feche mais.</div>
-    </div>
-    <div class="form-group"><label class="form-label">E-mail</label>
-      <input class="form-inp" type="email" id="l-email" placeholder="seu@email.com"></div>
-    <div class="form-group"><label class="form-label">Senha</label>
-      <input class="form-inp" type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <div id="l-err" class="err-msg"></div>
-    <button class="btn btn-a" style="margin-bottom:14px;margin-top:6px" onclick="doLogin()">Entrar</button>
-    <div style="text-align:center;font-size:13px;color:var(--t3)">Não tem conta? <button class="link-btn" onclick="go('signup')">Criar conta gratuita</button></div>
-  </div>
-</div>
 
-<!-- ── TELA: CADASTRO ── -->
-<div class="screen" id="s-signup">
-  <div class="hdr-back" style="padding:52px 20px 0">
-    <button class="back-btn" onclick="go('login')">←</button>
-    <div class="hdr-title">Criar conta</div>
-  </div>
-  <div class="auth-wrap" style="padding-top:20px">
-    <div class="form-group"><label class="form-label">Seu nome</label>
-      <input class="form-inp" type="text" id="s-name" placeholder="João Silva"></div>
-    <div class="form-group"><label class="form-label">E-mail</label>
-      <input class="form-inp" type="email" id="s-email" placeholder="seu@email.com"></div>
-    <div class="form-group"><label class="form-label">Senha (mínimo 6 caracteres)</label>
-      <input class="form-inp" type="password" id="s-pass" placeholder="••••••••"></div>
-    <div class="form-group"><label class="form-label">Seu nível atual como assessor</label>
-      <select class="form-select" id="s-nivel">
-        <option value="Iniciante">Iniciante — menos de 1 ano</option>
-        <option value="Intermediário">Intermediário — 1 a 2 anos</option>
-        <option value="Avançado">Avançado — 2 a 4 anos</option>
-        <option value="Sênior">Sênior — 4+ anos</option>
-      </select></div>
-    <div id="s-err" class="err-msg"></div>
-    <button class="btn btn-a" onclick="doSignup()">Criar conta e começar</button>
-  </div>
-</div>
-
-<!-- ── TELA: DASHBOARD ── -->
-<div class="screen" id="s-home">
-  <div class="hdr">
-    <div class="logo">advisor <em>ai</em></div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <div id="level-badge" style="background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--t2)">● Carregando...</div>
-      <button onclick="doLogout()" style="width:30px;height:30px;border-radius:50%;background:var(--s2);border:1px solid var(--b1);color:var(--t3);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center" title="Sair">↩</button>
-    </div>
-  </div>
-  <div class="scroll">
-    <div class="streak-row">
-      <div class="sf">🔥</div>
-      <div><div class="sn" id="streak-num">0</div><div class="slbl">dias seguidos</div></div>
-      <div class="xp-w">
-        <div class="xp-top"><span>Para próximo nível</span><span class="xp-v" id="xp-display">0 XP</span></div>
-        <div class="xp-bar"><div class="xp-fill" id="xp-bar" style="width:0%"></div></div>
-      </div>
-    </div>
-    <div class="sl">Treino do dia</div>
-    <div class="card-g" onclick="startGuided()">
-      <div class="badge ba">✦ Preparado pela IA</div>
-      <div style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:5px">Treino Guiado</div>
-      <div style="font-size:12px;color:var(--t3);line-height:1.5;margin-bottom:14px" id="guided-desc">A IA constrói um cliente único e realista para o seu nível e objetivo.</div>
-      <div class="cp">
-        <div class="cp-av" id="gp-av" style="background:var(--amber);color:#07101E">✦</div>
-        <div><div class="cp-name" id="gp-name">Carregando...</div><div class="cp-det" id="gp-det">—</div></div>
-      </div>
-      <button class="btn btn-a">▶ Começar treino do dia</button>
-    </div>
-    <div class="sl" style="margin-top:6px">Treino livre</div>
-    <div class="card" style="cursor:pointer;transition:transform .15s" onclick="go('wizard')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-      <div class="badge bt">⚙ Configurar sessão</div>
-      <div style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:5px">Treino Livre</div>
-      <div style="font-size:12px;color:var(--t3);line-height:1.5;margin-bottom:14px">Vocà escolhe objetivo, perfil, cenário, dificuldade e estilo — a IA cria o cliente.</div>
-      <button class="btn btn-o">Personalizar meu treino →</button>
-    </div>
-    <div class="sl" style="margin-top:6px">Última sessão</div>
-    <div id="last-session-card" class="card" style="font-size:12px;color:var(--t3)">Nenhuma sessão ainda. Comece agora!</div>
-  </div>
-  <nav class="bnav">
-    <div class="ni on"><div class="ni-icon">⌂</div><div class="ni-pip"></div><div class="ni-lbl">Início</div></div>
-    <div class="ni"><div class="ni-icon">📈</div><div class="ni-lbl">Histórico</div></div>
-    <div class="ni"><div class="ni-icon">🏆</div><div class="ni-lbl">Ranking</div></div>
-    <div class="ni"><div class="ni-icon">◎</div><div class="ni-lbl">Perfil</div></div>
-  </nav>
-</div>
-
-<!-- ── TELA: WIZARD ── -->
-<div class="screen" id="s-wizard">
-  <div class="hdr-back">
-    <button class="back-btn" onclick="go('home')">←</button>
-    <div style="flex:1">
-      <div class="si-lbl" id="wiz-label">Passo 1 de 8</div>
-      <div class="si-dots" id="wiz-dots"></div>
-    </div>
-  </div>
-  <div class="scroll" id="wiz-content"></div>
-  <div class="wiz-foot">
-    <div class="sel-sum" id="sel-summary"><span style="font-size:11px;color:var(--t3);font-style:italic">Suas escolhas aparecerão aqui</span></div>
-    <button class="btn btn-a" id="wiz-next" onclick="wizNext()">Continuar →</button>
-  </div>
-</div>
-
-<!-- ── TELA: BRIEFING ── -->
-<div class="screen" id="s-brief">
-  <div class="hdr-back">
-    <button class="back-btn" onclick="go('wizard')">←</button>
-    <div class="hdr-title">Sua sessão</div>
-  </div>
-  <div class="scroll" id="brief-content"></div>
-  <div style="padding:14px 16px;flex-shrink:0">
-    <button class="btn btn-a" onclick="startSession()">▶ Começar — você abre primeiro</button>
-  </div>
-</div>
-
-<!-- ── TELA: CHAT ── -->
-<div class="screen" id="s-chat">
-  <div class="chat-hdr">
-    <div class="ch-av" id="chat-avatar">?</div>
-    <div><div class="ch-name" id="chat-pname">—</div><div class="ch-sub" id="chat-psub">—</div></div>
-    <div class="mood-tag mn" id="mood-tag">Neutro</div>
-    <button class="end-s" onclick="endSession()">Encerrar</button>
-  </div>
-  <div class="trans-bar" id="trans-bar">
-    <div class="spinner" style="width:16px;height:16px;border-width:2px"></div>
-    <span id="interim-txt">Ouvindo...</span>
-  </div>
-  <div class="msgs" id="messages"></div>
-  <div class="chat-inp-area">
-    <button class="mic-btn" id="mic-btn" onclick="toggleAudio()">🎤<div class="rec-dot"></div></button>
-    <textarea class="chat-inp" id="chat-input" placeholder="Responda como assessor..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-    <button class="send-btn" id="send-btn" onclick="sendMsg()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="#07101E"><path d="M1.5 1.5l13 6.5-13 6.5V9.5l9-1.5-9-1.5V1.5z"/></svg>
-    </button>
-  </div>
-</div>
-
-<!-- ── TELA: FEEDBACK ── -->
-<div class="screen" id="s-feedback">
-  <div class="hdr-back">
-    <button class="back-btn" onclick="go('home')">←</button>
-    <div class="hdr-title">Análise da sessão</div>
-  </div>
-  <div class="scroll" id="feedback-content"></div>
-</div>
-
-<div class="load-ov" id="loading"><div class="spinner"></div><div class="load-txt" id="load-txt">Carregando...</div></div>
-<div class="err-toast" id="err-toast"></div>
-
-<script>
-// ── CONFIG ──
-const SUPABASE_URL = 'https://falogskpwaslzlskljib.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhbG9nc2twd2FzbHpsc2tsamliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODk2ODIsImV4cCI6MjA5MDM2NTY4Mn0.LArX4_Ad9IV5dL_cZ5yYohJWyB6WMH_xTlc9v29aAmM';
-
-const LEVELS = [
-  {title:'Assessor Trainee',xpMax:500},{title:'Assessor Bronze',xpMax:1000},
-  {title:'Assessor Prata',xpMax:2000},{title:'Assessor Ouro',xpMax:4000},
-  {title:'Assessor Diamante',xpMax:7000},{title:'Assessor Elite',xpMax:99999}
-];
-
-const STEPS = [
-  {q:'Qual é seu nível?',sub:'Calibra a exigência do cliente e o tom do feedback.',key:'nivel',
-   opts:[{l:'Iniciante'},{l:'Intermediário'},{l:'Avançado'},{l:'Sênior'},{l:'Líder comercial'}]},
-  {q:'Objetivo da reunião?',sub:'O avaliador vai focar nessa competência.',key:'objetivo',
-   opts:[{l:'Primeira reunião'},{l:'Diagnóstico patrimonial'},{l:'Acompanhamento de carteira'},
-         {l:'Captação de recursos'},{l:'Retenção de cliente'},{l:'Realocação de carteira'},
-         {l:'Venda de seguro'},{l:'Venda de consórcio'},{l:'Sucessão patrimonial'},
-         {l:'Proteção familiar'},{l:'Planejamento de liquidez'},{l:'Reunião pós-perda'},
-         {l:'Explicação de cenário macro'},{l:'Reativação de cliente'},
-         {l:'Concentração de patrimônio'},{l:'Financial Planning'}]},
-  {q:'Perfil do cliente?',sub:'A IA constrói um personagem completo e único.',key:'perfil',
-   opts:[{l:'Conservador tradicional'},{l:'Moderado inseguro'},{l:'Agressivo impaciente'},
-         {l:'Alta renda exigente'},{l:'Ultra high net worth'},{l:'Extremamente racional'},
-         {l:'Focado apenas em taxa'},{l:'Traumatizado por perdas'},{l:'Desconfiado de assessor'},
-         {l:'Leigo e ansioso'},{l:'Experiente e questionador'},{l:'Empresário pragmático'},
-         {l:'Médico sem tempo'},{l:'Aposentado focado em renda'},{l:'Jovem acumulador'},
-         {l:'Patrimonialista'},{l:'Familiar focado em proteção'},{l:'Patrimônio concentrado'},
-         {l:'Compara com banco/private'},{l:'Não quer ser vendido'},
-         {l:'✦ Surpresa da IA',v:'surpresa',s:true}]},
-  {q:'Cenário econômico?',sub:'Afeta as preocupações e objeções do cliente.',key:'cenario',
-   opts:[{l:'Juros altos e inflação persistente'},{l:'Queda de juros'},{l:'Crise fiscal doméstica'},
-         {l:'Bolsa em forte queda'},{l:'Bolsa em euforia'},{l:'Crédito privado em estresse'},
-         {l:'Dólar em alta'},{l:'Incerteza política'},{l:'Recessão com inadimplência'},
-         {l:'Recuperação gradual'},{l:'Cenário externo adverso'},{l:'Ambiente neutro'},
-         {l:'✦ Escolher automaticamente',v:'auto',s:true}]},
-  {q:'Grau de dificuldade?',sub:'Calibra a intensidade e resistência do cliente.',key:'dificuldade',
-   opts:[{l:'Fácil'},{l:'Médio'},{l:'Alto'},{l:'Premium'},{l:'Elite'}]},
-  {q:'Estilo comportamental?',sub:'Personalidade dominante do cliente na reunião.',key:'estilo',
-   opts:[{l:'Cordial e aberto'},{l:'Cauteloso'},{l:'Frio e objetivo'},{l:'Defensivo'},
-         {l:'Silencioso'},{l:'Prolixo'},{l:'Provocador'},{l:'Resistente'},
-         {l:'Educado e desconfiado'},{l:'Emocionalmente abalado'},{l:'Apressado'},
-         {l:'Intelectualmente dominante'},{l:'✦ Compatível com o perfil',v:'auto',s:true}]},
-  {q:'Duração da sessão?',sub:'Determina o ritmo e o número de trocas esperadas.',key:'duracao',
-   opts:[{l:'Curta — 5 a 8 trocas',v:'Curta'},{l:'Média — 10 a 14 trocas',v:'Média'},{l:'Longa — 15+ trocas',v:'Longa'}]},
-  {q:'Modo especial?',sub:'Ativa comportamentos específicos de treinamento avançado.',key:'modo',
-   opts:[{l:'Normal'},{l:'Cliente difícil'},{l:'Cliente silencioso'},{l:'Cliente obcecado por taxa'},
-         {l:'Cliente insatisfeito'},{l:'Cliente que compara com concorrência'},
-         {l:'Cliente que pressiona por produto'},{l:'Cliente que quer rapidez'},
-         {l:'Cliente que evita responder'},{l:'Cliente altamente sofisticado'},
-         {l:'Banca examinadora comercial'}]}
-];
-
-const COMP_NAMES = {
-  rapport:'Abertura e rapport',
-  descoberta:'Descoberta de necessidades',
-  escuta:'Escuta ativa',
-  leitura:'Leitura emocional',
-  clareza:'Clareza e didática',
-  postura:'Postura consultiva',
-  objecoes:'Tratamento de objeções',
-  adequacao:'Adequação da solução',
-  confianca:'Geração de confiança',
-  fechamento:'Fechamento e próximo passo'
-};
-
-const COMP_ORDER = ['rapport','descoberta','escuta','leitura','clareza','postura','objecoes','adequacao','confianca','fechamento'];
-
-const OBJECTIVE_WEIGHTS = {
-  'Primeira reunião':          {rapport:15,descoberta:20,escuta:10,leitura:10,clareza:10,postura:15,objecoes:5,adequacao:5,confianca:5,fechamento:5},
-  'Retenção de cliente':       {rapport:10,descoberta:10,escuta:15,leitura:15,clareza:5,postura:15,objecoes:10,adequacao:5,confianca:10,fechamento:5},
-  'Acompanhamento de carteira':{rapport:5,descoberta:10,escuta:10,leitura:5,clareza:15,postura:10,objecoes:10,adequacao:20,confianca:5,fechamento:10},
-  'Venda de seguro':           {rapport:10,descoberta:15,escuta:10,leitura:10,clareza:10,postura:15,objecoes:10,adequacao:15,confianca:3,fechamento:2},
-  'Venda de consórcio':        {rapport:8,descoberta:18,escuta:10,leitura:8,clareza:12,postura:15,objecoes:10,adequacao:15,confianca:2,fechamento:2},
-  'Captação de recursos':      {rapport:12,descoberta:18,escuta:8,leitura:8,clareza:10,postura:15,objecoes:10,adequacao:8,confianca:5,fechamento:6},
-  'Reunião pós-perda':         {rapport:8,descoberta:10,escuta:15,leitura:20,clareza:8,postura:15,objecoes:8,adequacao:6,confianca:5,fechamento:5},
-  '_default':                  {rapport:10,descoberta:15,escuta:10,leitura:10,clareza:10,postura:15,objecoes:10,adequacao:10,confianca:5,fechamento:5}
-};
-
-const AVATAR_COLORS = ['#F59E0B','#3B82F6','#8B5CF6','#10B981','#14B8A6','#EF4444','#F97316'];
-
-const MARKET_CTX = {
-  'Juros altos e inflação persistente':'Selic elevada. Cliente foca em liquidez, pós-fixados e segurança. Inflação corrói renda real.',
-  'Queda de juros':'Ciclo de queda da Selic. Debate sobre alongamento, diversificação e renda variável.',
-  'Crise fiscal doméstica':'Deterioração das contas públicas. Prêmio de risco alto. Cliente avesso a risco local.',
-  'Bolsa em forte queda':'Ibovespa em queda. Cliente defensivo, focado em preservar patrimônio.',
-  'Bolsa em euforia':'Ibovespa em alta. Risco de FOMO e excesso de confiança.',
-  'Crédito privado em estresse':'Spreads abrindo, fundos de crédito marcados. Cliente questiona emissores.',
-  'Dólar em alta':'Real depreciado. Debate sobre proteção cambial e ativos dolarizados.',
-  'Incerteza política':'Ruído político intenso. Cliente paralisado ou com visão extremada.',
-  'Recessão com inadimplência':'PIB negativo, crédito apertando. Foco em caixa e solvência.',
-  'Recuperação gradual':'Melhora suave. Oportunidade de revisão estratégica.',
-  'Cenário externo adverso':'Pressão global: Fed hawkish, commodities voláteis. Mercados cautelosos.',
-  'Ambiente neutro':'Cenário estável. Foco na lógica do portfólio.',
-  'auto':'Cenário atual de mercado — a IA incorpora o contexto conforme o perfil do cliente.'
-};
-
-// ── ESTADO GLOBAL ──
-let sb = null;
-let userProfile = null;
-let userXP = 0;
-const W = {nivel:null,objetivo:null,perfil:null,cenario:null,dificuldade:null,estilo:null,duracao:null,modo:null};
-let wizStep = 0;
-const SE = {persona:null,history:[],objetivo:null,mode:null,active:false,hasAudio:false,audioCount:0,lastAudio:false,guidedObj:null,guidedDiff:null};
-
-// ── INICIALIZAÇÃO ──
-async function init() {
-  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) { await loadProfile(session.user.id); go('home'); }
-    else go('login');
-  } catch(e) { go('login'); }
-  sb.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') { userProfile = null; go('login'); }});
-}
-
-// ── AUTH ──
-async function doLogin() {
-  const email = document.getElementById('l-email').value.trim();
-  const pass = document.getElementById('l-pass').value;
-  document.getElementById('l-err').textContent = '';
-  if (!email || !pass) { document.getElementById('l-err').textContent = 'Preencha e-mail e senha.'; return; }
-  showLoad('Entrando...');
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-  hideLoad();
-  if (error) { document.getElementById('l-err').textContent = error.message; return; }
-  await loadProfile(data.user.id);
-  go('home');
-}
-
-async function doSignup() {
-  const name = document.getElementById('s-name').value.trim();
-  const email = document.getElementById('s-email').value.trim();
-  const pass = document.getElementById('s-pass').value;
-  const nivel = document.getElementById('s-nivel').value;
-  document.getElementById('s-err').textContent = '';
-  if (!name || !email || !pass) { document.getElementById('s-err').textContent = 'Preencha todos os campos.'; return; }
-  if (pass.length < 6) { document.getElementById('s-err').textContent = 'Senha deve ter mínimo 6 caracteres.'; return; }
-  showLoad('Criando conta...');
-  const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { name, nivel } } });
-  hideLoad();
-  if (error) { document.getElementById('s-err').textContent = error.message; return; }
-  userProfile = { id: data.user.id, name, nivel, xp: 0, xp_max: 500, streak: 0, level_title: 'Assessor Trainee' };
-  userXP = 0;
-  updateHomeUI();
-  buildGuidedPreview();
-  go('home');
-}
-
-async function doLogout() { if(sb) await sb.auth.signOut(); }
-
-async function loadProfile(userId) {
-  try {
-    const { data } = await sb.from('profiles').select('*').eq('id', userId).single();
-    if (data) { userProfile = data; userXP = data.xp || 0; updateHomeUI(); buildGuidedPreview(); }
-  } catch(e) { console.warn('Erro ao carregar perfil:', e.message); }
-}
-
-// ── HOME UI ──
-function getLevel(xp) {
-  for (const l of LEVELS) { if (xp < l.xpMax) return l; }
-  return LEVELS[LEVELS.length - 1];
-}
-
-function updateHomeUI() {
-  if (!userProfile) return;
-  const lvl = getLevel(userXP);
-  document.getElementById('level-badge').textContent = `● ${lvl.title}`;
-  document.getElementById('streak-num').textContent = userProfile.streak || 0;
-  document.getElementById('xp-display').textContent = `${userXP.toLocaleString('pt-BR')} / ${lvl.xpMax.toLocaleString('pt-BR')} XP`;
-  document.getElementById('xp-bar').style.width = Math.min((userXP / lvl.xpMax) * 100, 100) + '%';
-}
-
-async function buildGuidedPreview() {
-  if (!sb || !userProfile) return;
-  const { data: sessions } = await sb.from('sessions')
-    .select('objetivo,score_geral,persona,humor_final')
-    .eq('user_id', userProfile.id)
-    .order('created_at', {ascending:false})
-    .limit(10);
-
-  const nivel = userProfile?.nivel || 'Iniciante';
-  let obj = 'Primeira reunião';
-
-  if (sessions && sessions.length >= 3) {
-    const objScores = {};
-    sessions.forEach(s => {
-      if (!objScores[s.objetivo]) objScores[s.objetivo] = {total:0,count:0};
-      objScores[s.objetivo].total += s.score_geral || 0;
-      objScores[s.objetivo].count++;
-    });
-    const worst = Object.entries(objScores)
-      .map(([o,d]) => ({o, avg: d.total/d.count}))
-      .sort((a,b) => a.avg - b.avg)[0];
-    if (worst) obj = worst.o;
-    renderLastSession(sessions[0]);
-  }
-
-  SE.guidedObj = obj;
-  SE.guidedDiff = nivel==='Sênior'||nivel==='Líder comercial' ? 'Alto' : nivel==='Avançado' ? 'Médio' : 'Fácil';
-
-  document.getElementById('gp-av').textContent = '✦';
-  document.getElementById('gp-av').style.background = '#F59E0B';
-  document.getElementById('gp-av').style.color = '#07101E';
-  document.getElementById('gp-name').textContent = `Cliente IA · ${SE.guidedDiff}`;
-  document.getElementById('gp-det').textContent = `Foco: ${obj} · ⚡ Gerado exclusivamente para você`;
-  document.getElementById('guided-desc').textContent = sessions && sessions.length >= 3
-    ? `Análise das últimas ${sessions.length} sessões: prioridade em "${obj}".`
-    : 'A IA criará um cliente único e realista, adaptado ao seu nível e objetivo.';
-}
-
-function renderLastSession(s) {
-  if (!s) return;
-  document.getElementById('last-session-card').innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px">
-      <div style="width:36px;height:36px;border-radius:50%;background:#1E3A5F;color:#93C5FD;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">◎</div>
-      <div style="flex:1">
-        <div style="font-size:12px;font-weight:600;color:#CBD5E1">${s.persona||'Cliente IA'} · ${s.objetivo||'—'}</div>
-        <div style="font-size:10px;color:var(--t3)">Sessão mais recente</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:18px;font-weight:800;color:var(--green)">${s.score_geral||'—'}</div>
-        <div style="font-size:9px;color:var(--t3)">score</div>
-      </div>
-    </div>`;
-}
-
-// ── MODO GUIADO ──
-async function startGuided() {
-  SE.mode = 'guided';
-  W.nivel = userProfile?.nivel || 'Intermediário';
-  W.objetivo = SE.guidedObj || 'Primeira reunião';
-  W.perfil = 'Conservador tradicional';
-  W.cenario = 'Ambiente neutro';
-  W.dificuldade = SE.guidedDiff || 'Médio';
-  W.estilo = 'auto';
-  W.duracao = 'Média';
-  W.modo = 'Normal';
-  showLoad('Preparando treino do dia...');
-  try {
-    SE.persona = await generatePersona();
-    hideLoad();
-    renderBriefing();
-    go('brief');
-  } catch(e) {
-    hideLoad();
-    showErr('Erro ao gerar treino. Tente novamente.');
-  }
-}
-
-// ── WIZARD ──
-function renderWizStep() {
-  const step = STEPS[wizStep];
-  document.getElementById('wiz-dots').innerHTML = STEPS.map((_,i)=>`<div class="si-d ${i<wizStep?'done':i===wizStep?'now':''}"></div>`).join('');
-  document.getElementById('wiz-label').textContent = `Passo ${wizStep+1} de ${STEPS.length}`;
-  const curVal = W[step.key];
-  document.getElementById('wiz-content').innerHTML = `
-    <div style="padding:16px 0 0">
-      <div class="wiz-q">${step.q}</div>
-      <div class="wiz-sub">${step.sub}</div>
-      <div class="opt-list">${step.opts.map(o => {
-        const v = o.v || o.l;
-        const sel = curVal === v ? 'sel' : '';
-        const surprise = o.s ? 'surprise' : '';
-        const esc = v.replace(/'/g,"\\'");
-        return `<div class="opt ${sel} ${surprise}" onclick="selOpt(this,'${esc}','${step.key}')">
-          <div class="opt-r"><div class="rc">✓</div></div>
-          <span class="opt-txt">${o.l}</span>
-        </div>`;
-      }).join('')}</div>
-    </div>`;
-  updateSum();
-  document.getElementById('wiz-next').textContent = wizStep < STEPS.length-1 ? 'Continuar →' : 'Gerar cliente →';
-}
-
-function selOpt(el, v, k) {
-  W[k] = v;
-  document.querySelectorAll('#wiz-content .opt').forEach(o => o.classList.remove('sel'));
-  el.classList.add('sel');
-  updateSum();
-}
-
-async function wizNext() {
-  if (!W[STEPS[wizStep].key]) { showErr('Selecione uma opção para continuar.'); return; }
-  if (wizStep < STEPS.length-1) { wizStep++; renderWizStep(); return; }
-  // Último passo — gerar persona
-  SE.mode = 'free';
-  showLoad('Gerando seu cliente...');
-  try {
-    SE.persona = await generatePersona();
-    hideLoad();
-    renderBriefing();
-    go('brief');
-  } catch(e) {
-    hideLoad();
-    showErr('Erro ao gerar cliente. Tente novamente.');
-    console.error(e);
-  }
-}
-
-function updateSum() {
-  const labels = {nivel:'Nível',objetivo:'Obj',perfil:'Perfil',cenario:'Cenário',dificuldade:'Dif',estilo:'Estilo',duracan:'Dur',modo:'Modo'};
-  const chips = Object.entries(W).filter(([,v])=>v).map(([k,v])=>`<span class="chip ca">${v}</span>`).join('');
-  document.getElementById('sel-summary').innerHTML = chips || '<span style="font-size:11px;color:var(--t3);font-style:italic">Suas escolhas aparecerão aqui</span>';
-}
-
-// ── GERAÇÃO DINÂMICO DE PERSONA ──
-async function generatePersona() {
-  const perfil = W.perfil === 'surpresa' ? 'Escolha livre — surpreenda' : W.perfil;
-  const estilo = (!W.estilo || W.estilo === 'auto') ? 'Compatível com o perfil escolhido' : W.estilo;
-  const cenario = (!W.cenario || W.cenario === 'auto') ? 'Ambiente neutro de mercado' : W.cenario;
-
-  const prompt = `Crie um personagem para simulação de reunião de assessoria de investimentos.
-
-PERFIL: ${perfil}
-OBJETIVO DA REUNIÃO: ${W.objetivo}
-CENÁRIO ECONÔMICO: ${cenario}
-ESTILO COMPORTAMENTAL: ${estilo}
-NÍVEL DO ASSESSOR: ${W.nivel}
-DIFICULDADE: ${W.dificuldade}
-
-Gere um personagem realista e coerente. Responda APENAS em JSON válido, sem markdown:
-{"nome":"Nome Sobrenome","idade":XX,"profissao":"profissão do cliente","patrimonio":"ex: R$280 mil ou R$1,4 mi","estado_inicial":"1 frase sobre o estado emocional/disposição inicial do cliente para essa reunião","contexto":"2 frases curtas sobre vida financeira e contexto patrimonial","gatilho_oculto":"1 frase sobre o medo ou motivação oculta que influencia o comportamento"}`;
-
-  const r = await fetch('/api/chat', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 400,
-      messages: [{role:'user', content:prompt}]
-    })
-  });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  const data = await r.json();
-  const raw = (data.content?.[0]?.text || '{}').replace(/```json|```/g,'').trim();
-  return JSON.parse(raw);
-}
-
-function getAvatarColor(nome) {
-  const i = nome ? (nome.charCodeAt(0) + nome.charCodeAt(nome.length-1)) % AVATAR_COLORS.length : 0;
-  return AVATAR_COLORS[i];
-}
-
-function getInitials(nome) {
-  if (!nome) return '?';
-  return nome.split(' ').map(n=>n[0]).filter(Boolean).slice(0,2).join('').toUpperCase();
-}
-
-// ── BRIEFING ──
-function renderBriefing() {
-  const p = SE.persona;
-  const obj = W.objetivo || 'Primeira reunião';
-  const initials = getInitials(p?.nome);
-  const color = getAvatarColor(p?.nome || '');
-  const textColor = (color === '#F59E0B' || color === '#10B981') ? '#07101E' : '#fff';
-  const cenario = (!W.cenario || W.cenario === 'auto') ? 'Ambiente neutro' : W.cenario;
-  const marketCtx = MARKET_CTX[cenario] || 'Cenário personalizado pela IA.';
-
-  document.getElementById('brief-content').innerHTML = `
-    <div style="padding:0 16px 16px">
-      <div class="brief-p">
-        <div class="br-av" style="background:${color};color:${textColor}">${initials}</div>
-        <div>
-          <div class="br-name">${p?.nome || 'Cliente IA'}</div>
-          <div class="br-meta">${p?.idade ? p.idade+'a' : ''} · ${p?.profissao || ''} · ${p?.patrimonio || ''}</div>
-        </div>
-      </div>
-      <div class="chips">
-        <span class="chip ca">${W.nivel || 'Intermediário'}</span>
-        <span class="chip ca">${obj}</span>
-        <span class="chip cg">${W.dificuldade || 'Médio'}</span>
-        <span class="chip cg">${cenario}</span>
-        ${W.estilo && W.estilo !== 'auto' ? `<span class="chip cg">${W.estilo}</span>` : ''}
-        ${W.modo && W.modo !== 'Normal' ? `<span class="chip cr">${W.modo}</span>` : ''}
-      </div>
-      <div class="ib ib-eval">
-        <div class="ib-lbl">◎ Estado inicial do cliente</div>
-        <div class="ib-txt">${p?.estado_inicial || 'A IA iniciará com postura coerente ao perfil.'}</div>
-      </div>
-      <div class="ib" style="background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2)">
-        <div class="ib-lbl" style="color:#A78BFA">◉ Contexto patrimonial</div>
-        <div class="ib-txt">${p?.contexto || 'Perfil gerado pela IA.'}</div>
-      </div>
-      <div class="ib ib-war">
-        <div class="ib-lbl">⚡ Cenário econômico</div>
-        <div class="ib-txt">${marketCtx}</div>
-      </div>
-      <div class="ib ib-audio">
-        <div class="ib-lbl">🎤 Modo de resposta</div>
-        <div class="ib-txt">Use o microfone para simular uma ligação real. O avaliador analisa também tom de voz — confiança, clareza e empatia.</div>
-      </div>
-      <div class="ib ib-tip">
-        <div class="ib-lbl">💡 Dica</div>
-        <div class="ib-txt">Vocà abre a conversa primeiro. A abertura já é parte do treino — a cliente reage ao tom da sua abordagem inicial.</div>
-      </div>
-    </div>`;
-}
-
-// ── SESSÃO ──
-function startSession() {
-  const p = SE.persona;
-  const initials = getInitials(p?.nome);
-  const color = getAvatarColor(p?.nome || '');
-  const textColor = (color === '#F59E0B' || color === '#10B981') ? '#07101E' : '#fff';
-  const av = document.getElementById('chat-avatar');
-  av.textContent = initials;
-  av.style.background = color;
-  av.style.color = textColor;
-  document.getElementById('chat-pname').textContent = p?.nome || 'Cliente';
-  document.getElementById('chat-psub').textContent = `${W.objetivo||'Treino'} · ${W.dificuldade||'Médio'}`;
-  document.getElementById('messages').innerHTML = '';
-  SE.history = []; SE.active = true; SE.hasAudio = false; SE.audioCount = 0; SE.lastAudio = false;
-  // Initial mood based on difficulty
-  const initMood = ['Elite','Premium'].includes(W.dificuldade) ? 'desconfiado' :
-                   ['Alto'].includes(W.dificuldade) ? 'cauteloso' : 'neutro';
-  setMood(initMood);
-  go('chat');
-  setTimeout(() => document.getElementById('chat-input').focus(), 300);
-}
-
-function setMood(m) {
-  const el = document.getElementById('mood-tag');
-  el.className = 'mood-tag';
-  const positive = ['receptivo','interessado','engajado'];
-  const neutral = ['neutro','cauteloso'];
-  const moodLabels = {
-    receptivo:'Receptivo', interessado:'Interessado', engajado:'Engajado',
-    neutro:'Neutro', cauteloso:'Cauteloso',
-    desconfiado:'Desconfiado', defensivo:'Defensivo', fechado:'Fechado',
-    frustrado:'Frustrado', impaciente:'Impaciente'
-  };
-  if (positive.includes(m)) el.classList.add('ma');
-  else if (neutral.includes(m)) el.classList.add('mn');
-  else el.classList.add('mc');
-  el.textContent = moodLabels[m] || 'Neutro';
-}
-
-function detectMood(text) {
-  const lo = text.toLowerCase();
-  if (/interessante|faz sentido|me fala mais|gostei|curioso|tô aberto|podemos conversar|pode ser/.test(lo)) return 'interessado';
-  if (/engajado|quero avançar|vamos marcar|próximo passo|fechado com isso|concordo/.test(lo)) return 'engajado';
-  if (/não sei|hm|depende|talvez|vou pensar|precisaria ver|deixa eu analisar/.test(lo)) return 'neutro';
-  if (/me preocupa|não estou convicto|antes de mais nada|cautela|ainda tenho dúvidas/.test(lo)) return 'cauteloso';
-  if (/não vejo motivo|já ouvi isso|desconfiado|conflito de interesse|quanto você ganha/.test(lo)) return 'desconfiado';
-  if (/não quero|me recuso|não é pra mim|encerrar|suficiente|não tenho interesse/.test(lo)) return 'defensivo';
-  return null;
-}
-
-function addMsg(text, who, isAudio) {
-  const msgs = document.getElementById('messages');
-  const d = document.createElement('div'); d.className = `msg msg-${who}`;
-  const name = who === 'c' ? (SE.persona?.nome?.split(' ')[0] || 'Cliente') : 'Você';
-  const audioTag = (isAudio && who === 'a') ? '<div style="font-size:10px;color:var(--amber);margin-top:4px;opacity:.8">🎤 voz</div>' : '';
-  d.innerHTML = `<div class="msg-who">${name}</div><div class="bbl bbl-${who}">${text.replace(/\n/g,'<br>')}${audioTag}</div>`;
-  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
-}
-
-function showTyping() {
-  const d = document.createElement('div'); d.id = 'typ-ind'; d.className = 'msg msg-c';
-  d.innerHTML = '<div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
-  document.getElementById('messages').appendChild(d); document.getElementById('messages').scrollTop = 9999;
-}
-function hideTyping() { const t = document.getElementById('typ-ind'); if(t) t.remove(); }
-function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight,120)+'px'; }
-function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();} }
-
-// ── ÁUDIO ──
-let recognition = null, isRecording = false;
-function toggleAudio() {
-  if (!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)) { showErr('Reconhecimento de voz disponível no Chrome ou Edge.'); return; }
-  isRecording ? stopAudio() : startAudio();
-}
-function startAudio() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SR(); recognition.lang = 'pt-BR'; recognition.continuous = false; recognition.interimResults = true;
-  recognition.onstart = () => { isRecording=true; document.getElementById('mic-btn').classList.add('recording'); document.getElementById('trans-bar').classList.add('show'); document.getElementById('interim-txt').textContent = 'Ouvindo...'; document.getElementById('chat-input').value = ''; };
-  recognition.onresult = (e) => {
-    let interim='', final='';
-    for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript;else interim+=e.results[i][0].transcript;}
-    document.getElementById('chat-input').value = final||interim;
-    document.getElementById('interim-txt').textContent = interim?`"${interim}"...`:'Processando...';
-    autoResize(document.getElementById('chat-input'));
-    if(final){stopAudio();SE.lastAudio=true;}
-  };
-  recognition.onerror = (e) => { stopAudio(); if(e.error!=='aborted')showErr('Erro de voz: '+e.error); };
-  recognition.onend = stopAudio;
-  recognition.start();
-}
-function stopAudio() {
-  if(recognition)try{recognition.stop();}catch(e){}
-  isRecording=false; document.getElementById('mic-btn').classList.remove('recording'); document.getElementById('trans-bar').classList.remove('show');
-}
-
-// ── SISTEMA DE PROMPT ──
-function buildSystemPrompt() {
-  const p = SE.persona;
-  const cenario = (!W.cenario || W.cenario === 'auto') ? 'Ambiente neutro' : W.cenario;
-  const estilo = (!W.estilo || W.estilo === 'auto') ? 'compatível com o perfil' : W.estilo;
-  const duracao = W.duracao === 'Curta' ? 'Reunião curta (5 a 8 trocas) — seja mais direto.' :
-                  W.duracao === 'Longa' ? 'Reunião longa (15+ trocas) — revele informações gradualmente.' :
-                  'Reunião média (10 a 14 trocas).';
-  const diffInstr = W.dificuldade === 'Fácil' ? 'Seja receptivo e paciente. Objeções leves.' :
-                    W.dificuldade === 'Alto' ? 'Seja exigente. Objeções frequentes e bem fundamentadas.' :
-                    W.dificuldade === 'Premium' ? 'Altíssima exigência. Quase nenhuma concessão sem mérito real.' :
-                    W.dificuldade === 'Elite' ? 'Nível máximo. Teste consistência e profundidade em cada resposta.' :
-                    'Resistência moderada.';
-  const modoInstr = (W.modo && W.modo !== 'Normal') ? `\nMODO ESPECIAL ATIVO: "${W.modo}". Incorpore esse comportamento com intensidade durante toda a conversa.` : '';
-
-  return `[CONTEXTO]
-Você é um simulador premium de treinamento comercial para assessores de investimentos.
-Sua função é interpretar clientes de forma extremamente realista, natural e psicologicamente coerente.
-
-Durante a simulação, você atua EXCLUSIVAMENTE como cliente. Você NÃO é treinador, avaliador, tutor ou narrador.
-Qualquer avaliação ou análise do desempenho do assessor só pode aparecer após "FIM DA SIMULAÇÃO".
-
-[PERSONAGEM]
-Nome: ${p?.nome || 'Cliente'}
-Idade: ${p?.idade || '?'} anos
-Profissão: ${p?.profissao || '—'}
-Patrimônio: ${p?.patrimonio || '—'}
-Estado emocional inicial: ${p?.estado_inicial || 'Neutro, avaliando a situação'}
-Contexto patrimonial: ${p?.contexto || '—'}
-Perfil: ${W.perfil}
-Estilo comportamental: ${estilo}
-
-[CONFIGURAÇÃO DA SESSÃO]
-Objetivo da reunião: ${W.objetivo}
-Cenário econômico: ${cenario}
-Nível do assessor: ${W.nivel}
-Dificuldade: ${W.dificuldade} — ${diffInstr}
-Duração: ${duracao}${modoInstr}
-
-[REGRAS ABSOLUTAS]
-- Aja como pessoa real. Varie o tamanho das respostas.
-- Não entregue todas as informações logo de início.
-- Reaja ao tom, clareza e postura do assessor.
-- Recompense boa escuta com maior abertura.
-- Aumente resistência com pressa, jargão excessivo ou venda precoce.
-- Mantenha coerência psicológica e patrimonial durante toda a conversa.
-- Incorpore o cenário econômico nas suas preocupações e perguntas.
-- Use objeções realistas e progressivas (suaves → intermediárias → avançadas).
-- Nunca revele que é IA. Nunca facilite artificialmente.
-- NUNCA dê dicas ao assessor durante a conversa.
-- NUNCA comente a qualidade da abordagem durante a simulação.
-- NUNCA escreva: "Você deveria...", "Seria melhor...", "Uma abordagem melhor seria...", "Boa resposta...", "Você está indo bem..."
-- Se sentir vontade de orientar o assessor, converta em comportamento natural do cliente:
-  em vez de "Você deveria explorar meu contexto", diga "Você está entrando em solução sem entender meu caso."
-
-[SISTEMA DE HUMOR DINÂMICO]
-Seu humor evolui conforme a qualidade da condução do assessor:
-Positivo: receptivo → interessado → engajado
-Negativo: neutro → cauteloso → desconfiado → defensivo → fechado
-- Perguntas genuínas e escuta ativa melhoram o humor
-- Superficialidade, pressa e venda precoce pioram o humor
-- Nunca anuncie o humor explicitamente. Deixe emergir no tom e nas respostas.`;
-}
-
-// ── ENVIAR MENSAGEM ──
-async function sendMsg() {
-  if(!SE.active)return;
-  const inp = document.getElementById('chat-input');
-  const text = inp.value.trim(); if(!text)return;
-  const wasAudio = SE.lastAudio; SE.lastAudio = false;
-  inp.value = ''; inp.style.height = 'auto';
-  document.getElementById('send-btn').disabled = true;
-  if(wasAudio){SE.hasAudio=true;SE.audioCount++;}
-  addMsg(text,'a',wasAudio);
-  SE.history.push({role:'user',content:wasAudio?`[Mensagem de voz]: ${text}`:text});
-  showTyping();
-  try {
-    const ctrl = new AbortController(); const to = setTimeout(()=>ctrl.abort(),28000);
-    const r = await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:350,
-        system:buildSystemPrompt(),messages:SE.history}),signal:ctrl.signal});
-    clearTimeout(to);
-    if(!r.ok){const e=await r.json();throw new Error(t.error||`HTTP ${r.status}`);}
-    const data = await r.json();
-    const reply = data.content?.[0]?.text || '...';
-    hideTyping(); addMsg(reply,'c');
-    SE.history.push({role:'assistant',content:reply});
-    const mood = detectMood(reply);
-    if (mood) setMood(mood);
-  } catch(e) { hideTyping(); SE.history.pop(); showErr(e.name==='AbortError'?'Timeout — tente novamente.':'Erro: '+e.message); }
-  document.getElementById('send-btn').disabled=false;
-  document.getElementById('chat-input').focus();
-}
-
-// ── ENCERRAR SESSÃO ──
-async function endSession() {
-  if(!SE.active){go('home');return;}
-  if(SE.history.length<2){showErr('Pratique um pouco mais antes de encerrar!');return;}
-  SE.active=false; stopAudio();
-  showLoad('Analisando sua conversa...');
-  const transcript = SE.history.map(m=>`${m.role==='user'?'Assessor':(SE.persona?.nome?.split(' ')[0]||'Cliente')}: ${m.content}`).join('\n');
-  const weights = OBJECTIVE_WEIGHTS[W.objetivo] || OBJECTIVE_WEIGHTS['_default'];
-  const weightsStr = COMP_ORDER.map(k=>`  ${COMP_NAMES[k]}: ${weights[k]}%`).join('\n');
-  const audioInstr = SE.hasAudio ? `\nO assessor usou voz (${SE.audioCount} mensagem(ns)). Avalie também tom de voz — confiança, clareza e empatia. Inclua "score_tom":0-10 e "obs_tom":"1 frase" no JSON.` : '';
-
-  try {
-    const ctrl = new AbortController(); setTimeout(()=>ctrl.abort(),30000);
-    const r = await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,
-        messages:[{role:'user',content:`Você é coach sênior de assessores de investimentos. Analise esta conversa de treinamento.
-
-OBJETIVO: ${W.objetivo}
-PERFIL DO CLIENTE: ${W.perfil}
-ESTILO: ${W.estilo||'—'}
-CENÁRIO: ${W.cenario||'—'}
-NÍVEL DO ASSESSOR: ${W.nivel}
-DIFICULDADE: ${W.dificuldade}${audioInstr}
-
-TRANSCRIÇÃO:
-${transcript}
-
-PESOS PARA ESTE OBJETIVO (${W.objetivo}):
-${weightsStr}
-
-Avalie de 0 a 10 cada competência. Calcule score_geral (0-100) aplicando os pesos. Determine o humor_final do cliente ao encerrar.
-
-Responda APENAS em JSON válido, sem markdown:
-{"score_geral":0-100,"competencias":{"rapport":0-10,"descoberta":0-10,"escuta":0-10,"leitura":0-10,"clareza":0-10,"postura":0-10,"objecoes":0-10,"adequacao":0-10,"confianca":0-10,"fechamento":0-10},"faixa":"Excelente|Muito Bom|Bom|Regular|Precisa Melhorar","veredito":"1 frase de veredito comercial","humor_final":"receptivo|interessado|engajado|neutro|cauteloso|desconfiado|defensivo|fechado|frustrado|impaciente","desfecho":"1-2 frases sobre o desfecho comercial provável","proximo_passo":"1 frase sobre o próximo passo ideal","pontos_fortes":["acerto específico 1","acerto específico 2"],"pontos_melhorar":["ponto específico 1","ponto específico 2"],"lacunas":["lacuna importante"],"analise":"análise geral em 2-3 frases específicas","dica_principal":"1-2 frases de coaching específico para este caso"${SE.hasAudio?',"score_tom":0-10,"obs_tom":"1 frase sobre tom de voz"':''}}`}]}),
-      signal:ctrl.signal});
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-    let fb;
-    try { fb = JSON.parse((data.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim()); }
-    catch(parseErr) { throw new Error('Feedback inválido — tente encerrar novamente.'); }
-    hideLoad();
-    await saveSession(fb);
-    await updateProfile(fb.score_geral||0);
-    renderFeedback(fb);
-    go('feedback');
-  } catch(e) { hideLoad(); SE.active=true; showErr(e.name==='AbortError'?'Timeout. Tente novamente.':'Erro: '+e.message); }
-}
-
-// ── SALVAR NO SUPABASE ──
-async function saveSession(fb) {
-  if(!sb||!userProfile)return;
-  const c = fb.competencias || {};
-  const scoreObj = Math.round(((c.rapport||0)+(c.descoberta||0))/2*10);
-  const scoreMkt = Math.round(((c.clareza||0)+(c.adequacao||0))/2*10);
-  const scoreEsc = Math.round(((c.escuta||0)+(c.leitura||0))/2*10);
-  const humorMap = {receptivo:'aberto',interessado:'aberto',engajado:'aberto',neutro:'neutro',cauteloso:'neutro',desconfiado:'cetico',defensivo:'cetico',fechado:'cetico',frustrado:'cetico',impaciente:'cetico'};
-  try {
-    await sb.from('sessions').insert({
-      user_id:userProfile.id,
-      persona:SE.persona?.nome||'Dinâmico',
+<!-- ─"�� TELA: LOGIN ── -->
+<di��\��H��ܙY[��YH��[��[����]��\��H�]]]ܘ\���]��\��H�]][��ȏ��]��\��H���Ȉ�[OH��۝\�^�N���X\��[�X���N���Y�\�܈[O�ZO�[O��]���]��[OH��۝\�^�N�L����܎��\�K]�H���Z[�K�]��XK��X�HXZ\ˏ�]����]���]��\��H��ܛKYܛ�\��X�[�\��H��ܛK[X�[��K[XZ[�X�[��[�]�\��H��ܛKZ[��\OH�[XZ[�YH�Y[XZ[�X�Z�\�H��]P[XZ[���H���]���]��\��H��ܛKYܛ�\��X�[�\��H��ܛK[X�[���[�O�X�[��[�]�\��H��ܛKZ[��\OH�\���ܙ�YH�\\�ȈX�Z�\�H��(��(��(��(��(��(��(��(��ۚ�^Y�ۏH�Y�]�[���^OOOI�[�\��Y���[�
+H���]���]�YH�Y\����\��H�\��[\�ȏ��]����]ۈ�\��H�����XH��[OH�X\��[�X���N�M�X\��[�]����ۘ�X��H����[�
+H��[��\�؝]ۏ��]��[OH�^X[Yێ��[�\�ٛ۝\�^�N�L����܎��\�K]�H������[H�۝O��]ۈ�\��H�[��X���ۘ�X��H���	��Y۝\	�H��ܚX\��۝Hܘ]Z]O؝]ۏ��]����]����]����KKH8� 8� SN��QT���8� 8� KO��]��\��H��ܙY[��YH��\�Y۝\���]��\��H��X�X�Ȉ�[OH�Y[�΍L������]ۈ�\��H��X��X���ۘ�X��H���	���[��H����؝]ۏ��]��\��H��]]H��ܚX\��۝O�]����]���]��\��H�]]]ܘ\��[OH�Y[��]������]��\��H��ܛKYܛ�\��X�[�\��H��ܛK[X�[���]H��YO�X�[��[�]�\��H��ܛKZ[��\OH�^�YH��[�[YH�X�Z�\�H�������[�H���]���]��\��H��ܛKYܛ�\��X�[�\��H��ܛK[X�[��K[XZ[�X�[��[�]�\��H��ܛKZ[��\OH�[XZ[�YH��Y[XZ[�X�Z�\�H��]P[XZ[���H���]���]��\��H��ܛKYܛ�\��X�[�\��H��ܛK[X�[���[�H
+p�[�[[�
+��\�X�\�\�O�X�[��[�]�\��H��ܛKZ[��\OH�\���ܙ�YH��\\�ȈX�Z�\�H��(��(��(��(��(��(��(��(����]���]��\��H��ܛKYܛ�\��X�[�\��H��ܛK[X�[���]H��]�[]X[��[�\��\��܏�X�[���[X��\��H��ܛK\�[X��YH��[�]�[����[ۈ�[YOH�[�X�X[�H��[�X�X[�H8�%Y[���HH[����[ۏ���[ۈ�[YOH�[�\�YYp�\�[ȏ�[�\�YYp�\�[�8�%HH�[�����[ۏ���[ۈ�[YOH�]�[���Yȏ�]�[���Y�8�%�H
+[�����[ۏ���[ۈ�[YOH��ꛚ[܈���ꛚ[܈8�%
+�[�����[ۏ����[X���]���]�YH��Y\����\��H�\��[\�ȏ��]����]ۈ�\��H�����XH�ۘ�X��H���Y۝\
+
+H��ܚX\��۝HH��Yp��\�؝]ۏ���]����]����KKH8� 8� SN�T���T�8� 8� KO��]��\��H��ܙY[��YH��Z�YH���]��\��H�����]��\��H���ȏ�Y�\�܈[O�ZO�[O��]���]��[OH�\�^N��^�[YۋZ][\Θ�[�\���\����]�YH�]�[X�Y�H��[OH��X��ܛ�[���\�K\̊N؛ܙ\��\��Y�\�KX�JN؛ܙ\�\�Y]\Ό��Y[�΍\L�ٛ۝\�^�N�L\ٛ۝]�ZY������܎��\�K]�H������\��Y�[�ˋ���]����]ۈۘ�X��H�����]
+
+H��[OH��Y���ZY���؛ܙ\�\�Y]\΍L	NؘX��ܛ�[���\�K\̊N؛ܙ\��\��Y�\�KX�JN���܎��\�K]�N��\��܎��[�\�ٛ۝\�^�N�L��\�^N��^�[YۋZ][\Θ�[�\�ڝ\�Y�KX�۝[���[�\��]OH��Z\�����O؝]ۏ���]����]���]��\��H��ܛ����]��\��H���XZ�\��ȏ��]��\��H�و��'�)O�]���]��]��\��H�ۈ�YH���XZ�[�[H���]��]��\��H�����X\��Y�ZY���]���]���]��\��H�]ȏ��]��\��H�]����[��\�H���[[���]�[��[���[��\��H�]��YH�Y\�^H����[���]���]��\��H�X�\���]��\��H�Y�[�YH�X�\���[OH��Y�	H���]���]����]����]���]��\��H�����Z[���XO�]���]��\��H��\�YȈۘ�X��H��\��ZYY
+
+H���]��\��H��Y�H�H���)��\\�Y�[HPO�]���]��[OH��۝\�^�N�M�ٛ۝]�ZY������܎��\�K]JN�X\��[�X���N�\���Z[���ZXY��]���]��[OH��۝\�^�N�L����܎��\�K]�N�[�KZZY��K�N�X\��[�X���N�M�YH��ZYYY\�ȏ�HPH�ۜ����H[H�Y[�H0X��H�X[\�H\�H��]H��]�[Hؚ�]]�ˏ�]���]��\��H�����]��\��H��X]��YH��X]���[OH��X��ܛ�[���\�KX[X�\�N���܎��
+�LQH���)��]���]��]��\��H��[�[YH�YH��[�[YH���\��Y�[�ˋ���]��]��\��H��Y]�YH��Y]���%�]���]����]����]ۈ�\��H�����XH�������Yp��\��Z[���XO؝]ۏ���]���]��\��H����[OH�X\��[�]������Z[��]��O�]���]��\��H��\���[OH��\��܎��[�\���[��][ێ��[�ٛܛH�M\Ȉۘ�X��H���	��^�\�	�H�ۛ[�\�[ݙ\�H�\˜�[K��[�ٛܛOI��[��]VJL�
+IȈۛ[�\�[�]H�\˜�[K��[�ٛܛOI�ȏ��]��\��H��Y�H�����H�ۙ�Y�\�\��\������]���]��[OH��۝\�^�N�M�ٛ۝]�ZY������܎��\�K]JN�X\��[�X���N�\���Z[��]��O�]���]��[OH��۝\�^�N�L����܎��\�K]�N�[�KZZY��K�N�X\��[�X���N�M������\���Hؚ�]]��\��[�[��\�[�Y�X�[YHH\�[�8�%HPHܚXH��Y[�K��]����]ۈ�\��H�����[ȏ�\��ۘ[^�\�Y]H�Z[��8���؝]ۏ���]���]��\��H����[OH�X\��[�]������[XH�\������]���]�YH�\�\�\��[ۋX�\���\��H��\���[OH��۝\�^�N�L����܎��\�K]�H���[�[XH�\�����Z[�K���YX�HY�ܘHO�]����]����]��\��H���]����]��\��H��Hۈ��]��\��H��KZX�ۈ��� ��]��]��\��H��K\\���]��]��\��H��K[���[��X�[��]���]���]��\��H��H��]��\��H��KZX�ۈ��'���]��]��\��H��K[���\�0�ܚX���]���]���]��\��H��H��]��\��H��KZX�ۈ��'���]��]��\��H��K[����[��[���]���]���]��\��H��H��]��\��H��KZX�ۈ�����]��]��\��H��K[���\��[�]���]���ۘ]����]����KKH8� 8� SN��V�T�8� 8� KO��]��\��H��ܙY[��YH��]�^�\����]��\��H��X�X�ȏ���]ۈ�\��H��X��X���ۘ�X��H���	��YI�H����؝]ۏ��]��[OH��^�H���]��\��H��K[��YH��^�[X�[��\���HH�]���]��\��H��KY�ȈYH��^�Y�ȏ��]����]����]���]��\��H��ܛ��YH��^�X�۝[����]���]��\��H��^�Y������]��\��H��[\�[H�YH��[\�[[X\�H���[��[OH��۝\�^�N�L\���܎��\�K]�Nٛ۝\�[N�][Xȏ��X\�\���\�\\�X�\����\]ZO��[���]����]ۈ�\��H�����XH�YH��^�[�^�ۘ�X��H��^��^
+
+H���۝[�X\�8���؝]ۏ���]����]����KKH8� 8� SN���QQ�S��8� 8� KO��]��\��H��ܙY[��YH��X��YY����]��\��H��X�X�ȏ���]ۈ�\��H��X��X���ۘ�X��H���	��^�\�	�H����؝]ۏ��]��\��H��]]H���XH�\������]����]���]��\��H��ܛ��YH���YY�X�۝[����]���]��[OH�Y[�ΌMM�ٛ^\��[�Ό����]ۈ�\��H�����XH�ۘ�X��H��\��\��[ۊ
+H�������Yp��\�8�%����X��H�[YZ\��؝]ۏ���]����]����KKH8� 8� SN��U8� 8� KO��]��\��H��ܙY[��YH��X�]���]��\��H��]Z����]��\��H��X]��YH��]X]�]\�����]���]��]��\��H��[�[YH�YH��]\�[YH���%�]��]��\��H��\�X��YH��]\�X����%�]���]���]��\��H�[��]Y�[��YH�[��]Yȏ��]]���]����]ۈ�\��H��X���YH��X���ۘ�X��H����U�
+H�]OH��ވH\��ۘH��'�!���[��؝]ۏ���]ۈ�\��H�[�\Ȉۘ�X��H�[��\��[ۊ
+H��[��\��\�؝]ۏ���]���]��\��H��[��X�\��YH��[��X�\����]��\��H��[��\���[OH��Y�M��ZY��M�؛ܙ\�]�Y�����]����[�YH�[�\�[K]���]�[�ˋ����[����]���]��\��H�\��ȈYH�Y\��Y�\ȏ��]���]��\��H��]Z[�X\�XH����]ۈ�\��H�ZX�X���YH�ZX�X���ۘ�X��H����P]Y[�
+H��'�]��\��H��X�Y����]��؝]ۏ��^\�XH�\��H��]Z[��YH��]Z[�]�X�Z�\�H��\�ۙH��[�\��\��܋��������H�H�ۚ�^Y�ۏH�[�R�^J]�[�
+H�ۚ[�]H�]]ԙ\�^�J\�H���^\�XO���]ۈ�\��H��[�X���YH��[�X���ۘ�X��H��[�\��
+H���ݙ��YH�M��ZY�H�M���Y]Л�H�M�M���[H��
+�LQH��]H�LK�HK�[L�
+��KLL�
+��U�K�[KLK�KNKLK�U�K�^��Ϗ�ݙς�؝]ۏ���]����]����KKH8� 8� SN��QQ�P��8� 8� KO��]��\��H��ܙY[��YH��Y�YY�X�ȏ��]��\��H��X�X�ȏ���]ۈ�\��H��X��X���ۘ�X��H���	��YI�H����؝]ۏ��]��\��H��]]H��[��[\�HH�\������]����]���]��\��H��ܛ��YH��YY�X��X�۝[����]���]��[OH�Y[�ΌMM�ٛ^\��[�Ό����]ۈ�\��H�����[Ȉۘ�X��H��\�\��[YJ
+H��'���\]\���HY\�XH\��ۘO؝]ۏ���]����]����]��\��H��Y[݈�YH��Y[�ȏ�]��\��H��[��\����]��]��\��H��Y]�YH��Y]���\��Y�[�ˋ���]���]���]��\��H�\��]�\��YH�\��]�\����]����KKH8� 8� S�S�SU�S�P����P�H8� 8� KO��]��\��H��[݈�YH��[[�[��[OH�\�^N��ۙH���]��\��H��X�����ϼ'�"��ވH\��ۘO�ς����H�XHTH�^H�[]�[�X�ˈH�ވ�\��H�[X�[ۘYH]]�X]X�[Y[�HHX�ܙ���H�ꛙ\��YYHH[[܈H\��ۘK����X�[�TH�^H[]�[�X���X�[��[�]YH�[Z�^KZ[�]�\OH�\���ܙ�X�Z�\�H���ˋ�����]��\��H��\��ȏ���]ۈ�\��H��\�]�H�ۘ�X��H��]�U��^J
+H��]]�\��ޏ؝]ۏ���]ۈ�\��H��X�[��[�ۘ�X��H���[Y[���][[Y[��RY
+	��[[�[	�K��[K�\�^OIۛۙIȏ��[��[\�؝]ۏ���]����]����]�����ܚ\����8� 8� �ӑ�Q�8� 8� ��ۜ��TP�T�W�T�H	�΋�٘[�����\�����X���\X�\�K�����ۜ��TP�T�W�S�ӗ��VHH	�^R����S�R�U^�LS�R\�[��X��M�Z��ҎK�^R���ZS�R���[Q����\�[���RM�[V���[�̝������̝�[[RZ]�X�N\֔�M�[Q�X��SҜVZSڑLӞ�L��̓�\�[U���M�Z�MSQL��M[��\�
+�YRU�Y�֍^V[���P���R��]��XP[SI���ۜ�U�S�H�]N��\��\��܈�Z[�YI�X^�LK�]N��\��\��܈��۞�I�X^�LK��]N��\��\��܈�]I�X^��K�]N��\��\��܈�\���X^�K��]N��\��\��܈X[X[�I�X^��K�]N��\��\��܈[]I�X^�NNNN_B�N��ۜ��T�H�N��]X[0�H�]H��]�[���X����[X��HH^Y�ꛘ�XH��Y[�HH��H��YY�X�ˉ��^N�ۚ]�[	���Ζ����[�X�X[�I�K���[�\�YYp�\�[��K���]�[���Y��K����ꛚ[܉�K���0�Y\���Y\��X[	�W_K��N��ؚ�]]��H�][�p������X����]�[XY܈�ZH���\��\��H��\]0ꛘ�XK���^N��ؚ�]]�����Ζ�����[YZ\�H�][�p����K���XY۰���X��]�[[ۚX[	�K���X��\[�[Y[��H�\�Z\�I�K�����\p�����H�X�\�����K��ԙ][������H�Y[�I�K��ԙX[��p�����H�\�Z\�I�K���ՙ[�HH�Y�\���K��ՙ[�HH�ۜ��ܘ�[��K����X�\�����]�[[ۚX[	�K������p������[Z[X\��K���[�Z�[Y[��H\]ZY^��K��ԙ][�p���0���\\�I�K����^X�p�����H�[��\�[�XXܛ��K��ԙX]]�p�����H�Y[�I�K�����ۘ�[��p�����H]�[p��[��K��њ[�[��X[[��[���W_K��N��\��[��Y[�O���X���HPH�ۜ����H[H\��ۘY�[H��\]�H0X�ˉ��^N��\��[	���Ζ�����ۜ�\��Y܈�YX�[ۘ[	�K���[�\�Y�[��Y�\���K���Yܙ\��]��[\X�Y[�I�K����[H�[�H^Y�[�I�K���[�HY��]�ܝ	�K���^�[X[Y[�H�X�[ۘ[	�K���ћ��Y�\[�\�[H^I�K����][X]^�Y�܈\�\��K���\��ۙ�XY�H\��\��܉�K����ZY��H[��[����K���^\�Y[�HH]Y\�[ۘY܉�K���[\�\��\�[��Y�p�]X���K����p�YX���[H[\��K���\��[�Y����Y�[H�[�I�K��қݙ[HX�[][Y܉�K����]�[[ۚX[\�I�K��ј[Z[X\����Y�[H��p������K���]�[p��[��ۘ�[��Y��K������\\�H��H�[�����]�]I�K��Ӱ���]Y\��\��[�Y��K�����)��\��\�HHPI�����\��\�I�Ν�Y_W_K��N���[��\�[�X�۰�ZX�����X���Y�]H\��[��\p���Y\�Hؚ�p���Y\���Y[�K���^N���[�\�[����Ζ���ҝ\���[��H[��p�����\��\�[�I�K���]YYHH�\����K���ܚ\�H�\��[�p�\�X�I�K���Л��H[H�ܝH]YYI�K��Л��H[H]Y�ܚXI�K���ܰ�Y]��]�Y�[H\��\��I�K����0��\�[H[I�K���[��\�^�H�0�]X�I�K��ԙX�\�������H[�Y[\0ꛘ�XI�K���ԙX�\\�p�����ܘYX[	�K����[��\�[�^\���Y�\����K���[X�Y[�H�]]���K�����)�\���\�]]�X]X�[Y[�I����]]��Ν�Y_W_K��N��ܘ]HHY�X�[YO���X����[X��HH[�[��YYHH�\�\�0ꛘ�XH��Y[�K���^N��Y�X�[YI���Ζ���Ѱ�X�[	�K���p�Y[��K���[��K����[Z][I�K���[]I�W_K��N��\�[���\ܝ[Y[�[���X���\��ۘ[YYH�Z[�[�H��Y[�H�H�][�p��ˉ��^N��\�[����Ζ�����ܙX[HX�\���K����]][����K��ќ�[�Hؚ�]]���K���Y�[��]���K�����[[��[����K�����^��K����ݛ��Y܉�K��ԙ\�\�[�I�K����YX�Y�H\��ۙ�XY��K���[[��[ۘ[Y[�HX�[Y��K���\�\��Y��K����[�[X�X[Y[�H�Z[�[�I�K����)���\]0�]�[��H�\��[	����]]��Ν�Y_W_K��N��\�p�����H�\��������X���]\�Z[�H��][�H���Y\��H���\�\�\�Y\ˉ��^N��\�X�[����Ζ�����\�H8�%
+HH���\������\�I�K���p�YXH8�%LHM���\�����p�YXI�K���ۙ�H8�%MJ����\�����ۙ�I�W_K��N��[��\�X�X[���X���]]�H��\ܝ[Y[���\�X��Y�X���H�Z[�[Y[��]�[���Yˉ��^N��[�����Ζ���ӛܛX[	�K����Y[�HY��X�[	�K����Y[�H�[[��[����K����Y[�Hؘ�X�Y�܈^I�K�����Y[�H[��]\ٙZ]��K����Y[�H]YH��\\�H��H�ۘ�ܜ�ꛘ�XI�K�����Y[�H]YH�\��[ۘH܈��]��K����Y[�H]YH]Y\��\Y^��K�����Y[�H]YH]�]H�\�ۙ\��K����Y[�H[[Y[�H�ٚ\�X�Y��K���И[��H^[Z[�YܘH��Y\��X[	�W_B�N��ۜ���TӐSQT�H�\ܝ��X�\�\�HH�\ܝ	��\��ؙ\�N��\��ؙ\�HH�X�\��YY\���\��]N��\��]H]]�I��Z]\�N��Z]\�H[[��[ۘ[	���\�^�N���\�^�HHY0�]X�I����\�N����\�H�ۜ�[]�I��ؚ�X��\Ή��][Y[��Hؚ�p���Y\���Y\]XX�[Ή�Y\]Xp�����H��p��������ۙ�X[��N���\�p�����H�ۙ�X[���I���X�[Y[�ΉљX�[Y[��H���[[�\���N��ۜ���T�ԑT�H�ܘ\ܝ	�	�\��ؙ\�I�	�\��]I�	�Z]\�I�	��\�^�I�	���\�I�	�ؚ�X��\��	�Y\]XX�[��	��ۙ�X[��I�	ٙX�[Y[���N��ۜ�В�P�U�W��RQ��H	��[YZ\�H�][�p���Έܘ\ܝ�MK\��ؙ\�N��\��]N�LZ]\�N�L�\�^�N�L��\�N�MKؚ�X��\΍KY\]XX�[΍K�ۙ�X[��N�K�X�[Y[�΍_K�	ԙ][������H�Y[�IΈܘ\ܝ�L\��ؙ\�N�L\��]N�MKZ]\�N�MK�\�^�N�K��\�N�MKؚ�X��\ΌLY\]XX�[΍K�ۙ�X[��N�L�X�[Y[�΍_K�	�X��\[�[Y[��H�\�Z\�IΞܘ\ܝ�K\��ؙ\�N�L\��]N�LZ]\�N�K�\�^�N�MK��\�N�Lؚ�X��\ΌLY\]XX�[Ό��ۙ�X[��N�K�X�[Y[�ΌLK�	ՙ[�HH�Y�\��Έܘ\ܝ�L\��ؙ\�N�MK\��]N�LZ]\�N�L�\�^�N�L��\�N�MKؚ�X��\ΌLY\]XX�[ΌMK�ۙ�X[��N���X�[Y[�Ό�K�	ՙ[�HH�ۜ��ܘ�[�Έܘ\ܝ�\��ؙ\�N�N\��]N�LZ]\�N��\�^�N�L���\�N�MKؚ�X��\ΌLY\]XX�[ΌMK�ۙ�X[��N���X�[Y[�Ό�K�	��\p�����H�X�\����Έܘ\ܝ�L�\��ؙ\�N�N\��]N�Z]\�N��\�^�N�L��\�N�MKؚ�X��\ΌLY\]XX�[Ύ�ۙ�X[��N�K�X�[Y[�΍�K�	ԙ][�p���0���\\�IΈܘ\ܝ�\��ؙ\�N�L\��]N�MKZ]\�N���\�^�N���\�N�MKؚ�X��\ΎY\]XX�[΍��ۙ�X[��N�K�X�[Y[�΍_K�	��Y�][	Έܘ\ܝ�L\��ؙ\�N�MK\��]N�LZ]\�N�L�\�^�N�L��\�N�MKؚ�X��\ΌLY\]XX�[ΌL�ۙ�X[��N�K�X�[Y[�΍_B�N��ۜ�U�UT����Ԕ�H��эNQL��	��Ў����	���Pэ��	��L�NI�	��M�M���	��Q�
+�
+�	�юM��M��N��ۜ�PT��U��H	ҝ\���[��H[��p�����\��\�[�IΉ��[X�[]�YK��Y[�H���H[H\]ZY^�0���Y�^Y��H�Y�\�[���K�[��p������ܜ���H�[�H�X[���	�]YYHH�\���Ή��X��H]YYHH�[XˈX�]H�؜�H[ۙ�[Y[��]�\��Y�X�p�����H�[�H�\�p�]�[���	�ܚ\�H�\��[�p�\�X�IΉ�]\�[ܘp�����\��۝\�0X�\ˈ��Z[�H�\���[ˈ�Y[�H]�\���H�\�����[���	Л��H[H�ܝH]YYIΉ�X�ݙ\�H[H]YYK��Y[�HY�[��]�����Y�[H�\�\��\�]�[p��[ˉ��	Л��H[H]Y�ܚXIΉ�X�ݙ\�H[H[K��\���H��S�H^�\���H�ۙ�X[���K���	�ܰ�Y]��]�Y�[H\��\��IΉ���XY�X��[���[���Hܰ�Y]�X\��Y�ˈ�Y[�H]Y\�[ۘH[Z\��ܙ\ˉ��	�0��\�[H[IΉԙX[\�X�XYˈX�]H�؜�H��p������[X�X[H]]����\�^�Y�ˉ��	�[��\�^�H�0�]X�IΉԝp�Y��0�]X��[�[��ˈ�Y[�H\�[\�Y��H��H�\����^�[XYK���	ԙX�\�������H[�Y[\0ꛘ�XIΉ�P��Y�]]��ܰ�Y]�\\�[�ˈ����[H�Z^HH���ꛘ�XK���	ԙX�\\�p�����ܘYX[	Ή�Y[ܘH�X]�K��ܝ[�YYHH�]�\����\��]0�Y�X�K���	��[��\�[�^\���Y�\���Ή��\������ؘ[��Y]��\���[[�]Y\���0�]Z\ˈY\��Y���]][���ˉ��	�[X�Y[�H�]]��Ή��[��\�[�\�0�]�[������H0���X�H�ܝ���[ˉ��	�]]�Ή��[��\�[�]X[HY\��Y�8�%HPH[��ܜܘH��۝^��ۙ�ܛYH�\��[��Y[�K�N���8� 8� T�Q��АS8� 8� �]؈H�[]\�\��ٚ[HH�[]\�\�H�ۜ��Hۚ]�[��[ؚ�]]�Λ�[\��[��[�[�\�[Λ�[Y�X�[YN��[\�[Λ�[\�X�[Λ�[[�Λ�[N]�^��\H�ۜ��HH�\��ۘN��[\�ܞN��Kؚ�]]�Λ�[[�N��[X�]�N��[�K\�]Y[Ι�[�K]Y[���[��\�]Y[Ι�[�K�ZYYؚ���[�ZYYY����[N���8� 8� S�P�PSV�p�����8� 8� �\�[���[��[ۈ[�]
+
+H؈H�[��˜�\X�\�K�ܙX]P�Y[�
+�TP�T�W�T��TP�T�W�S�ӗ��VJN�H�ۜ��]N���\��[ۈHHH]�Z]؋�]]��]�\��[ۊ
+NY�
+�\��[ۊH�]�Z]�Y�ٚ[J�\��[ۋ�\�\��Y
+N���	��YI�N�B�[�H��	���[��NH�]�
+JH���	���[��N�B�؋�]]�ې]]�]P�[��J
+]�[�
+HO��Y�
+]�[�OOH	��QӑQ��U	�H�\�\��ٚ[HH�[���	�\�\��ٚ[HH�[�����[��N�_JNB����8� 8� UU8� 8� ��[���[��[ۈ���[�
+H�ۜ�[XZ[H��[Y[���][[Y[��RY
+	�Y[XZ[	�K��[YK��[J
+N�ۜ�\��H��[Y[���][[Y[��RY
+	�\\���K��[YN��[Y[���][[Y[��RY
+	�Y\���K�^�۝[�H	��Y�
+Y[XZ[\\��H���[Y[���][[Y[��RY
+	�Y\���K�^�۝[�H	��Y[��HK[XZ[H�[�K����]\���B�����Y
+	�[��[�ˋ���N�ۜ��]K\��܈HH]�Z]؋�]]��Yے[��]\���ܙ
+�[XZ[\���ܙ�\��JNYS�Y
+
+NY�
+\��܊H���[Y[���][[Y[��RY
+	�Y\���K�^�۝[�H\��܋�Y\��Y�N��]\���B�]�Z]�Y�ٚ[J]K�\�\��Y
+N��	��YI�NB��\�[���[��[ۈ��Y۝\
+
+H�ۜ��[YHH��[Y[���][[Y[��RY
+	��[�[YI�K��[YK��[J
+N�ۜ�[XZ[H��[Y[���][[Y[��RY
+	��Y[XZ[	�K��[YK��[J
+N�ۜ�\��H��[Y[���][[Y[��RY
+	��\\���K��[YN�ۜ��]�[H��[Y[���][[Y[��RY
+	��[�]�[	�K��[YN��[Y[���][[Y[��RY
+	��Y\���K�^�۝[�H	��Y�
+[�[YHY[XZ[\\��H���[Y[���][[Y[��RY
+	��Y\���K�^�۝[�H	��YF�6�F�F�2�26��2�s�&WGW&�Т�b�72��V�wF��b��F�7V�V�B�vWDV�V�V�D'��B�w2�W'"r��FW�D6��FV�B�u6V�FWfRFW"�:����b6&7FW&W2�s�&WGW&�Т6��t��B�t7&��F�6��F���r���6��7B�FF�W'&�"��v�B6"�WF��6�v�W��V����77v�&C�72��F���3��FF����R��fV���ғ����FT��B�����b�W'&�"��F�7V�V�B�vWDV�V�V�D'��B�w2�W'"r��FW�D6��FV�B�W'&�"��W76vS�&WGW&�ТW6W%&�f��R���C�FF�W6W"�B���R��fV����������S�7G&V����WfV��F�F�S�t76W76�"G&��VRrӰ�W6W%����WFFT���UT�����'V��DwV�FVE&Wf�Wr����v�v���Rr���Р�7��2gV�7F���F���v�WB����b�6"�v�B6"�WF��6�v��WB���Р�7��2gV�7F�����E&�f��R�W6W$�B���G'���6��7B�FF��v�B6"�g&�҂w&�f��W2r��6V�V7B�r�r��W�v�Br�W6W$�B��6��v�R�����b�FF��W6W%&�f��R�FF�W6W%��FF����WFFT���UT����'V��DwV�FVE&Wf�Wr���Т�6F6��R��6��6��R�v&�tW'&��6'&Vv"W&f�âr�R��W76vR��ЧР���)H)H���RT�)H)H �gV�7F���vWD�WfV����f�"�6��7B��b�UdT�2���b��������&WGW&�òТ&WGW&��UdT�5��UdT�2��V�wF��Ӱ�Р�gV�7F���WFFT���UT������b�W6W%&�f��R�&WGW&㰢6��7B�f��vWD�WfVW6W%����F�7V�V�B�vWDV�V�V�D'��B�v�WfV��&FvRr��FW�D6��FV�B�)x�G��f��F�F�W���F�7V�V�B�vWDV�V�V�D'��B�w7G&V���V�r��FW�D6��FV�B�W6W%&�f��R�7G&V�����F�7V�V�B�vWDV�V�V�D'��B�w��F�7��r��FW�D6��FV�B�G�W6W%��F���6�U7G&��r�wB�%"r���G��f�����F���6�U7G&��r�wB�%"r�����F�7V�V�B�vWDV�V�V�D'��B�w��&"r��7G��R�v�GF���F��֖₇W6W%���f���������rRs��Р�7��2gV�7F���'V��DwV�FVE&Wf�Wr�����b�6"��W6W%&�f��R�&WGW&㰢6��7B�FF�6W76���2��v�B6"�g&�҂w6W76���2r���6V�V7B�v�&�WF�f��66�&U�vW&��W'6��ƇV��%�f���r���W�wW6W%��Br�W6W%&�f��R�B����&FW"�v7&VFVE�Br��66V�F��s�f�6WҐ��Ɩ֗B�����6��7B�fV��W6W%&�f��S���fV���t��6��FRs���WB�&��u&��V�&&WV�:6�s����b�6W76���2bb6W76���2��V�wF���2���6��7B�&�66�&W2��Ӱ�6W76���2�f�$V6��2�����b��&�66�&W5�2��&�WF�f�Ғ�&�66�&W5�2��&�WF�f����F�Fã�6�V�C�Ӱ��&�66�&W5�2��&�WF�f���F�F���2�66�&U�vW&������&�66�&W5�2��&�WF�f���6�V�B����ғ��6��7Bv�'7B��&�V7B�V�G&�W2��&�66�&W2���������EҒ������fs�B�F�F��B�6�V�GҒ���6�'B���"����fr�"�fr��Ӱ��b�v�'7B��&��v�'7B��&V�FW$�7E6W76���6W76���5�ғ��Р�4R�wV�FVD�&���&���4R�wV�FVDF�fb��fV����u<:���"w���fV����t�:�FW"6��W&6��r�t�F�r��fV����tf�:vF�r�t�:�F��r�tl:6��s���F�7V�V�B�vWDV�V�V�D'��B�vw�br��FW�D6��FV�B�~)�bs��F�7V�V�B�vWDV�V�V�D'��B�vw�br��7G��R�&6�w&�V�B�r4cS�S"s��F�7V�V�B�vWDV�V�V�D'��B�vw�br��7G��R�6���"�r3sRs��F�7V�V�B�vWDV�V�V�D'��B�vw���Rr��FW�D6��FV�B�6ƖV�FR�+rG�4R�wV�FVDF�fg���F�7V�V�B�vWDV�V�V�D'��B�vw�FWBr��FW�D6��FV�B�f�6�G��&��+r)�vW&F�W�6�W6�f�V�FR&f�<:���F�7V�V�B�vWDV�V�V�D'��B�vwV�FVB�FW62r��FW�D6��FV�B�6W76���2bb6W76���2��V�wF���0���:Ɨ6RF2;��F��2G�6W76���2��V�wF��6W7<;VW3�&��&�FFRV�"G��&��"� ��t�7&�,:V�6ƖV�FR;��6�R&VƗ7F�FFF��6WR�:�fV�R�&�WF�f��s��Р�gV�7F���&V�FW$�7E6W76���2����b�2�&WGW&㰢F�7V�V�B�vWDV�V�V�D'��B�v�7B�6W76����6&Br����W$�D��� ��F�b7G��S�&F�7���f�W��Ɩv�֗FV�3�6V�FW#�v��#��F�b7G��S�'v�GF��3g���V�v�C�3g��&�&FW"�&F�W3�SS�&6�w&�V�C�3S4Tc�6���#�3�43TdC�f��B�6��S�G��f��B�vV�v�C���F�7���f�W��Ɩv�֗FV�3�6V�FW#��W7F�g��6��FV�C�6V�FW#�f�W��6�&�泣#�)x���F�c��F�b7G��S�&f�W��#��F�b7G��S�&f��B�6��S�'��f��B�vV�v�C�c�6���#�44$CTS#�G�2�W'6����t6ƖV�FR�w�+rG�2��&�WF�f���~(	Bw���F�c��F�b7G��S�&f��B�6��S���6���#�f"���C2�#�6W7<:6���2&V6V�FS��F�c���F�c��F�b7G��S�'FW�B�Ɩv�&�v�B#��F�b7G��S�&f��B�6��S����f��B�vV�v�C���6���#�f"���w&VV�#�G�2�66�&U�vW&���~(	Bw���F�c��F�b7G��S�&f��B�6��S����6���#�f"���C2�#�66�&S��F�c���F�c���F�c���Р���)H)H��D�uT�D�)H)H �7��2gV�7F���7F'DwV�FVB����4R���FR�vwV�FVBs��r��fV��W6W%&�f��S���fV���t��FW&�VF�:&��s��r��&�WF�f��4R�wV�FVD�&���u&��V�&&WV�:6�s��r�W&f���t6��6W'fF�"G&F�6����s��r�6V�&���t�&�V�FR�WWG&�s��r�F�f�7V�FFR�4R�wV�FVDF�fb��t�:�F��s��r�W7F����vWF�s��r�GW&6��t�:�F�s��r���F��t��&��s��6��t��B�u&W&�F�G&V���F�F����r���G'���4R�W'6���v�BvV�W&FUW'6��������FT��B������Ef��6TV�v��R����&V�FW$'&�Vf��r����v�v'&�Vbr����6F6��R�����FT��B����6��tW'"�tW'&��vW&"G&V����FV�FR��f�V�FR�r���ЧР���)H)Ht��$B)H)H �gV�7F���&V�FW%v��7FW����6��7B7FW�5DU5�v��7FWӰ�F�7V�V�B�vWDV�V�V�D'��B�wv���F�G2r����W$�D���5DU2�����ƒ����F�b6�73�'6��BG���v��7FW�vF��Rs�����v��7FW�v��rs�rw�#���F�c������rr���F�7V�V�B�vWDV�V�V�D'��B�wv����&V�r��FW�D6��FV�B�76�G�v��7FW��FRG�5DU2��V�wF����6��7B7W%f��u�7FW�W�Ӱ�F�7V�V�B�vWDV�V�V�D'��B�wv���6��FV�Br����W$�D��� ��F�b7G��S�'FF��s�g�#��F�b6�73�'v���#�G�7FW����F�c��F�b6�73�'v���7V"#�G�7FW�7V'���F�c��F�b6�73�&�B�Ɨ7B#�G�7FW��G2��������6��7Bb���b����ð�6��7B6V��7W%f����b�w6V�r�rs��6��7B7W'&�6R���2�w7W'&�6Rr�rs��6��7BW62�b�&W�6R��r�r�%��r"���&WGW&��F�b6�73�&�BG�6V��G�7W'&�6W�"��6Ɩ6��'6V��B�F��2�rG�W67�r�rG�7FW�W��r�#��F�b6�73�&�B�"#��F�b6�73�'&2#�)�3��F�c���F�c��7�6�73�&�B�G�B#�G�������7����F�c���Ғ����rr����F�c���F�c���WFFU7V҂���F�7V�V�B�vWDV�V�V�D'��B�wv����W�Br��FW�D6��FV�B�v��7FW�5DU2��V�wF���t6��F��V"(i"r�tvW&"6ƖV�FR(i"s��Р�gV�7F���6V��B�V��b�����u����c��F�7V�V�B�VW'�6V�V7F�$�r7v���6��FV�B��Br��f�$V6�������6�74Ɨ7B�&V��fR�w6V�r����V��6�74Ɨ7B�FB�w6V�r���WFFU7V҂���Р�7��2gV�7F���v���W�B�����b�u�5DU5�v��7FW��W�Ғ�6��tW'"�u6V�V6���RV��:|:6�&6��F��V"�r��&WGW&�Т�b�v��7FW�5DU2��V�wF����v��7FW���&V�FW%v��7FW���&WGW&�Т��9��F���76�(	BvW&"W'6���4R���FR�vg&VRs��6��t��B�tvW&�F�6WR6ƖV�FR���r���G'���4R�W'6���v�BvV�W&FUW'6��������FT��B������Ef��6TV�v��R����&V�FW$'&�Vf��r����v�v'&�Vbr����6F6��R�����FT��B����6��tW'"�tW'&��vW&"6ƖV�FR�FV�FR��f�V�FR�r���6��6��R�W'&�"�R���ЧР�gV�7F���WFFU7V҂���6��7B�&V�2���fVât�:�fV�r��&�WF�f�t�&�r�W&f�âuW&f��r�6V�&��t6V�:&��r�F�f�7V�FFS�tF�br�W7F���tW7F���r�GW&6�tGW"r���F�t��F�wӰ�6��7B6��2��&�V7B�V�G&�W2�r��f��FW"����eғ��b��������eғ���7�6�73�&6��6#�G�g���7�������rr���F�7V�V�B�vWDV�V�V�D'��B�w6V��7V��'�r����W$�D���6��2��s�7�7G��S�&f��B�6��S���6���#�f"���C2��f��B�7G��S��FƖ2#�7V2W66�Ɔ2&V6W,:6�V���7��s��Р���)H)HtU$8|84�D��8$Ԕ4DRU%4��)H)H �7��2gV�7F���vV�W&FUW'6������6��7BW&f���r�W&f�����w7W'&W6r�tW66�ƆƗg&R(	B7W'&VV�Fr�r�W&f�ð�6��7BW7F�����r�W7F�����r�W7F������vWF�r��t6��L:�fV�6���W&f��W66�Ɔ�F�r�r�W7F���6��7B6V�&����r�6V�&����r�6V�&�����vWF�r��t�&�V�FR�WWG&�FR�W&6F�r�r�6V�&�󰠢6��7B&��B�7&�RV�W'6��vV�&6��V�:|:6�FR&WV�:6�FR76W76�&�FR��fW7F��V�F�2ࠥU$d�âG�W&f��Ф�$�UD�d�D$UT�84�G�r��&�WF�f�Ф4T�8$��T4��9DԔ4�G�6V�&��ФU5D���4���%D�T�DâG�W7F���Ф�8�dT�D�54U54�#�G�r��fV�ФD�d�5T�DDS�G�r�F�f�7V�FFWР�vW&RV�W'6��vV�&VƗ7FR6�W&V�FR�&W7��FT�2V��4��l:ƖF��6V��&�F�v㠧�&���R#�$���R6�'&V���R"�&�FFR#����'&�f�76�#�'&�f�7<:6�F�6ƖV�FR"�'G&�����#�&W��"C#�֖��R"C�B֒"�&W7FF����6��#�#g&6R6�'&R�W7FF�V��6�����F�7�6�:|:6���6��F�6ƖV�FR&W76&WV�:6�"�&6��FW�F�#�#"g&6W27W'F26�'&Rf�Ff���6V�&R6��FW�F�G&�����"�&vF�Ɔ���7V�F�#�#g&6R6�'&R��VF��R��F�f:|:6��7V�FVR��f�VV�6��6���'F�V�F�'����6��7B"�v�BfWF6��r���6�Br����WF��C�u�5Br���VFW'3��t6��FV�B�G�Rs�vƖ6F�����6��w���&�G���4���7G&��v�g������FVâv6�VFR�6���WB�B�##SSBr�����F��V�3�C���W76vW3���&��S�wW6W"r�6��FV�C�&��G�ТҐ�ғ���b�"����F�&�r�WrW'&�"��EEG�"�7FGW7����6��7BFF�v�B"�6�ₓ��6��7B&r��FF�6��FV�C�����FW�B��w��r��&W�6R���6����r�rr��G&�҂���&WGW&��4���'6R�&r���Р�gV�7F���vWDfF$6���"����R���6��7B�����R�����R�6�$6�FTB������R�6�$6�FTB����R��V�wF����RdD%�4���%2��V�wF����&WGW&�dD%�4���%5��Ӱ�Р�gV�7F���vWD��F��2����R����b����R�&WGW&�s�s��&WGW&����R�7ƗB�rr��������Ғ�f��FW"�&���V��6Ɩ6R��"�����rr��F�WW$66R����Р���)H)H%$�Td��r)H)H �gV�7F���&V�FW$'&�Vf��r����6��7B�4R�W'6����6��7B�&��r��&�WF�f���u&��V�&&WV�:6�s��6��7B��F��2�vWD��F��2������R���6��7B6���"�vWDfF$6���"������R��rr���6��7BFW�D6���"��6���"���r4cS�S"r��6���"���r3#��r��r3sRr�r6ffbs��6��7B6V�&����r�6V�&����r�6V�&�����vWF�r��t�&�V�FR�WWG&�r�r�6V�&��6��7B�&�WD7G���$�UE�5E��6V�&�����t6V�:&��W'6��Ɨ�F�V���s��F�7V�V�B�vWDV�V�V�D'��B�v'&�Vb�6��FV�Br����W$�D����F�b7G��S�'FF��s�g�g�#��F�b6�73�&'&�Vb�#��F�b6�73�&'"�b"7G��S�&&6�w&�V�C�G�6���'Ӷ6���#�G�FW�D6���'�#�G���F��7���F�c��F�c��F�b6�73�&'"���R#�G������R��t6ƖV�FR�w���F�c��F�b6�73�&'"��WF#�G���FFR��FFR�vr�rw�+rG���&�f�76���rw�+rG���G&�������rw���F�c���F�c���F�c��F�b6�73�&6��2#��7�6�73�&6��6#�G�r��fV���t��FW&�VF�:&��w���7���7�6�73�&6��6#�G��&����7���7�6�73�&6��6r#�G�r�F�f�7V�FFR��t�:�F��w���7���7�6�73�&6��6r#�G�6V�&�����7��G�r�W7F���bbr�W7F�����vWF�r��7�6�73�&6��6r#�G�r�W7F������7���rw�G�r���F�bbr���F���t��&��r��7�6�73�&6��7"#�G�r���F����7���rw���F�c��F�b6�73�&�"�"�Wf�#��F�b6�73�&�"��&�#�)x�W7FF���6��F�6ƖV�FS��F�c��F�b6�73�&�"�G�B#�G���W7FF����6����t���6�,:6���7GW&6�W&V�FR�W&f���w���F�c���F�c��F�b6�73�&�""7G��S�&&6�w&�V�C�&v&�3�Ó"�#Cb��b��&�&FW#��6�ƖB&v&�3�Ó"�#Cb��"�#��F�b6�73�&�"��&�"7G��S�&6���#�4s�$d#�)x�6��FW�F�G&�������F�c��F�b6�73�&�"�G�B#�G���6��FW�F���uW&f��vW&F�V���w���F�c���F�c��F�b6�73�&�"�"�v"#��F�b6�73�&�"��&�#�)�6V�:&��V6��;F֖6���F�c��F�b6�73�&�"�G�B#�G��&�WD7G����F�c���F�c��F�b6�73�&�"�"�VF��#��F�b6�73�&�"��&�#�	��B��F�FR&W7�7F��F�c��F�b6�73�&�"�G�B#�W6R�֖7&�f��R&6��V�"V�Ɩv:|:6�&V���fƖF�"�Ɨ6F�,:��F��FRf��(	B6��f��:v�6�&W�RV�F����F�c���F�c��F�b6�73�&�"�"�F�#��F�b6�73�&�"��&�#�	�*F�6��F�c��F�b6�73�&�"�G�B#�f�<:�'&R6��fW'6&��V�&���F�c���F�c���F�c���Р���)H)H4U5<84�)H)H �gV�7F���7F'E6W76��ₒ��6��7B�4R�W'6����6��7B��F��2�vWD��F��2������R���6��7B6���"�vWDfF$6���"������R��rr���6��7BFW�D6���"��6���"���r4cS�S"r��6���"���r3#��r��r3sRr�r6ffbs��6��7Bb�F�7V�V�B�vWDV�V�V�D'��B�v6�B�fF"r���b�FW�D6��FV�B���F��3��b�7G��R�&6�w&�V�B�6���#��b�7G��R�6���"�FW�D6���#��F�7V�V�B�vWDV�V�V�D'��B�v6�B���Rr��FW�D6��FV�B������R��t6ƖV�FRs��F�7V�V�B�vWDV�V�V�D'��B�v6�B�7V"r��FW�D6��FV�B�G�r��&�WF�f���uG&V���w�+rG�r�F�f�7V�FFW��t�:�F��w���F�7V�V�B�vWDV�V�V�D'��B�v�W76vW2r����W$�D���rs��4R憗7F�'���Ӳ4R�7F�fR�G'VS�4R�4VF���f�6S�4R�VF��6�V�B��4R��7DVF���f�6S��6��7B��D���B��tVƗFRr�u&V֗V�u���6�VFW2�r�F�f�7V�FFR��vFW66��f�F�r��t�F�u���6�VFW2�r�F�f�7V�FFR��v6WFV��6�r�v�WWG&�s��6WD���B���D���B���v�v6�Br���6WEF��V�WB�����F�7V�V�B�vWDV�V�V�D'��B�v6�B֖�WBr��f�7W2���3���Р�gV�7F���6WD���B�Ғ��6��7BV��F�7V�V�B�vWDV�V�V�D'��B�v���B�Frr���V��6�74��R�v���B�Frs��6��7B�6�F�fR��w&V6WF�f�r�v��FW&W76F�r�vV�v�F�uӰ�6��7B�WWG&���v�WWG&�r�v6WFV��6�uӰ�6��7B���D�&V�2��&V6WF�f�u&V6WF�f�rƖ�FW&W76F�t��FW&W76F�r�V�v�F�tV�v�F�r��WWG&�t�WWG&�r�6WFV��6�t6WFV��6�r�FW66��f�F�tFW66��f�F�r�FVfV�6�f�tFVfV�6�f�r�fV6�F�tfV6�F�r�g'W7G&F�tg'W7G&F�rƖ�6�V�FS�t��6�V�FRwӰ��b��6�F�fR��6�VFW2�Ғ�V��6�74Ɨ7B�FB�v�r���V�6R�b��WWG&���6�VFW2�Ғ�V��6�74Ɨ7B�@B�v��r���V�6RV��6�74Ɨ7B�FB�v�2r���V��FW�D6��FV�B����D�&V�5�����t�WWG&�s��Р�gV�7F���FWFV7D���B�FW�B���6��7B���FW�B�F���vW$66R�����b����FW&W76�FW�f�6V�F�F���Rf���7�v�7FV��7W&��6��L;B&W'F���FV��26��fW'6'��FR6W"��FW7B���&WGW&�v��FW&W76F�s���b��V�v�F��VW&�f�:v'�f��2�&6'�,;7����76��fV6�F�6���76��6��6�&F���FW7B���&WGW&�vV�v�F�s���b���:6�6V�Ɔ��FWV�FW�F�fW��f�RV�6'�&V6�6&�fW'�FV��WR�Ɨ6"��FW7B���&WGW&�v�WWG&�s���b���R&V�7W��:6�W7F�R6��f�7F���FW2FR��2�F�6WFV����FFV��L;�f�F2��FW7B���&WGW&�v6WFV��6�s���b���:6�fV����F�f�Ƭ:�Wf��76��FW66��f�F��6��fƗF�FR��FW&W76W�V�F�f�<:�v���FW7B���&WGW&�vFW66��f�F�s���b���:6�VW&���R&V7W6���:6�:�&֖��V�6W'&'�7Vf�6�V�FW��:6�FV����FW&W76R��FW7B���&WGW&�vFVfV�6�f�s��&WGW&��V�ð�Р�gV�7F���FD�6r�FW�B�v����4VF����6��7B�6w2�F�7V�V�B�vWDV�V�V�D'��B�v�W76vW2r���6��7BB�F�7V�V�B�7&VFTV�V�V�B�vF�br��B�6�74��R��6r�6r�G�v�����6��7B��R�v�����v2r��4R�W'6�������S��7ƗB�rr�����t6ƖV�FRr��uf�<:�s��6��7BVF��Fr���4VF��bbv�����vr��s�F�b7G��S�&f��B�6��S���6���#�f"����&W"���&v���F��G���6�G���#�	��Bf����F�c�r�rs��B���W$�D����F�b6�73�&�6r�v��#�G���W���F�c��F�b6�73�&&&�&&��G�v���#�G�FW�B�&W�6R�����r�s�'#�r��G�VF��Fw���F�c����6w2�V�D6���B�B���6w2�67&���F���6w2�67&��ĆV�v�C��Р�gV�7F���6��uG���r����6��7BB�F�7V�V�B�7&VFTV�V�V�B�vF�br��B�B�wG�֖�Bs�B�6�74��R�v�6r�6r�2s��B���W$�D���s�F�b6�73�'G���r#��F�b6�73�'FB#���F�c��F�b6�73�'FB#���F�c��F�b6�73�'FB#���F�c���F�c�s��F�7V�V�B�vWDV�V�V�D'��B�v�W76vW2r��V�D6���B�B��F�7V�V�B�vWDV�V�V�D'��B�v�W76vW2r��67&���F��������ЦgV�7F�����FUG���r���6��7BB�F�7V�V�B�vWDV�V�V�D'��B�wG�֖�Br���b�B�B�&V��fR���ЦgV�7F���WF�&W6��R�V�V��7G��R�V�v�B�vWF�s�V��7G��R�V�v�B��F��֖�V��67&��ĆV�v�B�#��w�s�ЦgV�7F�����F�T�W��R���b�R�W����tV�FW"rbbR�6��gD�W���R�&WfV�DFVfV�B���6V�D�6r����Р���)H)H8TD��)H)H ��WB&V6�v�F�����V����5&V6�&F��r�f�6S��gV�7F���F�vv�TVF�����b��wvV&��E7VV6�&V6�v�F���r��v��F�w��u7VV6�&V6�v�F���r��v��F�r���6��tW'"�u&V6��V6��V�F�FRf��F�7��:�fV���6�&��R�RVFvR�r��&WGW&�Т�5&V6�&F��r�7F�VF���7F'DVF�򂓰�ЦgV�7F���7F'DVF����6��7B5"�v��F�r�7VV6�&V6�v�F�����v��F�r�vV&��E7VV6�&V6�v�F��㰢&V6�v�F�����Wr5"���&V6�v�F������r�wB�%"s�&V6�v�F����6��F��V�W2�f�6S�&V6�v�F�����FW&��&W7V�G2�G'VS��&V6�v�F������7F'B������7F�W'6��VF�򂓲�5&V6�&F��s�G'VS�F�7V�V�B�vWDV�V�V�D'��B�v֖2�'F�r��6�74Ɨ7B�FB�w&V6�&F��rr��F�7V�V�B�vWDV�V�V�D'��B�wG&�2�&"r��6�74Ɨ7B�FB�w6��rr��F�7V�V�B�vWDV�V�V�D'��B�v��FW&���G�Br��FW�D6��FV�B�t�Wf��F����s�F�7V�V�B�vWDV�V�V�D'��B�v6�B֖�WBr��f�VR�rs�Ӱ�&V6�v�F������&W7V�B��R������WB��FW&���rr�f����rs��f�"��WB��R�&W7V�D��FW����R�&W7V�G2��V�wF��������b�R�&W7V�G5����4f��f��³�R�&W7V�G5��ճ��G&�67&�C�V�6R��FW&�ҳ�R�&W7V�G5��ճ��G&�67&�C�ТF�7V�V�B�vWDV�V�V�D'��B�v6�B֖�WBr��f�VR�f����Ɩ�FW&�Ӱ�F�7V�V�B�vWDV�V�V�D'��B�v��FW&���G�Br��FW�D6��FV�B���FW&���"G���FW&���"����u&�6W76�F����s��WF�&W6��R�F�7V�V�B�vWDV�V�V�D'��B�v6�B֖�WBr�����b�f���7F�VF�򂓵4R��7DVF���G'VS�ТӰ�&V6�v�F������W'&�"��R����7F�VF�򂓲�b�R�W'&�"��v&�'FVBr�6��tW'"�tW'&�FRf���r�R�W'&�"��Ӱ�&V6�v�F������V�B�7F�VF��&V6�v�F����7F'B����ЦgV�7F���7F�VF�����b�&V6�v�F���G'��&V6�v�F����7F�����6F6��R��Т�5&V6�&F��s�f�6S�F�7V�V�B�vWDV�V�V�D'��B�v֖2�'F�r��6�74Ɨ7B�&V��fR�w&V6�&F��rr��F�7V�V�B�vWDV�V�V�D'��B�wG&�2�&"r��6�74Ɨ7B�&V��fR�w6��rr���Р���)H)H4�5DT�DR$��B)H)H �gV�7F���'V��E7�7FV�&��B����6��7B�4R�W'6����6��7B6V�&����r�6V�&����r�6V�&�����vWF�r��t�&�V�FR�WWG&�r�r�6V�&��6��7BW7F�����r�W7F�����r�W7F������vWF�r��v6��L:�fV�6���W&f��r�r�W7F���6��7BGW&6��r�GW&6����t7W'Fr�u&WV�:6�7W'F�R�G&�62�(	B6V���2F�&WF��r��r�GW&6����t���vr�u&WV�:6����v�R�G&�62�(	B&WfV�R��f�&�:|;VW2w&GV��V�FR�r��u&WV�:6��:�F��BG&�62��s��6��7BF�fd��7G"�r�F�f�7V�FFR���tl:6��r�u6V�&V6WF�f�R6�V�FR��&�\:|;VW2�WfW2�r��r�F�f�7V�FFR���t�F�r�u6V�W��vV�FR��&�\:|;VW2g&WVV�FW2R&V�gV�F�V�FF2�r��r�F�f�7V�FFR���u&V֗V�r�t�L:�76��W��|:��6��V6R�V�V�6��6W7<:6�6V��:�&�F�&V��r��r�F�f�7V�FFR���tVƗFRr�t�:�fV��:�����FW7FR6��6�7L:��6�R&�gV�F�FFRV�6F&W7�7F�r��u&W6�7L:��6���FW&F�s��6��7B��F���7G"��r���F�bbr���F���t��&��r������D�U5T4��D�d�"G�r���F��"���6�'�&RW76R6���'F�V�F�6����FV�6�FFRGW&�FRF�F6��fW'6��rs���&WGW&��4��DU�D�Хf�<:�:�V�6��V�F�"&V֗V�FRG&V���V�F�6��W&6��&76W76�&W2FR��fW7F��V�F�2�7VgV�:|:6�:���FW'&WF"6ƖV�FW2FRf�&�W�G&V��V�FR&VƗ7F��GW&�R6�6���v�6�V�FR6�W&V�FRࠤGW&�FR6��V�:|:6��f�<:�GVU�4�U4�d�T�DR6���6ƖV�FR�f�<:��84�:�G&V��F�"�fƖF�"�GWF�"�R�'&F�"�V�VW"fƖ:|:6��R�:Ɨ6RF�FW6V�V��F�76W76�"<;2�FR&V6W";72$d��D4��T�8|84�"ࠥ�U%4��tT�Ф���S�G������R��t6ƖV�FRwФ�FFS�G���FFR��s�w���0�&�f�7<:6�G���&�f�76���~(	BwХG&��;F��G���G&�������~(	BwФW7FF�V��6������6�âG���W7FF����6����t�WWG&��fƖ�F�6�GV:|:6�wФ6��FW�F�G&����âG���6��FW�F���~(	BwХW&f�âG�r�W&f��ФW7F���6���'F�V�FâG�W7F���Р��4��d�uU$8|84�D4U5<84�Ф�&�WF�f�F&WV�:6�G�r��&�WF�f�Ф6V�:&��V6��;F֖6�G�6V�&��Ф�:�fV�F�76W76�#�G�r��fV�ФF�f�7V�FFS�G�r�F�f�7V�FFW�(	BG�F�fd��7G'ФGW&:|:6�G�GW&6��G���F���7G'Р��$Tu$2%4��UD5Т��6���W76�&V��f&�R�F���F2&W7�7F2���:6�V�G&VwVRF�F22��f�&�:|;VW2��v�FR��:�6����&V��F���6�&W�R�7GW&F�76W76�"��&V6��V�6R&�W67WF6�����"&W'GW&��V�V�FR&W6�7L:��6�6��&W76��&|:6�W�6W76�f��RfV�F&V6�6R����FV�6�W,:��6�6�6��;6v�6RG&�����GW&�FRF�F6��fW'6����6�'�&R�6V�:&��V6��;F֖6��27V2&V�7W:|;VW2RW&wV�F2��W6R�&�\:|;VW2&VƗ7F2R&�w&W76�f2�7VfW2(i"��FW&�VF�:&�2(i"f�:vF2����V�6&WfV�RVR:����V�6f6�ƗFR'F�f�6���V�FR���T�4L:�F�62�76W76�"GW&�FR6��fW'6���T�46��V�FRVƖFFRF&�&FvV�GW&�FR6��V�:|:6����T�4W67&Wf�%f�<:�FWfW&����"�%6W&��VƆ�"���"�%V�&�&FvV��VƆ�"6W&����"�$&�&W7�7F���"�%f�<:�W7L:��F�&V���� ��6R6V�F�"f��FFRFR�&�V�F"�76W76�"�6��fW'FV�6���'F�V�F��GW&�F�6ƖV�FS��V�fW�FR%f�<:�FWfW&�W���&"�WR6��FW�F�"�F�v%f�<:�W7L:V�G&�F�V�6��\:|:6�6V�V�FV�FW"�WR66�� ���4�5DT�DR�T��"D��8$Ԕ4�Х6WR�V��"Wf��V�6��f�&�RVƖFFRF6��G\:|:6�F�76W76�#���6�F�f�&V6WF�f�(i"��FW&W76F�(i"V�v�F��VvF�f��WWG&�(i"6WFV��6�(i"FW66��f�F�(i"FVfV�6�f�(i"fV6�F��W&wV�F2vV�\:��2RW67WFF�f�VƆ�&���V�� ��7WW&f�6�ƖFFR�&W76RfV�F&V6�6R��&���V�� ���V�6�V�6�R��V��"W�Ɩ6�F�V�FR�FV��RV�W&v�"��F��R�2&W7�7F2���Р���)H)HT�d�"�T�4tT�)H)H �7��2gV�7F���6V�D�6r�����b�4R�7F�fR�&WGW&㰢6��7B���F�7V�V�B�vWDV�V�V�D'��B�v6�B֖�WBr���6��7BFW�B����f�VR�G&�҂���b�FW�B�&WGW&㰢6��7Bv4VF���4R��7DVF��4R��7DVF���f�6S�����f�VR�rs����7G��R�V�v�B�vWF�s��F�7V�V�B�vWDV�V�V�D'��B�w6V�B�'F�r��F�6&�VB�G'VS���b�v4VF��4R�4VF���G'VS�4R�VF��6�V�B���ТFD�6r�FW�B�vr�v4VF�򓰢4R憗7F�'��W6���&��S�wW6W"r�6��FV�C�v4VF�����V�6vV�FRf��ӢG�FW�G��FW�Gғ��6��uG���r����G'���6��7B7G&���Wr&�'D6��G&���W"���6��7BF��6WEF��V�WB�����7G&��&�'B���#����6��7B"�v�BfWF6��r���6�BrǶ�WF��C�u�5BrƆVFW'3��t6��FV�B�G�Rs�vƖ6F�����6��w���&�G���4���7G&��v�g�����FVâv6�VFR�6���WB�B�##SSBr����F��V�3�3S��7�7FVӦ'V��E7�7FV�&��B����W76vW3�4R憗7F�'�Ғ�6�v�æ7G&��6�v��ғ��6�V%F��V�WB�F򓰢�b�"�����6��7BS�v�B"�6�ₓ�F�&�r�WrW'&�"�R�W'&�'���EEG�"�7FGW7���Т6��7BFF�v�B"�6�ₓ��6��7B&Wǒ�FF�6��FV�C�����FW�B��r���s����FUG���r���FD�6r�&Wǒ�v2r���7V�W'6���&Wǒ���4R憗7F�'��W6���&��S�v76�7F�Br�6��FV�C�&WǗғ��6��7B���B�FWFV7D���B�&Wǒ����b����B�6WD���B����B����6F6��R����FUG���r���4R憗7F�'������6��tW'"�R���S���t&�'DW'&�"s�uF��V�WB(	BFV�FR��f�V�FR�s�tW'&�r�R��W76vR��ТF�7V�V�B�vWDV�V�V�D'��B�w6V�B�'F�r��F�6&�VC�f�6S��F�7V�V�B�vWDV�V�V�D'��B�v6�B֖�WBr��f�7W2����Р���)H)HT�4U%$"4U5<84�)H)H �7��2gV�7F���V�E6W76��ₒ���b�4R�7F�fR��v�v���Rr��&WGW&�Т�b�4R憗7F�'���V�wF��"��6��tW'"�u&F�VRV��V6���2�FW2FRV�6W'&"r��&WGW&�Т4R�7F�fS�f�6S�7F�VF�򂓲7F�W'6��VF�򂓰�6��t��B�t�Ɨ6�F�7V6��fW'6���r���6��7BG&�67&�B�4R憗7F�'�������G���&��S���wW6W"s�t76W76�"s��4R�W'6�������S��7ƗB�rr�����t6ƖV�FRr�ӢG���6��FV�G������u��r���6��7BvV�v�G2��$�T5D�dU�tT�t�E5�r��&�WF�f�����$�T5D�dU�tT�t�E5�u�FVfV�BuӰ�6��7BvV�v�G57G"�4����$DU"������G�4�����U5���ӢG�vV�v�G5����V�����u��r���6��7BVF����7G"�4R�4VF������76W76�"W6�Rf���G�4R�VF��6�V�G��V�6vV҆�2���fƖRF�,:��F��FRf��(	B6��f��:v�6�&W�RV�F����6�V'66�&U�F��#��R&�'5�F��#�#g&6R"���4����rs���G'���6��7B7G&���Wr&�'D6��G&���W"���6WEF��V�WB�����7G&��&�'B���3���6��7B"�v�BfWF6��r���6�BrǶ�WF��C�u�5BrƆVFW'3��t6��FV�B�G�Rs�vƖ6F�����6��w���&�G���4���7G&��v�g�����FVâv6�VFR�6���WB�B�##SSBr����F��V�3�S���W76vW3���&��S�wW6W"r�6��FV�C�f�<:�:�6�6�<:���"FR76W76�&W2FR��fW7F��V�F�2��Ɨ6RW7F6��fW'6FRG&V���V�F�ࠤ�$�UD�d�G�r��&�WF�f�ХU$d��D�4ĔT�DS�G�r�W&f��ФU5D���G�r�W7F�����~(	BwФ4T�8$��G�r�6V�&����~(	BwФ�8�dT�D�54U54�#�G�r��fV�ФD�d�5T�DDS�G�r�F�f�7V�FFW�G�VF����7G'Р�E$�45$�8|84�G�G&�67&�GР�U4�2$U5DR�$�UD�d��G�r��&�WF�f�ғ��G�vV�v�G57G'Р�fƖRFR6F6��WL:��6��6�7V�R66�&U�vW&����Ɩ6�F��2W6�2�FWFW&֖�R��V��%�f���F�6ƖV�FR�V�6W'&"ࠥ&W7��FT�2V��4��l:ƖF��6V��&�F�v㠧�'66�&U�vW&�#���&6��WFV�6�2#��'&�'B#���&FW66�&W'F#���&W67WF#���&�V�GW&#���&6�&W�#���'�7GW&#���&�&�V6�W2#���&FWV6�#���&6��f��6#���&fV6��V�F�#����&f��#�$W�6V�V�FW��V�F�&���&���&VwV�'�&V6�6�VƆ�&""�'fW&VF�F�#�#g&6RFRfW&VF�F�6��W&6��"�&�V��%�f���#�'&V6WF�f�Ɩ�FW&W76F��V�v�F���WWG&��6WFV��6��FW66��f�F��FVfV�6�f��fV6�F��g'W7G&F�Ɩ�6�V�FR"�&FW6fV6��#�#�"g&6W26�'&R�FW6fV6��6��W&6��&�l:fV�"�'&������76�#�#g&6R6�'&R�,;7����76��FV�"�'��F�5�f�'FW2#��&6W'F�W7V<:�f�6�"�&6W'F�W7V<:�f�6�"%��'��F�5��VƆ�&"#��'��F�W7V<:�f�6�"�'��F�W7V<:�f�6�"%��&�7V�2#��&�7V����'F�FR%��&�Ɨ6R#�&�:Ɨ6RvW&�V�"�2g&6W2W7V<:�f�62"�&F�6�&��6��#�#�"g&6W2FR6�6���rW7V<:�f�6�&W7FR66�"G�4R�4VF���r�'66�&U�F��#���&�'5�F��#�#g&6R6�'&RF��FRf��"s�rw����Ғ��6�v�æ7G&��6�v��ғ���b�"����F�&�r�WrW'&�"��EEG�"�7FGW7����6��7BFF�v�B"�6�ₓ���WBf#��G'��f"��4���'6R��FF�6��FV�C�����FW�G��w��r��&W�6R���6����r�rr��G&�҂���Т6F6��'6TW'"��F�&�r�WrW'&�"�tfVVF&6���l:ƖF�(	BFV�FRV�6W'&"��f�V�FR�r��Т��FT��B����v�B6fU6W76���f"���v�BWFFU&�f��R�f"�66�&U�vW&������&V�FW$fVVF&6��f"���v�vfVVF&6�r����6F6��R����FT��B���4R�7F�fS�G'VS�6��tW'"�R���S���t&�'DW'&�"s�uF��V�WB�FV�FR��f�V�FR�s�tW'&�r�R��W76vR��ЧР���)H)H4�d"��5U$4R)H)H �7��2gV�7F���6fU6W76���f"����b�6'��W6W%&�f��R�&WGW&㰢6��7B2�f"�6��WFV�6�2���Ӱ�6��7B66�&T�&���F��&�V�B���2�&�'G�����2�FW66�&W'F�����"����6��7B66�&TַB��F��&�V�B���2�6�&W������2�FWV6������"����6��7B66�&TW62��F��&�V�B���2�W67WF�����2��V�GW&�����"����6��7B�V��$���&V6WF�f�v&W'F�rƖ�FW&W76F�v&W'F�r�V�v�F�v&W'F�r��WWG&�v�WWG&�r�6WFV��6�v�WWG&�r�FW66��f�F�v6WF�6�r�FVfV�6�f�v6WF�6�r�fV6�F�v6WF�6�r�g'W7G&F�v6WF�6�rƖ�6�V�FS�v6WF�6�wӰ�G'���v�B6"�g&�҂w6W76���2r���6W'B���W6W%��C�W6W%&�f��R�B��W'6���4R�W'6�������W��tF��:&֖6�r���&�WF�f�r��&�WF�f���6V�&��r�6V�&����~(	Br��F�f�7V�FFS�r�F�f�7V�FFW��t�:�F��r���fV��W7V&��r��fV���W6W%&�f��R��fV���t��FW&�VF�:&��r����FS�4R���FW��vg&VRr��66�&U�vW&æf"�66�&U�vW&���66�&U��&�WF�f�66�&T�&���66�!?.nome||'Dinâmico',
       objetivo:W.objetivo,
       cenario:W.cenario||'—',
       dificuldade:W.dificuldade||'Médio',
@@ -1097,7 +381,7 @@ function renderFeedback(fb) {
 }
 
 function restartSame() {
-  SE.history=[]; SE.active=true; SE.hasAudio=false; SE.audioCount=0; SE.lastAudio=false;
+  SE.history=[]; SE.active=true; SE.hasAudio=false; SE.audioCount=0; SE.lastAudio=false; stopPersonaAudio();
   document.getElementById('messages').innerHTML='';
   const initMood = ['Elite','Premium'].includes(W.dificuldade) ? 'desconfiado' :
                    ['Alto'].includes(W.dificuldade) ? 'cauteloso' : 'neutro';
@@ -1120,7 +404,92 @@ function showLoad(t){document.getElementById('load-txt').textContent=t;document.
 function hideLoad(){document.getElementById('loading').classList.remove('show');}
 function showErr(msg){const t=document.getElementById('err-toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4500);}
 
+// ── ELEVENLABS VOICE ENGINE ──
+const _FEMALE_N=new Set(['ana','maria','julia','juliana','laura','fernanda','beatriz','camila','carolina','leticia','claudia','patricia','mariana','renata','carla','sandra','viviane','gabriela','rafaela','andrea','vanessa','simone','alessandra','priscila','cristina','monica','rosa','lucia','luzia','tereza','vera','elaine','denise','fabiana','gisele','natalia','tamires','bianca','isabela','alice','sophia','valentina','helena','manuela','giovanna','livia','clara','bruna','roberta','tatiana','silvana','elisa','flavia','katia','adriana','debora','solange','eliana','rosana','marcia','erika','sueli','aparecida']);
+const _MALE_N=new Set(['joao','jose','antonio','francisco','carlos','paulo','pedro','lucas','luis','marcos','gabriel','rafael','daniel','marcelo',�rodrigo','andre','felipe','thiago','leandro','fernando','gustavo','sergio','fabio','alex','eduardo','roberto','leonardo','mario','henrique','vitor','diego','renato','alexandre','igor','guilherme','bruno','matheus','arthur','caio','davi','samuel','murilo','heitor','enzo','nicolas','ryan','renan']);
+
+function _inferGender(nome){const f=nome.split(' ')[0].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');if(_FEMALE_N.has(f))return'feminino';if(_MALE_N.has(f))return'masculino';if(/[aáà]$/.test(f))return'feminino';return'masculino';}
+function _mapAge(i){return i<32?'young':i<55?'middle_aged':'old';}
+function _hash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
+
+function _voiceSettings(estilo,humor,dif){
+  const b={Ansioso:{s:.35,b:.75,st:.70},Técnico:{s:.80,b:.85,st:.15},Desconfiado:{s:.55,b:.80,st:.45},Decisivo:{s:.75,b:.80,st:.30},'Intelectualmente dominante':{s:.82,b:.78,st:.20}}[estilo]||{s:.55,b:.75,st:.40};
+  const hm={receptivo:{ds:.05,dst:-.05},interessado:{ds:.03,dst:-.03},neutro:{ds:0,dst:0},cauteloso:{ds:-.03,dst:.05},desconfiado:{ds:-.06,dst:.08},defensivo:{ds:-.08,dst:.12},fechado:{ds:-.10,dst:.15},frustrado:{ds:-.12,dst:.18},impaciente:{ds:-.15,dst:.20}}[(humor||'neutro').toLowerCase()]||{ds:0,dst:0};
+  const dm={Simples:{ds:.05,dst:-.05},Moderada:{ds:0,dst:0},'Difícil':{ds:-.05,dst:.08},Elite:{ds:-.08,dst:.12},Premium:{ds:-.10,dst:.15}}[dif]||{ds:0,dst:0};
+  const cl=v=>Math.max(0,Math.min(1,v));
+  return{stability:cl(b.s+hm.ds+dm.ds),similarity_boost:cl(b.b),style:cl(b.st+hm.dst+dm.dst),use_speaker_boost:true};
+}
+
+function _selectVoice(voices,genero,idade,estilo){
+  const tg=genero==='feminino'?'female':'male', ta=_mapAge(idade);
+  let pool=voices.filter(v=>v.labels?.gender===tg);if(!pool.length)pool=voices;
+  const ap=pool.filter(v=>v.labels?.age===ta);if(ap.length)pool=ap;
+  const cp=pool.filter(v=>['conversational','social_media'].includes(v.labels?.use_case));if(cp.length)pool=cp;
+  return pool[_hash(`${genero}_${ta}_${estilo}`)%pool.length];
+}
+
+let ttsEnabled=!!localStorage.getItem('el_key');
+let ttsVoiceId=null, ttsSettings=null, ttsAudio=null;
+
+function updateTTSBtn(){
+  const b=document.getElementById('tts-btn');if(!b)return;
+  if(!localStorage.getItem('el_key')){b.textContent='🔇';b.className='tts-btn';return;}
+  b.textContent=ttsEnabled?'🔊':'🔇';b.className='tts-btn'+(ttsEnabled?' on':'');
+}
+
+function toggleTTS(){
+  if(!localStorage.getItem('el_key')){document.getElementById('tts-modal').style.display='flex';return;}
+  ttsEnabled=!ttsEnabled;
+  if(!ttsEnabled&&ttsAudio){ttsAudio.pause();ttsAudio=null;}
+  updateTTSBtn();
+}
+
+function saveTTSKey(){
+  const k=document.getElementById('el-key-input').value.trim();if(!k)return;
+  localStorage.setItem('el_key',k);ttsEnabled=true;
+  document.getElementById('tts-modal').style.display='none';
+  updateTTSBtn();
+  if(SE.persona)initVoiceEngine();
+}
+
+async function initVoiceEngine(){
+  const key=localStorage.getItem('el_key');if(!key||!SE.persona)return;
+  try{
+    const r=await fetch('https://api.elevenlabs.io/v1/voices',{headers:{'xi-api-key':key}});
+    if(!r.ok)return;
+    const voices=(await r.json()).voices||[];
+    const genero=_inferGender(SE.persona.nome);
+    const idade=parseInt(SE.persona.idade)||40;
+    const estilo=(!W.estilo||W.estilo==='auto')?'auto':W.estilo;
+    const humor=(SE.persona.estado_inicial||'neutro').split(/[,. ]/)[0];
+    const v=_selectVoice(voices,genero,idade,estilo);
+    if(v){ttsVoiceId=v.voice_id;ttsSettings=_voiceSettings(estilo,humor,W.dificuldade||'Moderada');}
+  }catch(e){console.warn('ElevenLabs init:',e);}
+}
+
+async function speakPersona(text){
+  if(!ttsEnabled||!ttsVoiceId)return;
+  const key=localStorage.getItem('el_key');if(!key)return;
+  if(ttsAudio){ttsAudio.pause();ttsAudio=null;}
+  const btn=document.getElementById('tts-btn');if(btn)btn.className='tts-btn on speaking';
+  const t=text.length>480?text.slice(0,480)+'...':text;
+  try{
+    const r=await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${ttsVoiceId}`,{
+      method:'POST',headers:{'xi-api-key':key,'Content-Type':'application/json','Accept':'audio/mpeg'},
+      body:JSON.stringify({text:t,model_id:'eleven_multilingual_v2',voice_settings:ttsSettings})
+    });
+    if(!r.ok){if(btn)btn.className='tts-btn on';return;}
+    const url=URL.createObjectURL(await r.blob());
+    ttsAudio=new Audio(url);
+    ttsAudio.play();
+    ttsAudio.onended=()=>{URL.revokeObjectURL(url);ttsAudio=null;if(btn)btn.className='tts-btn on';};
+  }catch(e){console.warn('TTS:',e);if(btn)btn.className='tts-btn on';}
+}
+
+function stopPersonaAudio(){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}const btn=document.getElementById('tts-btn');if(btn&&ttsEnabled)btn.className='tts-btn on';}
+
 init();
+updateTTSBtn();
 </script>
 </body>
 </html>
