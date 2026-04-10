@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Engine — Advisor AI</title>
+<style>
+:root{--bg:#07101E;--s1:#0F1629;--s2:#111D30;--b1:#1A2840;--b2:#253650;--amber:#F59E0B;--teal:#14B8A6;--green:#10B981;--red:#EF4444;--t1:#F1F5F9;--t2:#94A3B8;--t3:#475569}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t1);font-family:-apple-system,'Segoe UI',sans-serif;min-height:100vh;padding:32px 16px}
+.wrap{max-width:680px;margin:0 auto}
+h1{font-size:24px;font-weight:800;margin-bottom:4px}.h1 em{color:var(--amber);font-style:normal}
+.sub{font-size:13px;color:var(--t3);margin-bottom:28px}
+.section{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:20px;margin-bottom:16px}
+.section-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:14px}
+label{font-size:12px;color:var(--t2);display:block;margin-bottom:5px;margin-top:10px}
+label:first-of-type{margin-top:0}
+input,select,textarea{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--t1);outline:none;font-family:inherit;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--b2)}
+select option{background:var(--s2)}
+textarea{resize:vertical;min-height:60px;line-height:1.5}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.btn{padding:12px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-a{background:var(--amber);color:#07101E}.btn-a:hover{opacity:.9}
+.btn-a:disabled{opacity:.45;cursor:not-allowed}
+.btn-o{background:transparent;border:1px solid var(--b2);color:var(--t2)}.btn-o:hover{background:var(--s2);color:var(--t1)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.result{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px;margin-top:14px;display:none}
+.result.show{display:block}
+.voice-card{display:flex;align-items:center;gap:14px;padding:12px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:10px;margin-bottom:10px}
+.v-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.v-female{background:rgba(20,184,166,.15);border:1px solid rgba(20,184,166,.3)}
+.v-male{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3)}
+.v-name{font-size:15px;font-weight:700;color:var(--t1)}
+.v-meta{font-size:11px;color:var(--t3);margin-top:2px;line-height:1.6}
+.v-id{font-size:10px;color:var(--t3);font-family:monospace;background:var(--bg);padding:2px 6px;border-radius:4px;margin-top:4px;display:inline-block}
+.settings-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.setting-item{background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:10px}
+.s-lbl{font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.s-val{font-size:18px;font-weight:700;color:var(--amber)}
+.s-bar{height:4px;background:var(--b1);border-radius:2px;margin-top:6px;overflow:hidden}
+.s-fill{height:100%;background:linear-gradient(90deg,#D97706,#F59E0B);border-radius:2px;transition:width .4s}
+.s-reason{font-size:11px;color:var(--t2);line-height:1.5;margin-top:3px}
+.status{font-size:12px;color:var(--t3);margin-top:10px;min-height:18px}
+.status.ok{color:var(--green)}.status.err{color:var(--red)}.status.loading{color:var(--amber)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;margin:2px}
+.chip-gender-f{background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.25);color:var(--teal)}
+.chip-gender-m{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#60A5FA}
+.chip-age{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:var(--amber)}
+.chip-mood{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--red)}
+.chip-mood.ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:var(--green)}
+.chip-mood.mid{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:var(--amber)}
+audio{width:100%;margin-top:12px;border-radius:8px;outline:none;filter:invert(1) hue-rotate(175deg) brightness(0.9)}
+.log{background:var(--bg);border:1px solid var(--b1);border-radius:8px;padding:12px;font-size:11px;color:var(--t3);font-family:monospace;max-height:180px;overflow-y:auto;margin-top:10px;line-height:1.7;white-space:pre-wrap;display:none}
+.log.show{display:block}
+.voices-list{max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.vl-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--s1);border:1px solid var(--b1);border-radius:8px;cursor:pointer;transition:all .15s}
+.vl-item:hover{border-color:var(--b2)}.vl-item.sel{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.4)}
+.vl-meta{font-size:11px;color:var(--t3)}.vl-name{font-size:13px;font-weight:600;color:var(--t1)}
+.tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:12px;background:var(--b2);color:var(--t2);text-transform:uppercase}
+.tag-m{background:rgba(59,130,246,.15);color:#60A5FA}.tag-f{background:rgba(20,184,166,.15);color:var(--teal)}
+.tag-y{background:rgba(16,185,129,.15);color:var(--green)}.tag-mid{background:rgba(245,158,11,.15);color:var(--amber)}.tag-old{background:rgba(239,68,68,.15);color:var(--red)}
+.divider{border:none;border-top:1px solid var(--b1);margin:20px 0}
+.reason-box{background:rgba(20,184,166,.05);border:1px solid rgba(20,184,166,.15);border-radius:8px;padding:12px;font-size:12px;color:var(--t2);line-height:1.6;margin-top:10px}
+.reason-box strong{color:var(--teal)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>advisor <em>voice engine</em></h1>
+  <p class="sub">Motor de seleção automática de voz ElevenLabs por persona — teste antes de integrar</p>
+
+  <!-- API KEY -->
+  <div class="section">
+    <div class="section-title">🔑 Configuração ElevenLabs</div>
+    <label>API Key</label>
+    <input type="password" id="apiKey" placeholder="sk_..." />
+    <div class="btn-row">
+      <button class="btn btn-a" onclick="loadVoices()">Carregar vozes disponíveis</button>
+    </div>
+    <div class="status" id="apiStatus"></div>
+    <div class="voices-list" id="voicesList"></div>
+  </div>
+
+  <!-- PERSONA INPUT -->
+  <div class="section">
+    <div class="section-title">🧑 Persona (simular dados gerados pela IA)</div>
+    <div class="row">
+      <div>
+        <label>Nome</label>
+        <input type="text" id="pNome" value="Fernanda Carvalho" oninput="inferGenderFromName()" />
+      </div>
+      <div>
+        <label>Idade</label>
+        <input type="number" id="pIdade" value="47" min="20" max="80" />
+      </div>
+    </div>
+    <label>Profissão</label>
+    <input type="text" id="pProfissao" value="Médica cardiologista" />
+    <label>Estado emocional inicial</label>
+    <textarea id="pEstado" rows="2">Desconfiada e apressada, com pouco tempo para a reunião</textarea>
+    <div class="row3" style="margin-top:14px">
+      <div>
+        <label>Gênero detectado</label>
+        <input type="text" id="pGenero" value="feminino" readonly style="opacity:.7" />
+      </div>
+      <div>
+        <label>Perfil (wizard)</label>
+        <select id="pPerfil">
+          <option>Conservador tradicional</option>
+          <option>Investidor moderado</option>
+          <option>Agressivo e sofisticado</option>
+          <option>Empresário prático</option>
+        </select>
+      </div>
+      <div>
+        <label>Estilo comportamental</label>
+        <select id="pEstilo">
+          <option value="Ansioso">Ansioso</option>
+          <option value="Técnico">Técnico e analítico</option>
+          <option value="Desconfiado" selected>Desconfiado</option>
+          <option value="Decisivo">Decisivo e direto</option>
+          <option value="Intelectualmente dominante">Intelectual</option>
+          <option value="auto">Auto (pela IA)</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div>
+        <label>Humor atual (durante sessão)</label>
+        <select id="pHumor">
+          <option value="receptivo">Receptivo</option>
+          <option value="interessado">Interessado</option>
+          <option value="neutro">Neutro</option>
+          <option value="cauteloso">Cauteloso</option>
+          <option value="desconfiado" selected>Desconfiado</option>
+          <option value="defensivo">Defensivo</option>
+          <option value="impaciente">Impaciente</option>
+          <option value="frustrado">Frustrado</option>
+          <option value="fechado">Fechado</option>
+        </select>
+      </div>
+      <div>
+        <label>Dificuldade</label>
+        <select id="pDificuldade">
+          <option>Fácil</option>
+          <option selected>Moderada</option>
+          <option>Difícil</option>
+          <option>Elite</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-a" id="btnSelect" onclick="runVoiceSelection()" disabled>✦ Selecionar voz automaticamente</button>
+      <button class="btn btn-o" onclick="randomPersona()">↻ Persona aleatória</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="section result" id="resultSection">
+    <div class="section-title">🎙️ Voz selecionada</div>
+    <div id="voiceCard"></div>
+    <div id="settingsCard"></div>
+    <div class="reason-box" id="reasonBox"></div>
+
+    <hr class="divider">
+    <label>Texto para teste (fala da persona)</label>
+    <textarea id="testText" rows="3">Olha, eu tenho pouco tempo. Me diz diretamente o que você tem a oferecer e por que eu deveria confiar em você.</textarea>
+    <div class="btn-row">
+      <button class="btn btn-a" id="btnPlay" onclick="playVoice()">▶ Reproduzir</button>
+      <button class="btn btn-o" onclick="toggleLog()">Ver log técnico</button>
+    </div>
+    <audio id="audioPlayer" controls style="display:none"></audio>
+    <div class="status" id="playStatus"></div>
+    <div class="log" id="debugLog"></div>
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let ALL_VOICES = [];
+let SELECTED_VOICE = null;
+let SELECTED_SETTINGS = null;
+let LOG = [];
+
+function log(msg) {
+  LOG.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
+  const el = document.getElementById('debugLog');
+  el.textContent = LOG.join('\n');
+  el.scrollTop = el.scrollHeight;
+}
+
+// ─────────────────────────────────────────────
+// STEP 1 — LOAD VOICES FROM ELEVENLABS
+// ─────────────────────────────────────────────
+async function loadVoices() {
+  const key = document.getElementById('apiKey').value.trim();
+  if (!key) { setStatus('apiStatus', 'Informe a API Key', 'err'); return; }
+
+  setStatus('apiStatus', 'Carregando vozes...', 'loading');
+  log('Buscando vozes na ElevenLabs...');
+
+  try {
+    const res = await fetch('https://api.elevenlabs.io/v1/voices', {
+      headers: { 'xi-api-key': key }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    ALL_VOICES = data.voices || [];
+    log(`${ALL_VOICES.length} vozes carregadas`);
+    renderVoiceList(ALL_VOICES);
+    setStatus('apiStatus', `✓ ${ALL_VOICES.length} vozes disponíveis`, 'ok');
+    document.getElementById('btnSelect').disabled = false;
+  } catch(e) {
+    setStatus('apiStatus', `Erro: ${e.message}`, 'err');
+    log(`ERRO ao carregar vozes: ${e.message}`);
+  }
+}
+
+function renderVoiceList(voices) {
+  const list = document.getElementById('voicesList');
+  if (!voices.length) { list.innerHTML = ''; return; }
+  list.innerHTML = voices.slice(0, 60).map(v => {
+    const g = (v.labels?.gender || '?');
+    const a = (v.labels?.age || '?');
+    const acc = (v.labels?.accent || '');
+    return `<div class="vl-item" onclick="previewVoiceInfo('${v.voice_id}')">
+      <span style="font-size:18px">${g==='female'?'👩':'👨'}</span>
+      <div style="flex:1">
+        <div class="vl-name">${v.name}</div>
+        <div class="vl-meta">${acc ? acc+' · ' : ''}${a}</div>
+      </div>
+      <span class="tag tag-${g==='female'?'f':'m'}">${g==='female'?'F':'M'}</span>
+      ${a==='young'?'<span class="tag tag-y">jovem</span>':a==='old'?'<span class="tag tag-old">sênior</span>':'<span class="tag tag-mid">adulto</span>'}
+    </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────
+// STEP 2 — INFER GENDER FROM NAME
+// ─────────────────────────────────────────────
+// Heurística para nomes brasileiros comuns
+const FEMALE_NAMES = new Set([
+  'ana','maria','julia','juliana','fernanda','camila','beatriz','larissa','amanda','luciana',
+  'leticia','gabriela','isabela','isabel','carolina','vanessa','mariana','patricia','claudia',
+  'renata','adriana','daniela','jessica','priscila','tatiana','viviane','simone','carla',
+  'roberta','silvia','cristina','andrea','regina','vera','bruna','alice','lara','bianca',
+  'natalia','debora','eliane','sandra','aline','monica','rosana','soraya','elisa','helena',
+  'laura','marcela','melissa','sabrina','veronica','tereza','miriam','rita','celeste','ines'
+]);
+const MALE_NAMES = new Set([
+  'joao','jose','carlos','antonio','francisco','paulo','lucas','gabriel','rafael','rodrigo',
+  'fabio','marcelo','eduardo','andre','pedro','alexandre','nelson','sergio','roberto','luiz',
+  'marcos','thiago','daniel','mateus','guilherme','leandro','gustavo','henrique','caio',
+  'diego','renato','vinicius','anderson','mauricio','erick','flavio','cesar','jorge','alan',
+  'fausto','hernan','igor','ivan','joel','julio','mario','otavio','rogerio','ruan','tiago',
+  'wagner','wellington','yuri','zeus','cleyton','adriano','alan','alex','almir','angelo'
+]);
+
+function inferGender(nome) {
+  if (!nome) return 'masculino';
+  const first = nome.split(' ')[0].toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // remove acentos
+
+  if (FEMALE_NAMES.has(first)) return 'feminino';
+  if (MALE_NAMES.has(first)) return 'masculino';
+
+  // Fallback: terminações comuns em pt-BR
+  if (/[aáà]$/.test(first) && !['joshua','nikita','luca'].includes(first)) return 'feminino';
+  if (/[oe]$/.test(first)) return 'masculino';
+  return 'masculino'; // default
+}
+
+function inferGenderFromName() {
+  const nome = document.getElementById('pNome').value;
+  document.getElementById('pGenero').value = inferGender(nome);
+}
+
+// ─────────────────────────────────────────────
+// STEP 3 — MAP AGE → ELEVENLABS AGE LABEL
+// ─────────────────────────────────────────────
+function mapAge(idade) {
+  if (idade < 32) return 'young';
+  if (idade < 55) return 'middle_aged';
+  return 'old';
+}
+
+// ─────────────────────────────────────────────
+// STEP 4 — MAP ESTILO + HUMOR → VOICE SETTINGS
+// ─────────────────────────────────────────────
+/*
+  ElevenLabs voice settings:
+  - stability (0-1): alto = mais consistente, baixo = mais expressivo/variado
+  - similarity_boost (0-1): fidelidade à voz original
+  - style (0-1): exagero de estilo/emoção (modelos v2)
+  - use_speaker_boost: clareza adicional
+*/
+function mapEstiloToSettings(estilo, humor, dificuldade) {
+  // Base por estilo comportamental
+  const estiloMap = {
+    'Ansioso':                    { stability: 0.35, similarity_boost: 0.75, style: 0.70, reason: 'Voz mais variável e expressiva para simular ansiedade' },
+    'Técnico':                    { stability: 0.80, similarity_boost: 0.85, style: 0.15, reason: 'Voz estável e controlada, tom analítico e seco' },
+    'Desconfiado':                { stability: 0.55, similarity_boost: 0.80, style: 0.45, reason: 'Tom fechado e levemente tenso, com pausas e hesitações' },
+    'Decisivo':                   { stability: 0.75, similarity_boost: 0.80, style: 0.30, reason: 'Voz firme, direta, sem vacilação' },
+    'Intelectualmente dominante': { stability: 0.82, similarity_boost: 0.78, style: 0.20, reason: 'Tom assertivo e controlado, dicção clara e autoritária' },
+    'auto':                       { stability: 0.55, similarity_boost: 0.75, style: 0.40, reason: 'Configuração balanceada para estilo não definido' },
+  };
+
+  // Ajuste por humor atual (modifica a base)
+  const humorAdjust = {
+    'receptivo':   { stability: +0.10, style: -0.10 },
+    'interessado': { stability: +0.05, style: -0.05 },
+    'neutro':      { stability: +0.00, style: +0.00 },
+    'cauteloso':   { stability: -0.05, style: +0.10 },
+    'desconfiado': { stability: -0.10, style: +0.15 },
+    'defensivo':   { stability: -0.15, style: +0.20 },
+    'impaciente':  { stability: -0.20, style: +0.25 },
+    'frustrado':   { stability: -0.25, style: +0.30 },
+    'fechado':     { stability: -0.20, style: +0.20 },
+  };
+
+  // Ajuste por dificuldade (dificuldade maior = mais intensidade)
+  const diffAdjust = {
+    'Fácil':    { stability: +0.08, style: -0.08 },
+    'Moderada': { stability: +0.00, style: +0.00 },
+    'Difícil':  { stability: -0.08, style: +0.10 },
+    'Elite':    { stability: -0.15, style: +0.18 },
+  };
+
+  const base = estiloMap[estilo] || estiloMap['auto'];
+  const hAdj = humorAdjust[humor] || { stability: 0, style: 0 };
+  const dAdj = diffAdjust[dificuldade] || { stability: 0, style: 0 };
+
+  const clamp = (v, min=0, max=1) => Math.min(max, Math.max(min, v));
+
+  return {
+    stability:        clamp(base.stability + hAdj.stability + dAdj.stability),
+    similarity_boost: clamp(base.similarity_boost),
+    style:            clamp(base.style + hAdj.style + dAdj.style),
+    use_speaker_boost: true,
+    reason: base.reason,
+  };
+}
+
+// ─────────────────────────────────────────────
+// STEP 5 — SELECT BEST VOICE FOR PERSONA
+// ─────────────────────────────────────────────
+function selectVoice(voices, genero, idade, estilo) {
+  const targetGender = genero === 'feminino' ? 'female' : 'male';
+  const targetAge    = mapAge(idade);
+
+  log(`Buscando: gênero=${targetGender}, idade=${targetAge}, estilo=${estilo}`);
+
+  // 1. Filtrar por gênero (obrigatório)
+  let pool = voices.filter(v => (v.labels?.gender || '') === targetGender);
+  log(`Após filtro gênero: ${pool.length} vozes`);
+
+  // 2. Filtrar por idade (preferencial)
+  const ageFit = pool.filter(v => (v.labels?.age || '') === targetAge);
+  if (ageFit.length > 0) {
+    pool = ageFit;
+    log(`Após filtro idade (${targetAge}): ${pool.length} vozes`);
+  } else {
+    log(`Sem vozes com idade "${targetAge}", usando todas do gênero`);
+  }
+
+  // 3. Preferir vozes com use_case adequado ao estilo
+  const useCasePrefs = {
+    'Técnico':                    ['informational', 'educational', 'news'],
+    'Ansioso':                    ['conversational', 'characters'],
+    'Decisivo':                   ['professional', 'informational'],
+    'Desconfiado':                ['conversational', 'interactive'],
+    'Intelectualmente dominante': ['informational', 'professional'],
+    'auto':                       ['conversational'],
+  };
+  const prefs = useCasePrefs[estilo] || ['conversational'];
+  const ucFit = pool.filter(v => prefs.some(p => (v.labels?.use_case || '').includes(p)));
+  if (ucFit.length > 0) {
+    pool = ucFit;
+    log(`Após filtro use_case: ${pool.length} vozes`);
+  }
+
+  // 4. Seleção determinística baseada em hash do nome+perfil
+  //    → mesma persona sempre recebe mesma voz durante a sessão
+  const seed = `${genero}_${targetAge}_${estilo}`;
+  const idx  = simpleHash(seed) % pool.length;
+  const selected = pool[idx];
+  log(`Voz selecionada: "${selected.name}" (voice_id: ${selected.voice_id})`);
+  return selected;
+}
+
+function simpleHash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+// ─────────────────────────────────────────────
+// STEP 6 — MAIN ORCHESTRATOR
+// ─────────────────────────────────────────────
+function runVoiceSelection() {
+  if (!ALL_VOICES.length) { alert('Carregue as vozes primeiro.'); return; }
+
+  const nome       = document.getElementById('pNome').value;
+  const idade      = parseInt(document.getElementById('pIdade').value) || 40;
+  const profissao  = document.getElementById('pProfissao').value;
+  const estado     = document.getElementById('pEstado').value;
+  const genero     = document.getElementById('pGenero').value || inferGender(nome);
+  const estilo     = document.getElementById('pEstilo').value;
+  const humor      = document.getElementById('pHumor').value;
+  const dificuldade = document.getElementById('pDificuldade').value;
+
+  LOG = [];
+  log('━━━ Nova seleção de voz ━━━');
+  log(`Persona: ${nome}, ${idade}a, ${profissao}`);
+  log(`Gênero: ${genero} | Estilo: ${estilo} | Humor: ${humor} | Dif: ${dificuldade}`);
+
+  SELECTED_VOICE    = selectVoice(ALL_VOICES, genero, idade, estilo);
+  SELECTED_SETTINGS = mapEstiloToSettings(estilo, humor, dificuldade);
+
+  log(`Settings → stability:${SELECTED_SETTINGS.stability.toFixed(2)} | style:${SELECTED_SETTINGS.style.toFixed(2)} | similarity:${SELECTED_SETTINGS.similarity_boost.toFixed(2)}`);
+
+  renderResult(nome, idade, genero, profissao, estado, estilo, humor);
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function renderResult(nome, idade, genero, profissao, estado, estilo, humor) {
+  const v = SELECTED_VOICE;
+  const s = SELECTED_SETTINGS;
+  const isFemale = genero === 'feminino';
+  const ageLabel = mapAge(idade);
+  const ageLabelPT = { young: 'Jovem (<32a)', middle_aged: 'Adulto (32-54a)', old: 'Sênior (55+a)' };
+  const humorPT = { receptivo:'🟢 Receptivo', interessado:'🟢 Interessado', neutro:'🟡 Neutro', cauteloso:'🟡 Cauteloso', desconfiado:'🔴 Desconfiado', defensivo:'🔴 Defensivo', impaciente:'🔴 Impaciente', frustrado:'🔴 Frustrado', fechado:'🔴 Fechado' };
+  const humorCls = ['receptivo','interessado'].includes(humor) ? 'ok' : ['neutro','cauteloso'].includes(humor) ? 'mid' : '';
+
+  document.getElementById('voiceCard').innerHTML = `
+    <div class="voice-card">
+      <div class="v-avatar ${isFemale ? 'v-female' : 'v-male'}">${isFemale ? '👩' : '👨'}</div>
+      <div style="flex:1">
+        <div class="v-name">${v.name}</div>
+        <div class="v-meta">
+          <span class="chip ${isFemale?'chip-gender-f':'chip-gender-m'}">${isFemale?'♀ Feminino':'♂ Masculino'}</span>
+          <span class="chip chip-age">${ageLabelPT[ageLabel]}</span>
+          <span class="chip chip-mood ${humorCls}">${humorPT[humor]||humor}</span>
+        </div>
+        <div class="v-meta" style="margin-top:4px">Accent: ${v.labels?.accent||'—'} · Use case: ${v.labels?.use_case||'—'}</div>
+        <div class="v-id">${v.voice_id}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('settingsCard').innerHTML = `
+    <div style="font-size:11px;color:var(--t3);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:14px 0 8px">Configurações de voz</div>
+    <div class="settings-grid">
+      ${renderSetting('Estabilidade', s.stability, 'Alto = mais robótica. Baixo = mais humana e emotiva.')}
+      ${renderSetting('Estilo / Emoção', s.style, 'Alto = voz mais dramática e intensa.')}
+      ${renderSetting('Similaridade', s.similarity_boost, 'Fidelidade ao timbre original da voz.')}
+      <div class="setting-item"><div class="s-lbl">Speaker Boost</div><div class="s-val" style="font-size:14px;margin-top:4px">${s.use_speaker_boost ? '✓ Ativo' : '✗ Inativo'}</div><div class="s-reason">Clareza adicional para vozes de maior intensidade.</div></div>
+    </div>`;
+
+  document.getElementById('reasonBox').innerHTML = `<strong>Por que essa voz?</strong><br>${s.reason}<br><br>
+    Persona <em>${nome}</em>, ${idade} anos, ${profissao.toLowerCase()}. ${estilo !== 'auto' ? `Estilo "${estilo}" →` : ''} ${humorPT[humor]||humor} durante a sessão.`;
+
+  document.getElementById('resultSection').classList.add('show');
+}
+
+function renderSetting(label, value, reason) {
+  return `<div class="setting-item">
+    <div class="s-lbl">${label}</div>
+    <div class="s-val">${(value*100).toFixed(0)}%</div>
+    <div class="s-bar"><div class="s-fill" style="width:${value*100}%"></div></div>
+    <div class="s-reason">${reason}</div>
+  </div>`;
+}
+
+// ─────────────────────────────────────────────
+// STEP 7 — PLAY VOICE VIA ELEVENLABS API
+// ─────────────────────────────────────────────
+async function playVoice() {
+  if (!SELECTED_VOICE) { alert('Selecione uma voz primeiro.'); return; }
+  const key  = document.getElementById('apiKey').value.trim();
+  const text = document.getElementById('testText').value.trim();
+  if (!text) return;
+
+  setStatus('playStatus', 'Gerando áudio...', 'loading');
+  document.getElementById('btnPlay').disabled = true;
+  log(`Chamando TTS: voice_id=${SELECTED_VOICE.voice_id}, chars=${text.length}`);
+
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${SELECTED_VOICE.voice_id}`, {
+      method: 'POST',
+      headers: {
+        'xi-api-key': key,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg',
+      },
+      body: JSON.stringify({
+        text,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: {
+          stability:        SELECTED_SETTINGS.stability,
+          similarity_boost: SELECTED_SETTINGS.similarity_boost,
+          style:            SELECTED_SETTINGS.style,
+          use_speaker_boost: SELECTED_SETTINGS.use_speaker_boost,
+        }
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`HTTP ${res.status}: ${err}`);
+    }
+
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const player = document.getElementById('audioPlayer');
+    player.src = url;
+    player.style.display = 'block';
+    player.play();
+    setStatus('playStatus', '✓ Reproduzindo', 'ok');
+    log(`Áudio gerado: ${(blob.size/1024).toFixed(1)} KB`);
+  } catch(e) {
+    setStatus('playStatus', `Erro: ${e.message}`, 'err');
+    log(`ERRO TTS: ${e.message}`);
+  } finally {
+    document.getElementById('btnPlay').disabled = false;
+  }
+}
+
+// ─────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────
+function setStatus(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'status ' + (type || '');
+}
+
+function toggleLog() {
+  document.getElementById('debugLog').classList.toggle('show');
+}
+
+function previewVoiceInfo(vid) {
+  const v = ALL_VOICES.find(x => x.voice_id === vid);
+  if (!v) return;
+  document.querySelectorAll('.vl-item').forEach(el => el.classList.remove('sel'));
+  event.currentTarget.classList.add('sel');
+  log(`Preview info: ${v.name} | gender:${v.labels?.gender} | age:${v.labels?.age} | accent:${v.labels?.accent} | use_case:${v.labels?.use_case}`);
+  document.getElementById('debugLog').classList.add('show');
+}
+
+// Personas aleatórias para teste
+const SAMPLE_PERSONAS = [
+  { nome:'Ricardo Alves', idade:58, profissao:'Empresário do agronegócio', estado:'Direto e desconfiado de assessores', estilo:'Decisivo', humor:'desconfiado', dificuldade:'Difícil' },
+  { nome:'Mariana Costa', idade:34, profissao:'Engenheira de software sênior', estado:'Curiosa e ansiosa com o primeiro investimento grande', estilo:'Técnico', humor:'cauteloso', dificuldade:'Moderada' },
+  { nome:'José Pereira', idade:72, profissao:'Médico aposentado', estado:'Conservador, preocupado com segurança', estilo:'Ansioso', humor:'neutro', dificuldade:'Fácil' },
+  { nome:'Camila Rodrigues', idade:41, profissao:'Advogada tributarista', estado:'Impaciente e direta, quer dados concretos', estilo:'Intelectualmente dominante', humor:'impaciente', dificuldade:'Elite' },
+  { nome:'Paulo Mendes', idade:29, profissao:'Desenvolvedor startup', estado:'Empolgado mas sem experiência', estilo:'Ansioso', humor:'interessado', dificuldade:'Fácil' },
+];
+
+function randomPersona() {
+  const p = SAMPLE_PERSONAS[Math.floor(Math.random() * SAMPLE_PERSONAS.length)];
+  document.getElementById('pNome').value = p.nome;
+  document.getElementById('pIdade').value = p.idade;
+  document.getElementById('pProfissao').value = p.profissao;
+  document.getElementById('pEstado').value = p.estado;
+  document.getElementById('pEstilo').value = p.estilo;
+  document.getElementById('pHumor').value = p.humor;
+  document.getElementById('pDificuldade').value = p.dificuldade;
+  inferGenderFromName();
+}
+
+// Init
+inferGenderFromName();
+</script>
+</body>
+</html>
